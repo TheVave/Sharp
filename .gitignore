@@ -368,3 +368,4 @@ FodyWeavers.xsd
 /BuildIncrmtr/BuildIncrmtr.csproj
 /BuildIncrmtr/Program.cs
 /BuildIncrmtr/App.config
+/BuildIncrmtr/Properties/AssemblyInfo.cs
