@@ -79,7 +79,7 @@
     <Compile Update="2d\Raycasting\_2dLineMaker.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
-    <Compile Update="2d\Raycasting\_2dMovementRepersenter.cs">
+    <Compile Update="2d\Raycasting\_2dMovementRepresenter.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
     <Compile Update="Renderer\MainRenderer.cs">

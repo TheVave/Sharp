@@ -8,7 +8,7 @@ namespace SharpPhysics
 		public static extern int MessageBox(IntPtr h, string m, string c, int type);
 		public static void ThrowError(string message, bool crash)
         {
-			MessageBox(IntPtr.Zero, message, "Error", 0x10 | 0x00);
+			MessageBox(IntPtr.Zero, message, "Error", /* 0x01 is MB_ICONERROR (error symbol) and 0x00 is MB_OK (ok message box) */ 0x10 | 0x00);
             if (crash) throw new Exception(message + " (Shown in message box)");
         }
         public static void ThrowNotImplementedExcepetion()

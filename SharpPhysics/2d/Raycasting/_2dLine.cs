@@ -5,7 +5,7 @@ namespace SharpPhysics
 {
 	public class _2dLine
 	{
-		internal _2dMovementRepersenter RayData;
+		internal _2dMovementRepresenter RayData;
 		/// <summary>
 		/// the start of the ray at the X position
 		/// </summary>
@@ -51,7 +51,7 @@ namespace SharpPhysics
 			YStart = yStart;
 			XEnd = xEnd;
 			YEnd = yEnd;
-			// pothag thereom
+			// Pythagorean theorem
 			Length = Math.Sqrt(Math.Pow(Math.Abs(XStart - XEnd), 2) + Math.Pow(Math.Abs(YStart - YEnd), 2d));
 		}
 		public _2dLine(Point a, Point b) => new _2dLine(a.X, a.Y, b.X, b.Y);

@@ -19,6 +19,11 @@ namespace SharpPhysics
 		public double[] MeshPointsZ;
 
 		/// <summary>
+		/// The points that make up the mesh.
+		/// </summary>
+		public Point[] MeshPoints;
+
+		/// <summary>
 		/// The X points in the mesh with, no offset, exactly how the model was first made.
 		/// </summary>
 		public double[] MeshPointsActualX;
@@ -69,6 +74,13 @@ namespace SharpPhysics
 
 			// for ease of conversion from a 2d mesh to a 3d mesh
 			MeshPointsActualZ = new double[MeshPointsY.Length];
+
+			// dealing with the MeshPoints field
+			MeshPoints = new Point[MeshPointsX.Length];
+			for (int i = 0; i < MeshPointsX.Length; i++)
+			{
+				MeshPoints[i] = new Point(MeshPointsX[i], MeshPointsY[i]);
+			}
 		}
 	}
 }

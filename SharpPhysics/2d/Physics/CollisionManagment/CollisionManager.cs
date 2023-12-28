@@ -36,17 +36,17 @@ namespace SharpPhysics
 		/// <summary>
 		/// The index(s) in the hitables array meshes that have collided with objectToCheck
 		/// </summary>
-		private static int[] objectToCheckIfCollidedMeshIndex;
+		private static int[] objectToCheckIfCollidedMeshIndex = Array.Empty<int>();
 
 		/// <summary>
 		/// The index(s) in the objectToCheck mesh that have collided with hitables[x]
 		/// </summary>
-		private static int[] objectToCheckMeshIndex;
+		private static int[] objectToCheckMeshIndex = Array.Empty<int>();
 
 		/// <summary>
 		/// All of the objects that collided with objectToCheck
 		/// </summary>
-		private static _2dSimulatedObject[] CollidedObjects;
+		private static _2dSimulatedObject[] CollidedObjects = Array.Empty<_2dSimulatedObject>();
 
 		/// <summary>
 		/// The value to return from CheckIfCollidedWithObject
@@ -114,8 +114,10 @@ namespace SharpPhysics
 							new Tuple<int, int, _2dSimulatedObject>
 							(objectToCheckIfCollidedMeshIndex[indx], objectToCheckMeshIndex[indx], CollidedObjects[indx]))
 							.ToArray();
+						indx++;
+						hasBeenCollision = true;
 					}
-					indx++;
+					
 				}
 			}
 			if (hasBeenCollision) return ToReturn;

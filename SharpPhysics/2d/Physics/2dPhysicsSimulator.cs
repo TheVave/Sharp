@@ -126,9 +126,18 @@ namespace SharpPhysics
 			CurrentMovement.EndPosition = ObjectToSimulate.Translation.ObjectPosition;
 		}
 
+		/// <summary>
+		/// Applies a force on a specific point on a mesh line.
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <param name="meshLineIndex"></param>
+		/// <param name="linePoint"></param>
+		// Mostly used for collisions
 		public static void ApplyForce(_2dSimulatedObject obj, int meshLineIndex, double linePoint)
 		{
-
+			_2dLine line = 
+				new(obj.ObjectMesh.MeshPoints[meshLineIndex], obj.ObjectMesh.MeshPoints[meshLineIndex + 1]);
+			
 		}
 
 		internal void StartPhysicsSimulator()

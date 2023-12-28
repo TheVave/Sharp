@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using SharpPhysics;
 namespace SharpPhysics
 {
-	public class _2dMovementRepersenter
+	public class _2dMovementRepresenter
 	{
 		public double xStart = 0;
 		public double yStart = 0;
