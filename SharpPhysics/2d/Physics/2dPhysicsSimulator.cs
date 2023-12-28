@@ -131,7 +131,6 @@ namespace SharpPhysics
 				DelayAmount = (int)Math.Ceiling(1000d / TickSpeed);
 				while (true)
 				{
-					if (!GlobalDeclerations.IsSolvingPhysics) break;
 					if (StopSignal) break;
 					if (!DoManualTicking)
 					{

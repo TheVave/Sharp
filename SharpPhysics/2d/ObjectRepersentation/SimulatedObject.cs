@@ -43,7 +43,7 @@ namespace SharpPhysics
 			ObjectMesh = _2dBaseObjects.LoadSquareMesh();
 			ObjectPhysicsParams = new _2dPhysicsParams();
 			Translation = new _2dTranslation();
-			SimulationHierarcy.Hierarchies[0].Objects = SimulationHierarcy.Hierarchies[0].Objects.Append(this).ToArray();
+			//SimulationHierarcy.Hierarchies[0].Objects = SimulationHierarcy.Hierarchies[0].Objects.Append(this).ToArray();
 		}
 
 		/// <summary>

@@ -51,5 +51,21 @@ namespace SharpPhysics
 			Array.Copy(MeshPointsX, zCopyLayer, MeshPointsZ.Length);
 			MeshPointsActualZ = xCopyLayer;
 		}
+		public Mesh(double[] MeshPointsX, double[] MeshPointsY)
+		{
+			this.MeshPointsX = MeshPointsX;
+			this.MeshPointsY = MeshPointsY;
+			this.MeshPointsZ = new double[MeshPointsX.Length];
+
+			double[] xCopyLayer = new double[MeshPointsX.Length];
+			Array.Copy(MeshPointsX, xCopyLayer, MeshPointsX.Length);
+			MeshPointsActualX = xCopyLayer;
+
+			double[] yCopyLayer = new double[MeshPointsX.Length];
+			Array.Copy(MeshPointsX, yCopyLayer, MeshPointsY.Length);
+			MeshPointsActualY = xCopyLayer;
+
+			MeshPointsActualY = new double[MeshPointsY.Length];
+		}
 	}
 }

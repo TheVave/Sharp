@@ -46,6 +46,9 @@ namespace SharpInterface
 			VObjects[0].ObjectPhysicsParams.GravityMultiplier = 0;
 			VObjects[1].ObjectPhysicsParams.GravityMultiplier = 0;
 
+			VObjects[0].ObjectMesh = new(new double[] { 35, -35, -35, 35 }, new double[] { 35, 35, -35, -35 });
+			VObjects[1].ObjectMesh = new(new double[] { 35, -35, -35, 35 }, new double[] { 35, 35, -35, -35 });
+
 			VObjects[1].RegisterToScene();
 			VObjects[0].ObjectPhysicsParams.CollidableObjects = VObjects[0].ObjectPhysicsParams.CollidableObjects.Append(VObjects[1]).ToArray();
 			VObjects[0].StartPhysicsSimulation();
