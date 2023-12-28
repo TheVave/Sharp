@@ -78,43 +78,7 @@
     <Compile Update="2d\Raycasting\_2dMovementRepersenter.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
-    <Compile Update="3d\BaseObjects.cs">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="3d\ObjectRepersentation\Mesh.cs">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="3d\ObjectRepersentation\PhysicsMeshStorage.cs">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="3d\Objects\PhysicsPrams.cs">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="3d\Objects\SimulatedObject.cs">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="3d\Objects\Translation\Translation.cs">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="3d\Objects\XYZPlaceholder.cs">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="3d\PhysicsSim\CollisionManagment\CollisionManager.cs">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="3d\PhysicsSim\MovmentRepersenter.cs">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="3d\PhysicsSim\PhysicsSimulator.cs">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="3d\PhysicsSim\SUVATEquations.cs">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Compile>
     <Compile Update="Renderer\MainRenderer.cs">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="Renderer\2d\WindowSetup\WindowSetup.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
     <Compile Update="Simulation\SimulationState.cs">
@@ -145,8 +109,6 @@
 
   <ItemGroup>
     <Folder Include="UI\Renderer\" />
-    <Folder Include="Editor\" />
-    <Folder Include="Renderer\2d\Display\" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
