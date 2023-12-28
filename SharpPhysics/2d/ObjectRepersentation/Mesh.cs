@@ -55,6 +55,8 @@ namespace SharpPhysics
 		{
 			this.MeshPointsX = MeshPointsX;
 			this.MeshPointsY = MeshPointsY;
+
+			// for ease of conversion from a 2d mesh to a 3d mesh
 			this.MeshPointsZ = new double[MeshPointsX.Length];
 
 			double[] xCopyLayer = new double[MeshPointsX.Length];
@@ -63,8 +65,9 @@ namespace SharpPhysics
 
 			double[] yCopyLayer = new double[MeshPointsX.Length];
 			Array.Copy(MeshPointsY, yCopyLayer, MeshPointsY.Length);
-			MeshPointsActualY = xCopyLayer;
+			MeshPointsActualY = yCopyLayer;
 
+			// for ease of conversion from a 2d mesh to a 3d mesh
 			MeshPointsActualZ = new double[MeshPointsY.Length];
 		}
 	}
