@@ -4,8 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpPhysics.Renderer
+namespace SharpPhysics
 {
+	/// <summary>
+	/// HTML / CSS Color declerations.
+	/// Defined with RGB with ints. Example: White = 255255255
+	/// </summary>
+	// I don't remember how I found this list.
     public enum ColorName
     {
         Red = 255000000,

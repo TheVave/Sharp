@@ -45,7 +45,7 @@
     <Compile Update="2d\ObjectRepersentation\PhysicsPrams.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
-    <Compile Update="2d\ObjectRepersentation\_2dPoint.cs">
+    <Compile Update="2d\ObjectRepersentation\Point.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
     <Compile Update="2d\ObjectRepersentation\SimulatedObject.cs">

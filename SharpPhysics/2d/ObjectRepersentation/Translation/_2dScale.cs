@@ -12,12 +12,6 @@ namespace SharpPhysics
 		{
 			return $"Scale:{xSca},{ySca},{zSca}";
 		}
-		public _2dScale(Translation.Scale scaleRef)
-		{
-			xSca = scaleRef.xSca;
-			ySca = scaleRef.ySca;
-			zSca = 0;
-		}
 		public _2dScale(short x, short y, short z)
 		{
 			xSca = x;

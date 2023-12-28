@@ -44,6 +44,10 @@ namespace SharpPhysics
 		/// </summary>
 		public double SpeedResistance = 0.1;
 
+		/// <summary>
+		/// The acceleration of the object in SpeedDirection. 
+		/// Not recommended to be used, may have strange side effects.
+		/// </summary>
 		public double SpeedAcceleration = 0;
 
 		/// <summary>
@@ -69,6 +73,8 @@ namespace SharpPhysics
 		/// </summary>
 		public double[] Momentum = new double[] { 0, 0 };
 
+		// was going to be used when I was first
+		// thinking up how to do collisions.
 		//public bool StoreComplexValues = true;
 
 		/// <summary>

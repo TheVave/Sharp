@@ -19,7 +19,8 @@ namespace SharpPhysics
 		// an array containing the info returned from MeshUtils.IsLeft
 		private static bool[] isLefts;
         /// <summary>
-        /// 
+        /// Checks if a object has collided with another object.
+		/// Currently under development.
         /// </summary>
         /// <param name="hitables"></param>
         /// <param name="objectToCheck"></param>

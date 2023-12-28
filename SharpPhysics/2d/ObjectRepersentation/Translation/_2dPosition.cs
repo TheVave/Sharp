@@ -12,12 +12,6 @@ namespace SharpPhysics
 		{
 			return $"Pos:{xPos},{yPos},{zPos}";
 		}
-		public _2dPosition(Translation.Position posRef)
-		{
-			xPos = posRef.xPos;
-			yPos = posRef.yPos;
-			zPos = 0;
-		}
 		public _2dPosition(double x, double y, double z)
 		{
 			xPos = x;

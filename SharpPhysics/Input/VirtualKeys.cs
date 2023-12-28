@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace SharpPhysics
 {
+	/// <summary>
+	/// Virtual key codes for input.
+	/// These also have things like left mouse button
+	/// or middle mouse button.
+	/// </summary>
 	public enum VirtualKey
 	{
+		// any gaps in the enum are because those codes are unassigned.
 		LEFT_MOUSE_BTN = 1,
 		RIGHT_MOUSE_BTN = 2,
 		CANCEL = 3,

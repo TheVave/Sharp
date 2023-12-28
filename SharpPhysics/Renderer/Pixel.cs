@@ -3,6 +3,8 @@
 	/// <summary>
 	/// default pixel class designed for compatibility with C++
 	/// </summary>
+	// It is made with compatibility with C++ because of the way I am planning on doing
+	// rendering. This uses a C++ function to display things on a window. See FastPixelWriter
 	public class Pixel
     {
 		/// <summary>

@@ -6,6 +6,11 @@ using System.Text;
 
 namespace SharpPhysics
 {
+	/// <summary>
+	/// This class (is going to) manage most of the rendering computation.
+	/// Currently it does not need to be used when you are making the simulation using
+	/// MonoGame
+	/// </summary>
 	public static class MainRenderer
 	{
 		/// <summary>

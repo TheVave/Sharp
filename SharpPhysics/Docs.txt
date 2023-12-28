@@ -1,4 +1,4 @@
-
+WARNING: NOT UP TO DATE, this is old...
 Things that I could not find a good way to do:
 	To rewrite the operation at collision dirrive a PhysicsSimulator object and enter override then select ExecuteAtCollision (possibly fixedable using delegates)
 		Mesh creation, I may make a program to make a output based on a designer

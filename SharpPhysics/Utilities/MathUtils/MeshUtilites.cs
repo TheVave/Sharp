@@ -5,11 +5,11 @@ namespace SharpPhysics
 {
     public static class MeshUtilites
     {
-        public static int CalculateDistFromPoint(Translation.Position position)
+        public static int CalculateDistFromPoint(_2dPosition position)
         {
             return (int)(Math.Abs(position.xPos) + Math.Abs(position.yPos) + Math.Abs(position.zPos));
         }
-        public static int CalculateMaxDistFromCenter(Mesh mesh, Translation.Position placeholderPositionObject)
+        public static int CalculateMaxDistFromCenter(Mesh mesh, _2dPosition placeholderPositionObject)
         {
             int maxDist = 0;
             for (int i = 0; i < mesh.MeshPointsX.Length; i++)
@@ -42,7 +42,7 @@ namespace SharpPhysics
 		/// </returns>
 		public static int IsLeft(Point a, Point b, Point c)
 		{
-			return (int)((b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x));
+			return (int)((b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X));
 		}
 	}
 }

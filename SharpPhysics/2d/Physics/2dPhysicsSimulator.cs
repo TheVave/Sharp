@@ -1,10 +1,12 @@
 ﻿
+using SharpPhysics.Simulation;
+
 namespace SharpPhysics
 {
-	/// <summary>
-	/// used the same PhyscisParams class as the PhyscisSimulator for compatibility
-	/// </summary>
-	public class _2dPhysicsSimulator
+    /// <summary>
+    /// used the same PhyscisParams class as the PhyscisSimulator for compatibility
+    /// </summary>
+    public class _2dPhysicsSimulator
 	{
 
 		/// <summary>
@@ -32,7 +34,7 @@ namespace SharpPhysics
 		public int TickSpeed = 500;
 		public _2dMovmentRepresenter CurrentMovement { get; private set; } = new(new _2dPosition(0, 0));
 		public int SpeedMultiplier = 1;
-		public virtual void ExecuteAtCollision(SimulatedObject hitObject, SimulatedObject self) { }
+		public virtual void ExecuteAtCollision(_2dSimulatedObject hitObject, _2dSimulatedObject self) { }
 		public int DelayAmount;
 		public double TimePerSimulationTick = 0.001;
 

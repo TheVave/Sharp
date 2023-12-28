@@ -54,7 +54,7 @@ namespace SharpPhysics
 			// pothag thereom
 			Length = Math.Sqrt(Math.Pow(Math.Abs(XStart - XEnd), 2) + Math.Pow(Math.Abs(YStart - YEnd), 2d));
 		}
-		public _2dLine(_2dPoint a, _2dPoint b) => new _2dLine(a.x, a.y, b.x, b.y);
+		public _2dLine(Point a, Point b) => new _2dLine(a.X, a.Y, b.X, b.Y);
 		public static _2dSimulatedObject? CheckIfRayCollidedWithObject(_2dLine ray)
 		{
 			return null;

@@ -8,6 +8,9 @@ namespace SharpPhysics
 {
 	public static class SaveHelper
 	{
+		/// <summary>
+		/// Indicates the number of saves that SharpPhysics will attempt to do before over-writing one.
+		/// </summary>
 		public static short MaxSaveCount { get; set; } = 10;
 		public static void SaveFileStandardWrite(string[] data, string saveName)
 		{
@@ -20,10 +23,14 @@ namespace SharpPhysics
 					{
 						try
 						{
+							// ls.txt is a file that stores the save number.
+							// It may have the contents of 8 to write to the 8th
+							// game save file.
 							File.WriteAllText($@"{Environment.CurrentDirectory}\Saves\ls.txt", "0");
 						}
 						catch
 						{
+							// if the directory does not exist or another reason
 							ErrorHandler.ThrowError("Error, Internal error, unknown cause.", true);
 						}
 					}
@@ -48,8 +55,13 @@ namespace SharpPhysics
 				}
 			});
 		}
+		/// <summary>
+		/// Not currently finished.
+		/// </summary>
+		/// <param name="hierarchy"></param>
 		public static void SaveObjects(_2dSceneHierarchy hierarchy)
 		{
+			return;
 			string[] data = new string[0];
 			foreach (_2dSimulatedObject obj in hierarchy.Objects)
 			{

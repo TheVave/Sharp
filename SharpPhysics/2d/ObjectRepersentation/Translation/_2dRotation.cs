@@ -12,11 +12,6 @@ namespace SharpPhysics
 		{
 			return $"Rot:{xRot}";
 		}
-		public _2dRotation(Translation.Rotation rotRef)
-		{
-			xRot = rotRef.xRot;
-			yRot = 0;
-		}
 		public _2dRotation(float x, float y)
 		{
 			xRot = x;
