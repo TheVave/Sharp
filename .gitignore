@@ -10,6 +10,10 @@
 *.userosscache
 *.sln.docstates
 
+# Removing some build commands
+*.cmd
+*.bat
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
