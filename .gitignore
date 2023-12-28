@@ -362,3 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /BuildIncrmtr/BuildIncrmtr.csproj
+/BuildIncrmtr/Program.cs
+/BuildIncrmtr/App.config
