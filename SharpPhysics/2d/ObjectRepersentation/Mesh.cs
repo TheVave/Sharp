@@ -44,7 +44,7 @@ namespace SharpPhysics
 			MeshPointsActualX = xCopyLayer;
 
 			double[] yCopyLayer = new double[MeshPointsX.Length];
-			Array.Copy(MeshPointsX, yCopyLayer, MeshPointsY.Length);
+			Array.Copy(MeshPointsY, yCopyLayer, MeshPointsY.Length);
 			MeshPointsActualY = xCopyLayer;
 
 			double[] zCopyLayer = new double[MeshPointsX.Length];
@@ -62,7 +62,7 @@ namespace SharpPhysics
 			MeshPointsActualX = xCopyLayer;
 
 			double[] yCopyLayer = new double[MeshPointsX.Length];
-			Array.Copy(MeshPointsX, yCopyLayer, MeshPointsY.Length);
+			Array.Copy(MeshPointsY, yCopyLayer, MeshPointsY.Length);
 			MeshPointsActualY = xCopyLayer;
 
 			MeshPointsActualZ = new double[MeshPointsY.Length];
