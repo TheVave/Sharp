@@ -29,7 +29,7 @@ namespace SharpPhysics
 			ObjectMesh = objectMesh;
 			ObjectPhysicsParams = objectPhysicsParams;
 			Translation = translation;
-			SimulationHierarcy.Hierarchies[0].Objects = SimulationHierarcy.Hierarchies[0].Objects.Append(this).ToArray();
+			SimulationHierarchy.Hierarchies[0].Objects = SimulationHierarchy.Hierarchies[0].Objects.Append(this).ToArray();
 		}
 
 		/// <summary>
@@ -43,7 +43,7 @@ namespace SharpPhysics
 			ObjectMesh = _2dBaseObjects.LoadSquareMesh();
 			ObjectPhysicsParams = new _2dPhysicsParams();
 			Translation = new _2dTranslation();
-			//SimulationHierarcy.Hierarchies[0].Objects = SimulationHierarcy.Hierarchies[0].Objects.Append(this).ToArray();
+			//SimulationHierarchy.Hierarchies[0].Objects = SimulationHierarchy.Hierarchies[0].Objects.Append(this).ToArray();
 		}
 
 		/// <summary>
@@ -52,7 +52,7 @@ namespace SharpPhysics
 		/// <param name="scene"></param>
 		public void RegisterToScene(int scene)
 		{
-			SimulationHierarcy.Hierarchies[scene].Objects = SimulationHierarcy.Hierarchies[0].Objects.Append(this).ToArray();
+			SimulationHierarchy.Hierarchies[scene].Objects = SimulationHierarchy.Hierarchies[0].Objects.Append(this).ToArray();
 		}
 
 		/// <summary>
@@ -60,7 +60,7 @@ namespace SharpPhysics
 		/// </summary>
 		public void RegisterToScene()
 		{
-			SimulationHierarcy.Hierarchies[0].Objects = SimulationHierarcy.Hierarchies[0].Objects.Append(this).ToArray();
+			SimulationHierarchy.Hierarchies[0].Objects = SimulationHierarchy.Hierarchies[0].Objects.Append(this).ToArray();
 		}
 
         /// <summary>

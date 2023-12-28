@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SharpPhysics;
-using System.Drawing;
 using System.Linq;
 
 namespace SharpInterface
@@ -34,8 +33,8 @@ namespace SharpInterface
 			ballSpeed = 100f;
 			VObjects = new _2dSimulatedObject[]
 			{
-				new(),
-				new()
+				new(new(new double[] { 35, -35, -35, 35 }, new double[] { 35, 35, -35, -35 }), new(), new()),
+				new(new(new double[] { 35, -35, -35, 35 }, new double[] { 35, 35, -35, -35 }), new(), new())
 			};
 			VObjects[0].Translation.ObjectPosition.xPos = 100;
 			VObjects[1].Translation.ObjectPosition.xPos = 100;
@@ -46,12 +45,10 @@ namespace SharpInterface
 			VObjects[0].ObjectPhysicsParams.GravityMultiplier = 0;
 			VObjects[1].ObjectPhysicsParams.GravityMultiplier = 0;
 
-			VObjects[0].ObjectMesh = new(new double[] { 35, -35, -35, 35 }, new double[] { 35, 35, -35, -35 });
-			VObjects[1].ObjectMesh = new(new double[] { 35, -35, -35, 35 }, new double[] { 35, 35, -35, -35 });
-
 			VObjects[1].RegisterToScene();
 			VObjects[0].ObjectPhysicsParams.CollidableObjects = VObjects[0].ObjectPhysicsParams.CollidableObjects.Append(VObjects[1]).ToArray();
 			VObjects[0].StartPhysicsSimulation();
+			VObjects[1].StartPhysicsSimulation();
 
 			base.Initialize();
 		}

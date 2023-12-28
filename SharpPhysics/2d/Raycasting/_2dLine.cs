@@ -67,7 +67,7 @@ namespace SharpPhysics
 				rayMaker.Length = i / 100;
 				rayMaker.Rot = ray.Rotation;
 				line = rayMaker.Get_2DRay();
-				for (int j = 0; j++ < SimulationHierarcy.GetObjectCount();) return null;
+				for (int j = 0; j++ < SimulationHierarchy.GetObjectCount();) return null;
 			}
 			
 		}

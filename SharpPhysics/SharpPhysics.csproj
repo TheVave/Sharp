@@ -32,6 +32,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Cursor1.cur" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
@@ -93,13 +97,13 @@
     <Compile Update="Simulation\ObjectHierarchy\SceneHierarchy.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
-    <Compile Update="Simulation\ObjectHierarchy\SimulationHierarcy.cs">
+    <Compile Update="Simulation\ObjectHierarchy\SimulationHierarchy.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
     <Compile Update="Utilities\MathUtils\MathLibExt.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
-    <Compile Update="Utilities\MathUtils\MeshUtilites.cs">
+    <Compile Update="Utilities\MathUtils\MeshUtilities.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
     <Compile Update="Utilities\MathUtils\SOHCAHTOA.cs">

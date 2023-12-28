@@ -29,7 +29,7 @@ namespace SharpPhysics
 		/// <summary>
 		/// WARNING: this has a maximum of 1000
 		/// </summary>
-		public int TickSpeed = 500;
+		public int TickSpeed = 60;
 		public _2dMovmentRepresenter CurrentMovement { get; private set; } = new(new _2dPosition(0, 0));
 		public int SpeedMultiplier = 1;
 		public virtual void ExecuteAtCollision(_2dSimulatedObject hitObject, _2dSimulatedObject self) { }

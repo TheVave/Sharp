@@ -41,19 +41,34 @@ namespace SharpPhysics
 			foreach (_2dSimulatedObject objectToCheckIfCollided in hitables)
 			{
 				IsInsides = new bool[objectToCheckIfCollided.ObjectMesh.MeshPointsX.Length * objectToCheck.ObjectMesh.MeshPointsX.Length];
-				for (int i = 0; i < objectToCheckIfCollided.ObjectMesh.MeshPointsX.Length /* -2 for index errors becase mesh points x.length + 2 is outside of the array */ - 2; i++)
+				for (int i = 0; i < objectToCheckIfCollided.ObjectMesh.MeshPointsX.Length /* -2 for index errors because mesh points x.length + 2 is outside of the array */ - 2; i++)
 				{
 					for (int j = 0; j < objectToCheck.ObjectMesh.MeshPointsX.Length; j++)
 					{
+						// the point
 						a = new Point(objectToCheck.ObjectMesh.MeshPointsX[j], objectToCheck.ObjectMesh.MeshPointsY[j]);
-						b = new Point(objectToCheckIfCollided.ObjectMesh.MeshPointsX[i], objectToCheckIfCollided.ObjectMesh.MeshPointsY[i]);
+
+						// triangle section a
+						b = new Point(objectToCheckIfCollided.ObjectMesh.MeshPointsX[i/* + 0 */], objectToCheckIfCollided.ObjectMesh.MeshPointsY[i]/* + 0 */);
+
+						// triangle section b
 						c = new Point(objectToCheckIfCollided.ObjectMesh.MeshPointsX[i + 1], objectToCheckIfCollided.ObjectMesh.MeshPointsY[i + 1]);
+
+						// triangle section c
 						d = new Point(objectToCheckIfCollided.ObjectMesh.MeshPointsX[i + 2], objectToCheckIfCollided.ObjectMesh.MeshPointsY[i + 2]);
 
-						IsInsides[(i * objectToCheck.ObjectMesh.MeshPointsX.Length) + j] = MeshUtilites.IsInside(b.X,b.Y,c.X,c.Y,d.X,d.Y,a.X,a.Y);
-
+						// gets the main result, if the point is inside the triangle, then this returns true.
+						IsInsides[(i * objectToCheck.ObjectMesh.MeshPointsX.Length) + j] = MeshUtilities.IsInside(b.X,b.Y,c.X,c.Y,d.X,d.Y,a.X,a.Y);
 					} 
+				}
 
+				foreach (bool calcCollision in IsInsides)
+				{
+					// there has been a collision.
+					if (calcCollision)
+					{
+
+					}
 				}
 			}
 			return null;

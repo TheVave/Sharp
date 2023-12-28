@@ -23,7 +23,7 @@ namespace SharpPhysics
 		/// </summary>
 		public double[] MeshPointsActualX;
 
-		/// <summary>
+		/// <summary> 
 		/// The Y points in the mesh with, no offset, exactly how the model was first made.
 		/// </summary>
 		public double[] MeshPointsActualY;
@@ -65,7 +65,7 @@ namespace SharpPhysics
 			Array.Copy(MeshPointsX, yCopyLayer, MeshPointsY.Length);
 			MeshPointsActualY = xCopyLayer;
 
-			MeshPointsActualY = new double[MeshPointsY.Length];
+			MeshPointsActualZ = new double[MeshPointsY.Length];
 		}
 	}
 }

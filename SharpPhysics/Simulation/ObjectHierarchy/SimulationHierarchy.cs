@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharpPhysics
 {
-	internal static class SimulationHierarcy
+	internal static class SimulationHierarchy
 	{
 		public static SceneHierarchy[] Hierarchies = new SceneHierarchy[] { new() };
 		public static int GetObjectCount() 

@@ -1,6 +1,6 @@
 ﻿namespace SharpPhysics
 {
-    public static class MeshUtilites
+    public static class MeshUtilities
     {
         public static int CalculateDistFromPoint(_2dPosition position)
         {
