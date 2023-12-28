@@ -1,7 +1,7 @@
 ﻿
 namespace SharpPhysics
 {
-    public struct _2dSimulatedObject
+    public class _2dSimulatedObject
     {
 		/// <summary>
 		/// The object's mesh

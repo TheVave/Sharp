@@ -28,6 +28,11 @@ namespace SharpPhysics
 		/// </summary>
 		private static bool[] IsInsides;
 
+		/// <summary>
+		/// The index(s) that 
+		/// </summary>
+		private static int[] objectToCheckIfCollidedMeshIndex;
+
         /// <summary>
         /// Checks if a object has collided with another object.
 		/// Currently under development.
@@ -67,6 +72,7 @@ namespace SharpPhysics
 					// there has been a collision.
 					if (calcCollision)
 					{
+						// this does work. Tested
 
 					}
 				}

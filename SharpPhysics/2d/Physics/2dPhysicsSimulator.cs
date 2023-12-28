@@ -2,7 +2,7 @@
 namespace SharpPhysics
 {
     /// <summary>
-    /// used the same PhyscisParams class as the PhyscisSimulator for compatibility
+    /// The default 2d physics simulator. Based on the old unfinished 3d one.
     /// </summary>
     public class _2dPhysicsSimulator
 	{
@@ -85,6 +85,9 @@ namespace SharpPhysics
 			ObjectToSimulate.ObjectPhysicsParams.Momentum[0] += (((speedDirection[0]) * displacement / sUVATEquations.T * ObjectToSimulate.ObjectPhysicsParams.Mass))/* - ObjectToSimulate.ObjectPhysicsParams.SpeedResistance */;
 			ObjectToSimulate.ObjectPhysicsParams.Momentum[1] += ((speedDirection[1]) * displacement / sUVATEquations.T * ObjectToSimulate.ObjectPhysicsParams.Mass) - (ObjectToSimulate.ObjectPhysicsParams.GravityMultiplier * 9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass);
 
+			// originally, the SpeedResistance value, if the speed was negative would add to it, but if the speed was
+			// below the SpeedResistance then it would significantly accelerate the object. This (somewhat messy) code
+			// fixes that.
 			if (ObjectToSimulate.ObjectPhysicsParams.Momentum[0] > 0)
 				if (ObjectToSimulate.ObjectPhysicsParams.Momentum[0] > ObjectToSimulate.ObjectPhysicsParams.SpeedResistance)
 					ObjectToSimulate.ObjectPhysicsParams.Momentum[0] -= ObjectToSimulate.ObjectPhysicsParams.SpeedResistance;
@@ -118,9 +121,14 @@ namespace SharpPhysics
 			}
 
 
-			// update CurrentMovment value
+			// update CurrentMovement value
 			CurrentMovement.StartPosition = CurrentMovement.EndPosition;
 			CurrentMovement.EndPosition = ObjectToSimulate.Translation.ObjectPosition;
+		}
+
+		public static void ApplyForce(_2dSimulatedObject)
+		{
+
 		}
 
 		internal void StartPhysicsSimulator()
