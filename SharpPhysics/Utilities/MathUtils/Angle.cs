@@ -7,6 +7,11 @@
 		/// </summary>
 		public double AngleValue;
 
+		public Angle(double angleValue)
+		{
+			AngleValue = angleValue;
+		}
+
 		/// <summary>
 		/// gets a Translation._2dPosition object that repersents the given paramenters, simlar to cartesian coords
 		/// </summary>

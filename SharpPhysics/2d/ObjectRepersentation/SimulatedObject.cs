@@ -63,9 +63,11 @@ namespace SharpPhysics
 			SimulationHierarchy.Hierarchies[0].Objects = SimulationHierarchy.Hierarchies[0].Objects.Append(this).ToArray();
 		}
 
-		public void ApplyVectorMomentum()
+		public void ApplyVectorMomentum(_2dVector force)
 		{
-
+			_2dLine forceLine = force.ToLine();
+			ObjectPhysicsParams.Momentum[0] = forceLine.XEnd;
+			ObjectPhysicsParams.Momentum[1] = forceLine.YEnd;
 		}
 
 		/// <summary>

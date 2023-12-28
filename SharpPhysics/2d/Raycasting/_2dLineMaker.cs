@@ -45,12 +45,12 @@
 			// create object
 			_2dLine _2DRay = new(Rot);
 			// set starts.
-			_2DRay.RayData.yStart = yStart;
-			_2DRay.RayData.xStart = xStart;
+			_2DRay.YStart = yStart;
+			_2DRay.XStart = xStart;
 			// the normal rotation function for finding x is <PreviousX>*cos(<theta>)-<PreviousY>*sin(<theta>) but because PreviousX = 0 then it can be just <PreviousY>*sin(<theta>).
-			_2DRay.RayData.xEnd = (-Length) * Math.Sin(Rot);
+			_2DRay.XEnd = (-Length) * Math.Sin(Rot);
 			// similar idea to the previous line
-			_2DRay.RayData.yEnd = Length * Math.Cos(Rot);
+			_2DRay.YEnd = Length * Math.Cos(Rot);
 			return _2DRay;
 		}
 	}

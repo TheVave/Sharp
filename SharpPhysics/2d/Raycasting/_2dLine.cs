@@ -2,20 +2,16 @@
 {
 	public class _2dLine
 	{
-		/// <summary>
-		/// The actual data for the line
-		/// </summary>
-		internal _2dMovementRepresenter RayData;
 
 		/// <summary>
 		/// the start of the ray at the X position
 		/// </summary>
-		public double XStart { get { return RayData.xStart; } set { RayData.xStart = value; } }
+		public double XStart;
 
 		/// <summary>
 		/// The start of the array at the Y position.
 		/// </summary>
-		public double YStart { get { return RayData.yStart; } set { RayData.yStart = value; } }
+		public double YStart;
 
 		/// <summary>
 		/// the Length of the line, set from 2dLineMaker class.
@@ -30,12 +26,12 @@
 		/// <summary>
 		/// The XEnd of the line, set from 2dLineMaker class
 		/// </summary>
-		public double XEnd { get { return RayData.xEnd; } set { RayData.xEnd = value; } }
+		public double XEnd;
 
 		/// <summary>
 		/// The YEnd of the line, set from 2dLineMaker class.
 		/// </summary>
-		public double YEnd { get { return RayData.yEnd; } set { RayData.yEnd = value; } }
+		public double YEnd;
 
 		public bool CheckIfCollided()
 		{

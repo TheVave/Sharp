@@ -37,6 +37,7 @@ namespace SharpPhysics
 		public double TimePerSimulationTick = 0.001;
 
 		private readonly bool DoManualTicking = false;
+		private CollisionData[]? resultFromCheckCollision;
 
 		readonly SUVATEquations sUVATEquations = new SUVATEquations();
 
@@ -63,8 +64,17 @@ namespace SharpPhysics
 
 		internal void Tick()
 		{
-			_2dCollisionManager.CheckIfCollidedWithObject(ObjectToSimulate.ObjectPhysicsParams.CollidableObjects, ObjectToSimulate);
-			// TODO: calculate collisions
+			resultFromCheckCollision = _2dCollisionManager.CheckIfCollidedWithObject(ObjectToSimulate.ObjectPhysicsParams.CollidableObjects, ObjectToSimulate);
+			if (resultFromCheckCollision != null)
+			{
+				_2dSimulatedObject collidedObject;
+				for (int i = 0; i < resultFromCheckCollision.Length; i++) 
+				{
+					collidedObject = resultFromCheckCollision[i].CollidedObject;
+					SimulateCollision(ref ObjectToSimulate, resultFromCheckCollision[i].ObjectToCheckIfCollidedMeshIndex, resultFromCheckCollision[i].objectToCheckMeshIndex, ref collidedObject);
+				}
+
+			}
 
 			//Starting math for moving 1d
 
@@ -133,11 +143,11 @@ namespace SharpPhysics
 		/// <param name="meshLineIndex"></param>
 		/// <param name="linePoint"></param>
 		// Mostly (only) used for collisions
-		internal static void SimulateCollision(ref _2dSimulatedObject obj, int meshLineIndex, double linePoint, ref _2dSimulatedObject collidedObject)
+		internal static void SimulateCollision(ref _2dSimulatedObject obj, int MeshLineIndexCollided, int MeshLineIndexCollider, ref _2dSimulatedObject collidedObject)
 		{
-			_2dLine line =
-				new(obj.ObjectMesh.MeshPoints[meshLineIndex], obj.ObjectMesh.MeshPoints[meshLineIndex + 1]);
-
+			//_2dLine line =
+			//	new(obj.ObjectMesh.MeshPoints[meshLineIndex], obj.ObjectMesh.MeshPoints[meshLineIndex + 1]);
+			obj.ApplyVectorMomentum(new _2dVector(new Angle(3.141592653589), 1));
 		}
 
 		internal void StartPhysicsSimulator()

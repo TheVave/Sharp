@@ -51,20 +51,19 @@ namespace SharpPhysics
 		/// <summary>
 		/// The value to return from CheckIfCollidedWithObject
 		/// </summary>
-		private static Tuple<int, int, _2dSimulatedObject>[]? ToReturn = Array.Empty<Tuple<int, int, _2dSimulatedObject>>();
+		private static CollisionData[]? ToReturn = Array.Empty<CollisionData>();
 
 		private static bool hasBeenCollision;
 
 
 		/// <summary>
 		/// Checks if a object has collided with another object.
-		/// Currently under development.
 		/// </summary>
 		/// <param name="hitables"></param>
 		/// <param name="objectToCheck"></param>
 		/// <param name="objectsPhysicsMeshStorage"></param>
 		/// <returns></returns>
-		public static Tuple<int, int, _2dSimulatedObject>[]? CheckIfCollidedWithObject(_2dSimulatedObject[] hitables, _2dSimulatedObject objectToCheck)
+		public static unsafe CollisionData[]? CheckIfCollidedWithObject(_2dSimulatedObject[] hitables, _2dSimulatedObject objectToCheck)
 		{
 			foreach (_2dSimulatedObject objectToCheckIfCollided in hitables)
 			{
@@ -110,10 +109,7 @@ namespace SharpPhysics
 					// there has been a collision.
 					if (calcCollision)
 					{
-						ToReturn = ToReturn.Append(
-							new Tuple<int, int, _2dSimulatedObject>
-							(objectToCheckIfCollidedMeshIndex[indx], objectToCheckMeshIndex[indx], CollidedObjects[indx]))
-							.ToArray();
+						ToReturn = ToReturn.Append(new CollisionData(objectToCheckIfCollidedMeshIndex[indx], objectToCheckMeshIndex[indx], CollidedObjects[indx])).ToArray();
 						indx++;
 						hasBeenCollision = true;
 					}

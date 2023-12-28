@@ -10,10 +10,10 @@
 			return u > 0 && v > 0;
 		}
 		public static bool DoRaysIntersect(_2dLine line1, _2dLine line2) => DoRaysPointsIntersect(
-			new Point(line1.RayData.xStart, line1.RayData.yStart)
-			, new Point(line1.RayData.xEnd, line1.RayData.yEnd)
-			, new Point(line2.RayData.xStart, line2.RayData.yStart)
-			, new Point(line2.RayData.xEnd, line2.RayData.yEnd));
+			new Point(line1.XStart, line1.YStart)
+			, new Point(line1.XEnd, line1.YEnd)
+			, new Point(line2.XStart, line2.YStart)
+			, new Point(line2.XEnd, line2.YEnd));
 		public static _2dLine PointsToLine(Point a, Point b) => new _2dLine(a, b);
 	}
 }
