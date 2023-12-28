@@ -1,16 +1,19 @@
 ﻿namespace SharpPhysics
 {
+	/// <summary>
+	/// This class is the main calculator of the ([nothing]/_2d)PhysicsSimulator class
+	/// </summary>
 	public sealed class SUVATEquations
 	{
 
 		/// <summary>
-		/// VS is velicity start
-		/// normaly repersented as U
+		/// VS is velocity start
+		/// normally represented as U
 		/// </summary>
 		public double VS { get; set; }
 
 		/// <summary>
-		/// VE is velocity end normaly repersented by v
+		/// VE is velocity end normally represented by v
 		/// </summary>
 		public double VE { get; set; }
 
@@ -25,7 +28,7 @@
 		public double A { get; set; }
 
 		/// <summary>
-		/// Displacment
+		/// Displacement
 		/// </summary>
 		public double S { get; set; }
 
@@ -54,9 +57,6 @@
 		/// <returns></returns>
 		public double NTWVSASVE()
 		{
-			CheckIfNull(VS, "VS is null");
-			CheckIfNull(A, "A is null");
-			CheckIfNull(VE, "VE is null");
 			return (VS + A) * VE;
 		}
 
@@ -68,9 +68,6 @@
 		/// <returns></returns>
 		public double NSWVSTA()
 		{
-			//CheckIfNull(VS, "VS is null");
-			//CheckIfNull(A, "A is null");
-			//CheckIfNull(T, "VE is null");
 			return VS * T + 1 / 2 * A * T;
 		}
 
@@ -80,9 +77,6 @@
 		/// <returns></returns>
 		public double NSWVSVET()
 		{
-			CheckIfNull(VS, "VS is null");
-			CheckIfNull(T, "A is null");
-			CheckIfNull(VE, "VE is null");
 			return 1 / 2 * (VS + VE) * T;
 		}
 
@@ -92,9 +86,6 @@
 		/// <returns></returns>
 		public double NVEWVSAS()
 		{
-			CheckIfNull(VS, "VS is null");
-			CheckIfNull(A, "A is null");
-			CheckIfNull(S, "VE is null");
 			return Math.Pow(VS, 2) + 2 * A * S;
 		}
 
@@ -104,9 +95,6 @@
 		/// <returns></returns>
 		public double NSWVETA()
 		{
-			CheckIfNull(VS, "VE is null");
-			CheckIfNull(T, "T is null");
-			CheckIfNull(VE, "A is null");
 			return VE * T - 1 / 2 * Math.Pow(A * T, 2);
 		}
 	}

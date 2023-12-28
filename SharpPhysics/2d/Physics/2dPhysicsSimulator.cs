@@ -63,8 +63,8 @@ namespace SharpPhysics
 
 		internal void Tick()
 		{
-			//TODO find if the object collides with another object
 			_2dCollisionManager.CheckIfCollidedWithObject(ObjectToSimulate.ObjectPhysicsParams.CollidableObjects, ObjectToSimulate);
+			// TODO: calculate collisions
 
 			//Starting math for moving 1d
 
@@ -126,7 +126,7 @@ namespace SharpPhysics
 			CurrentMovement.EndPosition = ObjectToSimulate.Translation.ObjectPosition;
 		}
 
-		public static void ApplyForce(_2dSimulatedObject)
+		public static void ApplyForce(_2dSimulatedObject obj, int meshLineIndex, double linePoint)
 		{
 
 		}
