@@ -43,7 +43,7 @@ namespace SharpPhysics
 		/// </summary>
 		public static void CheckMouse()
 		{
-			
+
 		}
 	}
 }

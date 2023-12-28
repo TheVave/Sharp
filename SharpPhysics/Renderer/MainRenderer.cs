@@ -146,7 +146,7 @@ namespace SharpPhysics
 				}
 			});
 
-			
+
 		}
 		// test for the canvas with a white color
 		public static void TestCanvas()

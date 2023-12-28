@@ -1,24 +1,24 @@
 ﻿namespace SharpPhysics
 {
-    public static class MeshUtilities
-    {
-        public static int CalculateDistFromPoint(_2dPosition position)
-        {
-            return (int)(Math.Abs(position.xPos) + Math.Abs(position.yPos) + Math.Abs(position.zPos));
-        }
-        public static int CalculateMaxDistFromCenter(Mesh mesh, _2dPosition placeholderPositionObject)
-        {
-            int maxDist = 0;
-            for (int i = 0; i < mesh.MeshPointsX.Length; i++)
-            {
-                placeholderPositionObject.xPos = mesh.MeshPointsX[i];
-                placeholderPositionObject.yPos = mesh.MeshPointsY[i];
-                placeholderPositionObject.zPos = mesh.MeshPointsZ[i];
-                if (CalculateDistFromPoint(placeholderPositionObject) > maxDist)
-                    maxDist = CalculateDistFromPoint(placeholderPositionObject);
-            }
-            return maxDist;
-        }
+	public static class MeshUtilities
+	{
+		public static int CalculateDistFromPoint(_2dPosition position)
+		{
+			return (int)(Math.Abs(position.xPos) + Math.Abs(position.yPos) + Math.Abs(position.zPos));
+		}
+		public static int CalculateMaxDistFromCenter(Mesh mesh, _2dPosition placeholderPositionObject)
+		{
+			int maxDist = 0;
+			for (int i = 0; i < mesh.MeshPointsX.Length; i++)
+			{
+				placeholderPositionObject.xPos = mesh.MeshPointsX[i];
+				placeholderPositionObject.yPos = mesh.MeshPointsY[i];
+				placeholderPositionObject.zPos = mesh.MeshPointsZ[i];
+				if (CalculateDistFromPoint(placeholderPositionObject) > maxDist)
+					maxDist = CalculateDistFromPoint(placeholderPositionObject);
+			}
+			return maxDist;
+		}
 
 		/// <summary>
 		/// Returns true if a point is on the right side of the line.

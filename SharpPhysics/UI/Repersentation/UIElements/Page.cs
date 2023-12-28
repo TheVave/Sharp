@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharpPhysics
+﻿namespace SharpPhysics
 {
-    [Serializable]
+	[Serializable]
 	public class Page : UIElement
 	{
 		public Color BackgroundColor { get; set; } = new();

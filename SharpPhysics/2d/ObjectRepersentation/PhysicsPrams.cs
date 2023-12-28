@@ -64,7 +64,7 @@ namespace SharpPhysics
 		/// eg. SpeedDirection = new double { 10,0 }
 		/// the object would go ten units in the x direction and 10 in the y direction
 		/// </summary>
-		public double[] Acceleration = new double[] { 0,0 };
+		public double[] Acceleration = new double[] { 0, 0 };
 
 
 		/// <summary>
@@ -83,10 +83,10 @@ namespace SharpPhysics
 		public float[] RotDirection = new float[] { 0, 0 };
 
 		public _2dPhysicsParams() { }
-		public _2dPhysicsParams(float massToSet, _2dSimulatedObject[] collidableObjects) 
-		{ 
-			Mass = massToSet; 
-			CollidableObjects = collidableObjects; 
+		public _2dPhysicsParams(float massToSet, _2dSimulatedObject[] collidableObjects)
+		{
+			Mass = massToSet;
+			CollidableObjects = collidableObjects;
 		}
 		public _2dPhysicsParams(float massToSet, float speed, double[] speedDirection, _2dSimulatedObject[] collidableObjects)
 		{

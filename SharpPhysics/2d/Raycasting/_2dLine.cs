@@ -1,15 +1,17 @@
-﻿using System;
-using SharpPhysics;
-
-namespace SharpPhysics
+﻿namespace SharpPhysics
 {
 	public class _2dLine
 	{
+		/// <summary>
+		/// The actual data for the line
+		/// </summary>
 		internal _2dMovementRepresenter RayData;
+
 		/// <summary>
 		/// the start of the ray at the X position
 		/// </summary>
 		public double XStart { get { return RayData.xStart; } set { RayData.xStart = value; } }
+
 		/// <summary>
 		/// The start of the array at the Y position.
 		/// </summary>
@@ -58,18 +60,18 @@ namespace SharpPhysics
 		public static _2dSimulatedObject? CheckIfRayCollidedWithObject(_2dLine ray)
 		{
 			return null;
-			_2dLineMaker rayMaker = new();
-			_2dLine line = new(0);
-			rayMaker.xStart = ray.XStart;
-			rayMaker.yStart = ray.YStart;
-			for (int i = 0; i < (ray.Length * 100); i++)
-			{
-				rayMaker.Length = i / 100;
-				rayMaker.Rot = ray.Rotation;
-				line = rayMaker.Get_2DRay();
-				for (int j = 0; j++ < SimulationHierarchy.GetObjectCount();) return null;
-			}
-			
+			//_2dLineMaker rayMaker = new();
+			//_2dLine line = new(0);
+			//rayMaker.xStart = ray.XStart;
+			//rayMaker.yStart = ray.YStart;
+			//for (int i = 0; i < (ray.Length * 100); i++)
+			//{
+			//	rayMaker.Length = i / 100;
+			//	rayMaker.Rot = ray.Rotation;
+			//	line = rayMaker.Get_2DRay();
+			//	for (int j = 0; j++ < SimulationHierarchy.GetObjectCount();) return null;
+			//}
+
 		}
 	}
 }

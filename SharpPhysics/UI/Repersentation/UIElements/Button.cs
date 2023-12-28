@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharpPhysics
+﻿namespace SharpPhysics
 {
-    [Serializable]
+	[Serializable]
 	public class Button : UIElement
 	{
 		public bool CurrentlyDown = false;
@@ -16,7 +10,7 @@ namespace SharpPhysics
 		public Color MouseReleasedColor = new(ColorName.Blue);
 		public Color DisabledColor = new(ColorName.Grey);
 		public bool Disabled = false;
-		public delegate void MouseDown(int MouseX,int MouseY);
+		public delegate void MouseDown(int MouseX, int MouseY);
 		public delegate void MouseOver(int MouseX, int MouseY);
 		public delegate void DisabledDown(int MouseX, int MouseY);
 

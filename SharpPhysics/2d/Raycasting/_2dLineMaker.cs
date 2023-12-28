@@ -1,7 +1,4 @@
-﻿using System;
-using SharpPhysics;
-
-namespace SharpPhysics
+﻿namespace SharpPhysics
 {
 	public class _2dLineMaker
 	{
@@ -18,11 +15,30 @@ namespace SharpPhysics
 		/// </summary>
 		public double Length;
 
+		public _2dLineMaker(double xStart, double yStart)
+		{
+			this.xStart = xStart;
+			this.yStart = yStart;
+			Rot = 0;
+			Length = 1;
+		}
+
+		public _2dLineMaker(double xStart, double yStart, double rot) : this(xStart, yStart)
+		{
+			Rot = rot;
+			Length = 1;
+		}
+
+		public _2dLineMaker(double xStart, double yStart, double rot, double length) : this(xStart, yStart, rot)
+		{
+			Length = length;
+		}
+
 		/// <summary>
-		/// finds a ray with the spesified starting points and returns a Ray to repersent the ending position after rotation
+		/// finds a ray with the specified starting points and returns a Ray to represent the ending position after rotation
 		/// </summary>
 		/// <returns>
-		/// a Ray to repersent the ending position after rotation
+		/// a Ray to represent the ending position after rotation
 		/// </returns>
 		public _2dLine Get_2DRay()
 		{
@@ -31,10 +47,10 @@ namespace SharpPhysics
 			// set starts.
 			_2DRay.RayData.yStart = yStart;
 			_2DRay.RayData.xStart = xStart;
-			// the normal rotation function for finding x is <PreviusX>*cos(<thata>)-<PreviusY>*sin(<thata>) but because PreviousX = 0 then it can be just <PreviusY>*sin(<thata>).
+			// the normal rotation function for finding x is <PreviousX>*cos(<theta>)-<PreviousY>*sin(<theta>) but because PreviousX = 0 then it can be just <PreviousY>*sin(<theta>).
 			_2DRay.RayData.xEnd = (-Length) * Math.Sin(Rot);
-			// simlar idea to the previous line
-			_2DRay.RayData.yEnd = Length*Math.Cos(Rot);
+			// similar idea to the previous line
+			_2DRay.RayData.yEnd = Length * Math.Cos(Rot);
 			return _2DRay;
 		}
 	}

@@ -1,10 +1,10 @@
 ﻿
 namespace SharpPhysics
 {
-    /// <summary>
-    /// The default 2d physics simulator. Based on the old unfinished 3d one.
-    /// </summary>
-    public class _2dPhysicsSimulator
+	/// <summary>
+	/// The default 2d physics simulator. Based on the old unfinished 3d one.
+	/// </summary>
+	public class _2dPhysicsSimulator
 	{
 
 		/// <summary>
@@ -135,9 +135,9 @@ namespace SharpPhysics
 		// Mostly (only) used for collisions
 		internal static void SimulateCollision(ref _2dSimulatedObject obj, int meshLineIndex, double linePoint, ref _2dSimulatedObject collidedObject)
 		{
-			_2dLine line = 
+			_2dLine line =
 				new(obj.ObjectMesh.MeshPoints[meshLineIndex], obj.ObjectMesh.MeshPoints[meshLineIndex + 1]);
-			
+
 		}
 
 		internal void StartPhysicsSimulator()

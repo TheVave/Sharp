@@ -49,7 +49,7 @@
 		/// <param name="rightDown"></param>
 		/// <param name="middleDown"></param>
 		/// <param name="mousePos"></param>
-		internal void UpdateMouseValues(bool leftDown, bool rightDown,bool middleDown, Tuple<ushort, ushort> mousePos)
+		internal void UpdateMouseValues(bool leftDown, bool rightDown, bool middleDown, Tuple<ushort, ushort> mousePos)
 		{
 			LeftMouseDown = leftDown;
 			RightMouseDown = rightDown;

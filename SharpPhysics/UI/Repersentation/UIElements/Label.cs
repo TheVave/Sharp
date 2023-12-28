@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharpPhysics
+﻿namespace SharpPhysics
 {
-    [Serializable]
+	[Serializable]
 	public class Label : UIElement
 	{
 		public string Content;

@@ -28,7 +28,7 @@
 			this.zPos = zPos;
 			Is3d = is3d;
 		}
-		public Point(double xPos, double yPos, double zPos) 
+		public Point(double xPos, double yPos, double zPos)
 		{
 			this.X = xPos;
 			this.Y = yPos;

@@ -1,8 +1,8 @@
 ﻿
 namespace SharpPhysics
 {
-    public static class _2dCollisionManager
-    {
+	public static class _2dCollisionManager
+	{
 		/// <summary>
 		/// the point to find if this is inside the triangle
 		/// </summary>
@@ -64,8 +64,8 @@ namespace SharpPhysics
 		/// <param name="objectToCheck"></param>
 		/// <param name="objectsPhysicsMeshStorage"></param>
 		/// <returns></returns>
-		public static Tuple<int,int,_2dSimulatedObject>[]? CheckIfCollidedWithObject(_2dSimulatedObject[] hitables, _2dSimulatedObject objectToCheck)
-        {
+		public static Tuple<int, int, _2dSimulatedObject>[]? CheckIfCollidedWithObject(_2dSimulatedObject[] hitables, _2dSimulatedObject objectToCheck)
+		{
 			foreach (_2dSimulatedObject objectToCheckIfCollided in hitables)
 			{
 				// resets the IsInside array for a new object
@@ -106,7 +106,7 @@ namespace SharpPhysics
 
 				foreach (bool calcCollision in IsInsides)
 				{
-					
+
 					// there has been a collision.
 					if (calcCollision)
 					{
@@ -117,11 +117,11 @@ namespace SharpPhysics
 						indx++;
 						hasBeenCollision = true;
 					}
-					
+
 				}
 			}
 			if (hasBeenCollision) return ToReturn;
 			else return null;
-        }
-    }
+		}
+	}
 }

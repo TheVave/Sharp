@@ -4,8 +4,8 @@
 	/// Placeholder for a direction.
 	/// </summary>
 	public enum XYPlaceholder
-    {
-        x,
-        y
-    }
+	{
+		x,
+		y
+	}
 }

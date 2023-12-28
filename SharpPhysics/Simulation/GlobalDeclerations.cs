@@ -1,7 +1,7 @@
 ﻿namespace SharpPhysics.Simulation
 {
-    public static class GlobalDeclerations
-    {
-        public static bool IsSolvingPhysics = true;
-    }
+	public static class GlobalDeclerations
+	{
+		public static bool IsSolvingPhysics = true;
+	}
 }

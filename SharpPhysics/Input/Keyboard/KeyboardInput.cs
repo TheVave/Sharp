@@ -6,7 +6,7 @@ namespace SharpPhysics
 	{
 		// external import from user32.dll that handles the keyboard and left or right mouse input
 		static extern short GetAsyncKeyState(int VirtualKeyPressed);
-		
+
 		/// <summary>
 		/// The keys that are down
 		/// WARNING!!! RUN InitKybrdThreads BEFORE ATTEMPTING TO USE
@@ -76,10 +76,10 @@ namespace SharpPhysics
 						{
 							if (!KeysDwn.Contains(keyToDetect)) KeysDwn = KeysDwn.Append(keyToDetect).ToArray();
 							// the above will only happen in very strange cases.
-						} 
+						}
 					}
 				});
-					
+
 			}
 		}
 	}
