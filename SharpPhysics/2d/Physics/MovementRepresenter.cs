@@ -1,5 +1,4 @@
-﻿using SharpPhysics;
-
+﻿
 namespace SharpPhysics
 {
     public sealed class _2dMovmentRepresenter

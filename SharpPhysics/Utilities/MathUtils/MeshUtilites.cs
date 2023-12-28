@@ -1,7 +1,4 @@
-﻿
-using System;
-
-namespace SharpPhysics
+﻿namespace SharpPhysics
 {
     public static class MeshUtilites
     {

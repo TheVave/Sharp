@@ -1,6 +1,4 @@
 ﻿
-using SharpPhysics.Simulation;
-
 namespace SharpPhysics
 {
     /// <summary>

@@ -1,5 +1,4 @@
-﻿using SharpPhysics;
-
+﻿
 namespace SharpPhysics
 {
 	public struct _2dPhysicsParams

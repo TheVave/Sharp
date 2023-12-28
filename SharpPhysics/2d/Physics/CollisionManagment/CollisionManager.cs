@@ -1,6 +1,4 @@
 ﻿
-using System;
-
 namespace SharpPhysics
 {
     public static class _2dCollisionManager
