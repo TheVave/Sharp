@@ -132,8 +132,8 @@ namespace SharpPhysics
 		/// <param name="obj"></param>
 		/// <param name="meshLineIndex"></param>
 		/// <param name="linePoint"></param>
-		// Mostly used for collisions
-		public static void ApplyForce(_2dSimulatedObject obj, int meshLineIndex, double linePoint)
+		// Mostly (only) used for collisions
+		internal static void SimulateCollision(ref _2dSimulatedObject obj, int meshLineIndex, double linePoint, ref _2dSimulatedObject collidedObject)
 		{
 			_2dLine line = 
 				new(obj.ObjectMesh.MeshPoints[meshLineIndex], obj.ObjectMesh.MeshPoints[meshLineIndex + 1]);

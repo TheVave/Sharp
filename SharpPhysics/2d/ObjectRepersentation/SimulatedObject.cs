@@ -63,6 +63,11 @@ namespace SharpPhysics
 			SimulationHierarchy.Hierarchies[0].Objects = SimulationHierarchy.Hierarchies[0].Objects.Append(this).ToArray();
 		}
 
+		public void ApplyVectorMomentum()
+		{
+
+		}
+
         /// <summary>
         /// Start the physics simulation for the object based on ObjectPhysicsParams
         /// </summary>
