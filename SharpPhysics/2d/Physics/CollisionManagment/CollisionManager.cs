@@ -38,7 +38,8 @@ namespace SharpPhysics
 						b = new Point(objectToCheckIfCollided.ObjectMesh.MeshPointsX[i], objectToCheckIfCollided.ObjectMesh.MeshPointsY[i]);
 						c = new Point(objectToCheckIfCollided.ObjectMesh.MeshPointsX[i + 1], objectToCheckIfCollided.ObjectMesh.MeshPointsY[i + 1]);
 
-						idx = (i * objectToCheck.ObjectMesh.MeshPointsX.Length) + j;
+
+						//idx = (i * objectToCheck.ObjectMesh.MeshPointsX.Length) + j;
 						result = MeshUtilites.IsLeft(a, b, c);
 
 						isLefts[idx] = result >= 0;
