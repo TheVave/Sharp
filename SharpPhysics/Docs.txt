@@ -1,0 +1,175 @@
+
+Things that I could not find a good way to do:
+	To rewrite the operation at collision dirrive a PhysicsSimulator object and enter override then select ExecuteAtCollision (possibly fixedable using delegates)
+		Mesh creation, I may make a program to make a output based on a designer
+		MESH CREATION RULES:
+			generely try to make the mesh verticies from top to bottom e.g you can look at SharpPhysics.BaseObjects.BaseObjects class and MakeCube function for examples
+			try to make all points on the faces all at once, at SharpPhysics.BaseObjects.BaseObjects class the top and bottom sides are both both defined next to each other in the array
+	(end)
+TODO:
+	make the position, scale and roatation structs not located in the Translation object (to not have to spesify Translation.Position,Translation.Rotation,...)
+
+Documantation:
+	public:
+		classes:
+			Translation:
+				public:
+					structs:
+						Position:
+							the position of the object
+								Vars:
+									Description:
+										xPos:
+											the x position of the object
+										yPos:
+											the y position of the object
+										zPos:
+											the z position of the object
+									Repersentations:
+										xPos: double
+										yPos: double
+										zPos: double
+						Rotation:
+							the rotation of the object
+								Vars:
+									Description:
+										xRot:
+											the x rotation of the object
+										yRot:
+											the y rotation of the object
+										zRot:
+											the z rotation of the object
+									Repersentations:
+										xRot: double
+										yRot: double
+										zRot: double
+						Scale:
+							the scale of the object
+								NOTE:
+									the simulator/renderer uses the points and multiplies the scale of that dimention to draw/simulate the object
+							Vars:
+								Description:
+									xPos:
+										the x scale of the object
+									yPos:
+										the y scale of the object
+									zPos:
+										the z scale of the object
+								Repersentations:
+									xPos: int
+									yPos: int
+									zPos: int
+					Vars:
+						Description:
+							ObjectPosition: The objects position
+							ObjectRoation: The objects roation
+							ObjectScale: the scale of the object
+			PhysicsParams:
+				Public:
+					Vars:
+						descriptions:
+							SimulatePhysics:
+								if the physics simulator simulates physics for the object, it can still be in collidableObjects var it just will not be simulated and act as a stationary static object
+							ObjectToSimulate:
+								the object to simulate
+							CollidableObjects:
+								the objects that the object can collide with if it is a static object (SimulatePhysics is false) then it will continue to be stationary
+							StopSignal:
+								the signal to communacate through memory to the simulator thread to stop the simulation
+									NOTE:
+										setting this to true does not set SimulatePhysics to false, so objects will still change its position
+							TickSignal:
+								the signal to communicate through memory to the PhysicsSimulator to simulate a physics tick if DoManualTicking is true
+							DoManualTicking:
+								disables the simulator thread from starting ticks by default, use TickSignal to start ticks
+							GravityMultiplier:
+								the gravity multiplier on the object, using negative GracityMultiplier value will make the object float up
+							TimeMultiplier:
+								The multiplier of time simulated each tick
+							SpeedAcceleration:
+								the acceleration per tick
+							Mass:
+								the mass of the object (does change gravity)
+							SpeedRisistance:
+								Warning: unused
+							RotDirection:
+								The direction that the object will rotate per tick
+								WARNING:
+									currently not implemented
+							StoreComplexValues:
+								if the CollisionManager wrapped with PhysicsSimulator class will store the area under the mesh based on the law of cosines
+								this is not meant to be changed unless you know what you are doing, if you are it sould only be used with many objects with few collidable objects
+									NOTE:
+
+										this can be used to reduce memory usage but this is not recommended becuse it can durasticly requiered increase comutational power
+							Momentum:
+								the momentum on the object
+							SpeedDirection:
+								the direction that the object will go in speed PhysicsParams.Speed field
+							RotResistance:
+								The resistance to rotating
+									WARNING:
+										not implemented
+							TicksPerSecond:
+								the number of ticks per second, max value is 1000
+								increasing the TicksPerSecond increased accuacy of the simulation but also increases the CPU consumption of the simulation thread
+							CollidableObjects:
+								The objects that the SimulatedObject can collide with
+						Repersentations:
+							SimulatePhysics: bool
+							ObjectToSimulate: SimulatedObject, see 146
+							CollidableObjects: SimulatedObject[n], see 146
+							StopSignal: bool
+							TickSignal: bool
+							DoManualTicking: bool
+							GravityMyltiplier: int32
+							TimeMultiplier: double
+							SpeedAcceleration: double
+							Mass: double
+							SpeedResistance: double
+							RotDirection: float[3]
+							StoreComplexValues: bool
+							Momentum: double[3]
+							SpeedDirection: double[3]
+							RotDirection: double
+							TicksPerSecond: int32
+				Internal:
+					descriptions:
+						PhysicsMeshStorage:
+							The PhysicsMeshStorage of the objects mesh used in collisions
+					Repersenations:
+						PhyscisMeshStorage: PhysicsMeshStorage
+			MovementRepersenter:
+				Vars:
+					Public:
+						Descriptions:
+							StartPos: the starting position
+							EndPos: the ending position
+						Repersentation:
+							StartPos: Translation.Position, see 11
+							EndPos: Translation.Position, see 11
+			SimulatedObject:
+				Vars:
+					public:
+						Descriptions:
+							ObjectMesh:
+								the mesh repersenting the objects shape
+							Translation:
+								the objects tranlation
+							ObjectPhysisParams:
+								the physics parameters for the PhysicsSimulator to use
+						Repersentations:
+							ObjectMesh: Mesh, see [MeshLine]
+							Translation: Translation, see 11
+							ObjectPhysicsParams: PhysicsParams, see 63
+				Methods:
+					public:
+						Descriptions:
+							StartPhysicsSimulation:
+								start the physics simulation for the object based on the ObjectPhysicsParams (see 154) and from the ObjectMesh (see 150)
+								returns:
+									a PhysicsSimulator class object to repersent the movement through space and interaction with other objects
+									(auto starts)
+			sealed SUVATEquations
+				public:
+					
