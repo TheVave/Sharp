@@ -1,7 +1,7 @@
 ** This directory contains the main code for the SharpPhysics library. **
 
 ### FOLDERS ###
-[2d](SharpPhysics/2d) This folder contains all of the 2d physics and object code. Most of the (functional) code is here
+[2d](SharpPhysics/2d) This folder contains all of the 2d physics and object code. Most of the (functional) code is here.
 [Input](SharpPhysics/Input) This folder contains all of the code for input for SharpPhysics. This code only works on window devices due to P/Invoke User32.dll functions.
 [ProgramSaving](SharpPhysics/ProgramSaving) This folder contains very few things and does not have any functionality.
 [Renderer](SharpPhysics/Renderer) This folder is no longer in use, but was going to be used to communicate with FastPixelWriter and be the main 2d renderer.
