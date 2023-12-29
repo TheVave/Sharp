@@ -52,7 +52,7 @@ namespace SharpPhysics
 		/// <summary>
 		/// the rotation resistance of the object
 		/// </summary>
-		public double RotResistance = 1;
+		public double RotResistance = 0.05;
 
 		/// <summary>
 		/// Speed in SpeedDirection
@@ -72,15 +72,16 @@ namespace SharpPhysics
 		/// </summary>
 		public double[] Momentum = new double[] { 0, 0 };
 
-		// was going to be used when I was first
-		// thinking up how to do collisions.
-		//public bool StoreComplexValues = true;
+		/// <summary>
+		/// The acceleration that the object will be experiencing.
+		/// </summary>
+		public double RotationalAcceleration = 0;
 
 		/// <summary>
-		/// 3d rotation using float[3],
-		/// these values should be between -1 and 1
+		/// The rotational momentum of the object
+		/// Treated very similar to regular momentum.
 		/// </summary>
-		public float[] RotDirection = new float[] { 0, 0 };
+		public double RotationalMomentum = 0;
 
 		public _2dPhysicsParams() { }
 		public _2dPhysicsParams(float massToSet, _2dSimulatedObject[] collidableObjects)
@@ -93,14 +94,6 @@ namespace SharpPhysics
 			Speed = speed;
 			Mass = massToSet;
 			Acceleration = speedDirection;
-			CollidableObjects = collidableObjects;
-		}
-		public _2dPhysicsParams(float massToSet, float speed, double[] speedDirection, float[] rotDirection, _2dSimulatedObject[] collidableObjects)
-		{
-			Speed = speed;
-			Mass = massToSet;
-			Acceleration = speedDirection;
-			RotDirection = rotDirection;
 			CollidableObjects = collidableObjects;
 		}
 	}

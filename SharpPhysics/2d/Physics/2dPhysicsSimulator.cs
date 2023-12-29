@@ -53,6 +53,8 @@ namespace SharpPhysics
 		//calculating the position based on the moving position
 		private double[] speedDirection = new double[2];
 
+		private double rotationalAmount = 0;
+
 		public _2dPhysicsSimulator(_2dSimulatedObject objectToSimulate) => ObjectToSimulate = objectToSimulate;
 
 
@@ -107,37 +109,17 @@ namespace SharpPhysics
 			CurrentMovement.EndPosition = ObjectToSimulate.Translation.ObjectPosition;
 
 			// new code for rotation similar to momentum and position.
-			// may change. Ideas for rotation from https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/10%3A_Rotational_Motion_and_Angular_Momentum/10.03%3A_Dynamics_of_Rotational_Motion_-_Rotational_Inertia
+			// may change. Ideas for rotation may be from https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/10%3A_Rotational_Motion_and_Angular_Momentum/10.03%3A_Dynamics_of_Rotational_Motion_-_Rotational_Inertia
 			// r in the upper link can be found by finding the area of the object, then working backward from the circle area equation, A = [pi]r^2, rearranged to r = r = [pi] / sqr(a).
+			rotationalAmount = ((ObjectToSimulate.ObjectPhysicsParams.RotationalAcceleration + ObjectToSimulate.ObjectPhysicsParams.RotationalMomentum) * TimePerSimulationTick);
+			ObjectToSimulate.Translation.ObjectRotation.xRot += (float)(rotationalAmount);
+			ObjectToSimulate.ObjectPhysicsParams.RotationalMomentum = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.RotationalAcceleration + ObjectToSimulate.ObjectPhysicsParams.RotationalMomentum, ObjectToSimulate.ObjectPhysicsParams.RotResistance);
 
 
-			// originally, the SpeedResistance value, if the speed was negative would add to it, but if the speed was
-			// below the SpeedResistance then it would significantly accelerate the object. This (somewhat messy) code
-			// fixes that.
-			if (ObjectToSimulate.ObjectPhysicsParams.Momentum[0] > 0)
-				if (ObjectToSimulate.ObjectPhysicsParams.Momentum[0] > ObjectToSimulate.ObjectPhysicsParams.SpeedResistance)
-					ObjectToSimulate.ObjectPhysicsParams.Momentum[0] -= ObjectToSimulate.ObjectPhysicsParams.SpeedResistance;
-				else
-					ObjectToSimulate.ObjectPhysicsParams.Momentum[0] = 0;
-			else if (ObjectToSimulate.ObjectPhysicsParams.Momentum[0] < 0)
 
-				if (ObjectToSimulate.ObjectPhysicsParams.Momentum[0] < ObjectToSimulate.ObjectPhysicsParams.SpeedResistance)
-					ObjectToSimulate.ObjectPhysicsParams.Momentum[0] += ObjectToSimulate.ObjectPhysicsParams.SpeedResistance;
+			ObjectToSimulate.ObjectPhysicsParams.Momentum[0] = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.Momentum[0], ObjectToSimulate.ObjectPhysicsParams.SpeedResistance);
 
-				else
-					ObjectToSimulate.ObjectPhysicsParams.Momentum[0] = 0;
-
-			if (ObjectToSimulate.ObjectPhysicsParams.Momentum[1] > 0)
-				if (ObjectToSimulate.ObjectPhysicsParams.Momentum[1] > ObjectToSimulate.ObjectPhysicsParams.SpeedResistance)
-					ObjectToSimulate.ObjectPhysicsParams.Momentum[1] -= ObjectToSimulate.ObjectPhysicsParams.SpeedResistance;
-				else
-					ObjectToSimulate.ObjectPhysicsParams.Momentum[1] = 0;
-
-			else if (ObjectToSimulate.ObjectPhysicsParams.Momentum[1] < 0)
-				if (ObjectToSimulate.ObjectPhysicsParams.Momentum[1] < ObjectToSimulate.ObjectPhysicsParams.SpeedResistance)
-					ObjectToSimulate.ObjectPhysicsParams.Momentum[1] += ObjectToSimulate.ObjectPhysicsParams.SpeedResistance;
-				else
-					ObjectToSimulate.ObjectPhysicsParams.Momentum[1] = 0;
+			ObjectToSimulate.ObjectPhysicsParams.Momentum[1] = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.Momentum[1], ObjectToSimulate.ObjectPhysicsParams.SpeedResistance);
 
 			// set mesh points for collision
 			for (int i = 0; i < ObjectToSimulate.ObjectMesh.MeshPointsX.Length; i++)
@@ -157,7 +139,7 @@ namespace SharpPhysics
 		/// <param name="meshLineIndex"></param>
 		/// <param name="linePoint"></param>
 		// Mostly (only) used for collisions
-		internal static void SimulateCollision(ref _2dSimulatedObject obj, int MeshLineIndexCollided, int MeshLineIndexCollider, ref _2dSimulatedObject collidedObject)
+		internal void SimulateCollision(ref _2dSimulatedObject obj, int MeshLineIndexCollided, int MeshLineIndexCollider, ref _2dSimulatedObject collidedObject)
 		{
 			//_2dLine line =
 			//	new(obj.ObjectMesh.MeshPoints[meshLineIndex], obj.ObjectMesh.MeshPoints[meshLineIndex + 1]);
@@ -165,8 +147,19 @@ namespace SharpPhysics
 			//obj.ApplyVectorMomentum(new _2dVector(new Angle(0), 1));
 		}
 
+		/// <summary>
+		/// Things that need to happen before any 2dPhysicsSimulator.Tick calls
+		/// </summary>
+		internal void Prerequisites()
+		{
+			// solving for mesh stuff
+			// finding a value for rotation.
+			r = Math.PI / Math.Sqrt(MeshUtilities.PolygonArea(ObjectToSimulate.ObjectMesh.MeshPoints));
+		}
+
 		internal void StartPhysicsSimulator()
 		{
+			Prerequisites();
 			Thread thread = new Thread(() =>
 			{
 				TimePerSimulationTick = ObjectToSimulate.ObjectPhysicsParams.TimeMultiplier / ObjectToSimulate.ObjectPhysicsParams.TicksPerSecond;

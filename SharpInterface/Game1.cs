@@ -41,6 +41,7 @@ namespace SharpInterface
 			VObjects[0].Translation.ObjectPosition.xPos = 100;
 			VObjects[1].Translation.ObjectPosition.xPos = 100;
 
+
 			VObjects[0].ObjectPhysicsParams.SpeedResistance = 0.1;
 			VObjects[1].ObjectPhysicsParams.SpeedResistance = 0.1;
 
@@ -91,7 +92,26 @@ namespace SharpInterface
 				VObjects[0].ObjectPhysicsParams.Momentum[0] = -1;
 			}
 
+			if (kstate.IsKeyDown(Keys.Q))
+			{
+				VObjects[0].ObjectPhysicsParams.RotationalMomentum = 1;
+			}
 
+			if (kstate.IsKeyDown(Keys.E))
+			{
+				VObjects[0].ObjectPhysicsParams.RotationalMomentum = -1;
+			}
+
+
+			if (kstate.IsKeyDown(Keys.Z))
+			{
+				VObjects[1].ObjectPhysicsParams.RotationalMomentum = 1;
+			}
+
+			if (kstate.IsKeyDown(Keys.C))
+			{
+				VObjects[1].ObjectPhysicsParams.RotationalMomentum = -1;
+			}
 
 			if (kstate.IsKeyDown(Keys.W))
 			{
@@ -127,7 +147,7 @@ namespace SharpInterface
 				ballPosition,
 				null,
 				Microsoft.Xna.Framework.Color.White,
-				0f,
+				obj.Translation.ObjectRotation.xRot,
 				new Vector2((float)obj.Translation.ObjectPosition.xPos, (float)obj.Translation.ObjectPosition.yPos),
 				Vector2.One,
 				SpriteEffects.None,

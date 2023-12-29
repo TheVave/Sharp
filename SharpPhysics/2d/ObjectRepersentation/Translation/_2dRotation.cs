@@ -7,11 +7,6 @@ namespace SharpPhysics
 		{
 			return $"Rot:{xRot}";
 		}
-		public _2dRotation(float x, float y)
-		{
-			xRot = x;
-			yRot = y;
-		}
 		public _2dRotation(float x)
 		{
 			xRot = x;
@@ -21,6 +16,5 @@ namespace SharpPhysics
 			xRot = 0;
 		}
 		public float xRot;
-		public float yRot;
 	}
 }

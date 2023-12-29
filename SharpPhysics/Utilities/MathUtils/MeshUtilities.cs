@@ -77,5 +77,29 @@
 			/* Check if sum of A1, A2 and A3 is same as A */
 			return (A == A1 + A2 + A3);
 		}
+
+
+		/// <summary>
+		/// Calculate the area of a polygon from a sequence of points.
+		/// </summary>
+		/// <param name="polygon"></param>
+		/// <returns></returns>
+		// from https://stackoverflow.com/questions/2432428/is-there-any-algorithm-for-calculating-area-of-a-shape-given-co-ordinates-that-d
+		public static double PolygonArea(Point[] polygon)
+		{
+			int i, j;
+			double area = 0;
+
+			for (i = 0; i < polygon.Length; i++)
+			{
+				j = (i + 1) % polygon.Length;
+
+				area += polygon[i].X * polygon[j].Y;
+				area -= polygon[i].Y * polygon[j].X;
+			}
+
+			area /= 2;
+			return (area < 0 ? -area : area);
+		}
 	}
 }
