@@ -22,8 +22,9 @@ namespace SharpPhysics
 		/// </summary>
 		public bool StopSignal = false;
 
-		internal bool alwaysOverride = true;
-
+		/// <summary>
+		/// The signal to calculate physics if you are manually calling the tick function.
+		/// </summary>
 		public bool TickSignal = false;
 
 		/// <summary>
@@ -35,6 +36,12 @@ namespace SharpPhysics
 		public virtual void ExecuteAtCollision(_2dSimulatedObject hitObject, _2dSimulatedObject self) { }
 		public int DelayAmount;
 		public double TimePerSimulationTick = 0.001;
+
+		/// <summary>
+		/// The perceived radius of the circle from the object mesh
+		/// see 108 - 110
+		/// </summary>
+		private double r;
 
 		private readonly bool DoManualTicking = false;
 		private CollisionData[]? resultFromCheckCollision;
@@ -92,8 +99,17 @@ namespace SharpPhysics
 			ObjectToSimulate.Translation.ObjectPosition.yPos += (((speedDirection[1]) * displacement) + ObjectToSimulate.ObjectPhysicsParams.Momentum[1]) - ObjectToSimulate.ObjectPhysicsParams.GravityMultiplier * 9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass;
 
 			// add momentum
-			ObjectToSimulate.ObjectPhysicsParams.Momentum[0] += (((speedDirection[0]) * displacement / sUVATEquations.T * ObjectToSimulate.ObjectPhysicsParams.Mass))/* - ObjectToSimulate.ObjectPhysicsParams.SpeedResistance */;
+			ObjectToSimulate.ObjectPhysicsParams.Momentum[0] += (((speedDirection[0]) * displacement / sUVATEquations.T * ObjectToSimulate.ObjectPhysicsParams.Mass));
 			ObjectToSimulate.ObjectPhysicsParams.Momentum[1] += ((speedDirection[1]) * displacement / sUVATEquations.T * ObjectToSimulate.ObjectPhysicsParams.Mass) - (ObjectToSimulate.ObjectPhysicsParams.GravityMultiplier * 9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass);
+
+			// update CurrentMovement value
+			CurrentMovement.StartPosition = CurrentMovement.EndPosition;
+			CurrentMovement.EndPosition = ObjectToSimulate.Translation.ObjectPosition;
+
+			// new code for rotation similar to momentum and position.
+			// may change. Ideas for rotation from https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/10%3A_Rotational_Motion_and_Angular_Momentum/10.03%3A_Dynamics_of_Rotational_Motion_-_Rotational_Inertia
+			// r in the upper link can be found by finding the area of the object, then working backward from the circle area equation, A = [pi]r^2, rearranged to r = r = [pi] / sqr(a).
+
 
 			// originally, the SpeedResistance value, if the speed was negative would add to it, but if the speed was
 			// below the SpeedResistance then it would significantly accelerate the object. This (somewhat messy) code
@@ -131,9 +147,7 @@ namespace SharpPhysics
 			}
 
 
-			// update CurrentMovement value
-			CurrentMovement.StartPosition = CurrentMovement.EndPosition;
-			CurrentMovement.EndPosition = ObjectToSimulate.Translation.ObjectPosition;
+			
 		}
 
 		/// <summary>
