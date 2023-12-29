@@ -147,7 +147,8 @@ namespace SharpPhysics
 		{
 			//_2dLine line =
 			//	new(obj.ObjectMesh.MeshPoints[meshLineIndex], obj.ObjectMesh.MeshPoints[meshLineIndex + 1]);
-			obj.ApplyVectorMomentum(new _2dVector(new Angle(3.141592653589), 1));
+			//obj.ObjectPhysicsParams.Momentum[0] -= 1;
+			//obj.ApplyVectorMomentum(new _2dVector(new Angle(0), 1));
 		}
 
 		internal void StartPhysicsSimulator()

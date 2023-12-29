@@ -31,6 +31,8 @@ namespace SharpInterface
 			ballPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2,
 			_graphics.PreferredBackBufferHeight / 2);
 			ballSpeed = 100f;
+			Window.AllowUserResizing = true;
+
 			VObjects = new _2dSimulatedObject[]
 			{
 				new(new(new double[] { 35, -35, -35, 35 }, new double[] { 35, 35, -35, -35 }), new(), new()),

@@ -66,8 +66,10 @@ namespace SharpPhysics
 		public void ApplyVectorMomentum(_2dVector force)
 		{
 			_2dLine forceLine = force.ToLine();
-			ObjectPhysicsParams.Momentum[0] = forceLine.XEnd;
-			ObjectPhysicsParams.Momentum[1] = forceLine.YEnd;
+			if (ObjectPhysicsParams.Momentum[0] < forceLine.XEnd) ObjectPhysicsParams.Momentum[0] = 0;
+			else ObjectPhysicsParams.Momentum[0] = forceLine.XEnd;
+			if (ObjectPhysicsParams.Momentum[1] < forceLine.YEnd) ObjectPhysicsParams.Momentum[1] = 0;
+			else ObjectPhysicsParams.Momentum[1] = forceLine.YEnd;
 		}
 
 		/// <summary>

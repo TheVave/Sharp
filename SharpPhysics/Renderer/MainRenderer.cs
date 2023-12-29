@@ -109,15 +109,15 @@ namespace SharpPhysics
 				process.StartInfo = new ProcessStartInfo($"{Environment.CurrentDirectory}\\display.exe");
 				// setting the window size in the args for the program
 				process.StartInfo.Arguments = $"{WndSize.Item1}x{WndSize.Item2}";
-				unsafe
-				{
-					// finding the ptr to the first pixel in the pixel[]
-					fixed (Pixel* ptr = &Pixels[0])
-					{
-						// setting the next part of the argument. e.g args "1920x1200,0CD9B4" or something...
-						process.StartInfo.Arguments += $",{(int)ptr:X}";
-					}
-				}
+				//unsafe
+				//{
+				//	// finding the ptr to the first pixel in the pixel[]
+				//	fixed (Pixel* ptr = &Pixels[0])
+				//	{
+				//		// setting the next part of the argument. e.g args "1920x1200,0CD9B4" or something...
+				//		process.StartInfo.Arguments += $",{(int)ptr:X}";
+				//	}
+				//}
 				process.Start();
 			}
 			catch (NullReferenceException excep)

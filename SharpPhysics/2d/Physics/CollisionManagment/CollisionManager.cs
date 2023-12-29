@@ -29,31 +29,12 @@ namespace SharpPhysics
 		private static Point d;
 
 		/// <summary>
-		/// an array containing the info returned from MeshUtils.IsLeft
-		/// </summary>
-		private static bool[] IsInsides;
-
-		/// <summary>
-		/// The index(s) in the hitables array meshes that have collided with objectToCheck
-		/// </summary>
-		private static int[] objectToCheckIfCollidedMeshIndex = Array.Empty<int>();
-
-		/// <summary>
-		/// The index(s) in the objectToCheck mesh that have collided with hitables[x]
-		/// </summary>
-		private static int[] objectToCheckMeshIndex = Array.Empty<int>();
-
-		/// <summary>
-		/// All of the objects that collided with objectToCheck
-		/// </summary>
-		private static _2dSimulatedObject[] CollidedObjects = Array.Empty<_2dSimulatedObject>();
-
-		/// <summary>
 		/// The value to return from CheckIfCollidedWithObject
 		/// </summary>
-		private static CollisionData[]? ToReturn = Array.Empty<CollisionData>();
 
 		private static bool hasBeenCollision;
+
+		private static int indx;
 
 
 		/// <summary>
@@ -63,12 +44,19 @@ namespace SharpPhysics
 		/// <param name="objectToCheck"></param>
 		/// <param name="objectsPhysicsMeshStorage"></param>
 		/// <returns></returns>
-		public static unsafe CollisionData[]? CheckIfCollidedWithObject(_2dSimulatedObject[] hitables, _2dSimulatedObject objectToCheck)
+		public static CollisionData[] CheckIfCollidedWithObject(_2dSimulatedObject[] hitables, _2dSimulatedObject objectToCheck)
 		{
+			hasBeenCollision = false;
+			Span<_2dSimulatedObject> collidedObjects = Array.Empty<_2dSimulatedObject>();
+			Span<int> objectToCheckMeshIndexes = Array.Empty<int>();
+			Span<int> objectToCheckIfCollidedMeshIndices = Array.Empty<int>();
+			Span<bool> isInsides;
+			Span<CollisionData> ToReturn = Array.Empty<CollisionData>();
 			foreach (_2dSimulatedObject objectToCheckIfCollided in hitables)
 			{
 				// resets the IsInside array for a new object
-				IsInsides = new bool[objectToCheckIfCollided.ObjectMesh.MeshPointsX.Length * objectToCheck.ObjectMesh.MeshPointsX.Length];
+				isInsides = new bool[objectToCheckIfCollided.ObjectMesh.MeshPointsX.Length * objectToCheck.ObjectMesh.MeshPointsX.Length];
+				indx = 0;
 				for (int i = 0; i < objectToCheckIfCollided.ObjectMesh.MeshPointsX.Length /* -2 for index errors because mesh points x.length + 2 is outside of the array */ - 2; i++)
 				{
 					for (int j = 0; j < objectToCheck.ObjectMesh.MeshPointsX.Length; j++)
@@ -91,32 +79,31 @@ namespace SharpPhysics
 						// if there has been a collision then updates objectToCheckIfCollidedMeshIndex and objectToCheckMeshIndex + optimizes the IsInsides setting some
 						if (result)
 						{
-							IsInsides[(i * objectToCheck.ObjectMesh.MeshPointsX.Length) + j] = result;
+							isInsides = ArrayUtils.AddSpanObject(isInsides, result);
 
-							objectToCheckIfCollidedMeshIndex = objectToCheckIfCollidedMeshIndex.Append(i).ToArray();
+							objectToCheckIfCollidedMeshIndices = ArrayUtils.AddSpanObject(objectToCheckIfCollidedMeshIndices, i);
 
-							objectToCheckMeshIndex = objectToCheckMeshIndex.Append(j).ToArray();
+							objectToCheckMeshIndexes = ArrayUtils.AddSpanObject(objectToCheckMeshIndexes, j);
 
-							CollidedObjects = CollidedObjects.Append(objectToCheckIfCollided).ToArray();
+							collidedObjects = ArrayUtils.AddSpanObject(collidedObjects, objectToCheckIfCollided);
 						}
 					}
 				}
-				int indx = 0;
 
-				foreach (bool calcCollision in IsInsides)
+				foreach (bool calcCollision in isInsides)
 				{
 
 					// there has been a collision.
 					if (calcCollision)
 					{
-						ToReturn = ToReturn.Append(new CollisionData(objectToCheckIfCollidedMeshIndex[indx], objectToCheckMeshIndex[indx], CollidedObjects[indx])).ToArray();
+						ToReturn = ArrayUtils.AddSpanObject(ToReturn, new CollisionData(objectToCheckIfCollidedMeshIndices[indx], objectToCheckMeshIndexes[indx], collidedObjects[indx]));
 						indx++;
 						hasBeenCollision = true;
 					}
 
 				}
 			}
-			if (hasBeenCollision) return ToReturn;
+			if (hasBeenCollision) return ToReturn.ToArray();
 			else return null;
 		}
 	}
