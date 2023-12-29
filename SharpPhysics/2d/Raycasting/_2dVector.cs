@@ -1,4 +1,6 @@
-﻿namespace SharpPhysics
+﻿using SharpPhysics.Utilities.MathUtils;
+
+namespace SharpPhysics._2d.Raycasting
 {
 	public class _2dVector
 	{

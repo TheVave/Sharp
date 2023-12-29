@@ -1,4 +1,6 @@
-﻿namespace SharpPhysics
+﻿using SharpPhysics.Renderer;
+
+namespace SharpPhysics.UI.Representation.UIElements
 {
 	[Serializable]
 	public class Page : UIElement

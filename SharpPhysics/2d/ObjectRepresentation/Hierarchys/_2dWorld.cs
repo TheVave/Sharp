@@ -1,4 +1,6 @@
 ﻿
+using SharpPhysics._2d.ObjectRepresentation.Hierarchies;
+
 namespace SharpPhysics
 {
 	public static class _2dWorld

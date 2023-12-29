@@ -1,4 +1,7 @@
-﻿namespace SharpPhysics
+﻿using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics._2d.Raycasting;
+
+namespace SharpPhysics.Utilities.MathUtils
 {
 	public static class _2dLineUtils
 	{

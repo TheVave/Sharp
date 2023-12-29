@@ -1,6 +1,6 @@
-﻿namespace SharpPhysics
+﻿namespace SharpPhysics.UI.Representation
 {
-	public enum UIElements
+	public enum UIElementList
 	{
 		Comment,
 		Label,
@@ -15,6 +15,6 @@
 		ProgramDisplay,
 		Container,
 		StackPanel,
-		HorazontalStackPanel
+		HorizontalStackPanel
 	}
 }

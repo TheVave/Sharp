@@ -1,5 +1,5 @@
 ﻿
-namespace SharpPhysics
+namespace SharpPhysics._2d.ObjectRepresentation
 {
 	public struct _2dPhysicsParams
 	{

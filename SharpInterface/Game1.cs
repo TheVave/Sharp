@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SharpPhysics;
+using SharpPhysics._2d.ObjectRepresentation;
 using System.Linq;
 
 namespace SharpInterface

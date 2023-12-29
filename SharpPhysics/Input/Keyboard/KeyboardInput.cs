@@ -1,6 +1,7 @@
 ﻿
+using SharpPhysics.Utilities.MISC.Errors;
 using System.Runtime.InteropServices;
-namespace SharpPhysics
+namespace SharpPhysics.Input.Keyboard
 {
 	public static class KeyboardInput
 	{

@@ -1,4 +1,4 @@
-﻿namespace SharpPhysics
+﻿namespace SharpPhysics.UI.Representation.UIElements
 {
 	[Serializable]
 	public class ProgressBar : UIElement

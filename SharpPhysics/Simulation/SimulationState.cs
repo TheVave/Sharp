@@ -1,4 +1,4 @@
-﻿namespace SharpPhysics
+﻿namespace SharpPhysics.Simulation
 {
 	public enum SimulationState
 	{

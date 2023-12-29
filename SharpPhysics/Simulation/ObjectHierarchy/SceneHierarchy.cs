@@ -1,4 +1,6 @@
-﻿namespace SharpPhysics
+﻿using SharpPhysics._2d.ObjectRepresentation;
+
+namespace SharpPhysics.Simulation.ObjectHierarchy
 {
 	public class SceneHierarchy
 	{

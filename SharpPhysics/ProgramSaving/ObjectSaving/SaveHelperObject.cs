@@ -1,4 +1,8 @@
-﻿namespace SharpPhysics
+﻿using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics._2d.ObjectRepresentation.Hierarchies;
+using SharpPhysics.Utilities.MISC.Errors;
+
+namespace SharpPhysics
 {
 	public static class SaveHelper
 	{

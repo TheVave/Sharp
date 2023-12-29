@@ -1,4 +1,4 @@
-﻿namespace SharpPhysics
+﻿namespace SharpPhysics._2d.Raycasting
 {
 	public class _2dLineMaker
 	{

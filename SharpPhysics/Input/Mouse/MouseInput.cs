@@ -1,7 +1,7 @@
 ﻿
 using System.Runtime.InteropServices;
 
-namespace SharpPhysics
+namespace SharpPhysics.Input.Mouse
 {
 	public static class MouseInput
 	{

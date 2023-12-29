@@ -1,4 +1,4 @@
-﻿namespace SharpPhysics
+﻿namespace SharpPhysics._2d.Physics
 {
 	/// <summary>
 	/// This class is the main calculator of the ([nothing]/_2d)PhysicsSimulator class

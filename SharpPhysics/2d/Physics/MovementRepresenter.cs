@@ -1,7 +1,9 @@
 ﻿
-namespace SharpPhysics
+using SharpPhysics._2d.ObjectRepresentation.Translation;
+
+namespace SharpPhysics._2d.Physics
 {
-	public sealed class _2dMovmentRepresenter
+	public sealed class _2dMovementRepresenter
 	{
 		/// <summary>
 		/// Represents the starting position of the "line"
@@ -17,7 +19,7 @@ namespace SharpPhysics
 		/// WARNING: this code creates a MovmentRepersenter with the StartPosition of 0,0,0.
 		/// </summary>
 		/// <param name="endPosition"></param>
-		public _2dMovmentRepresenter(_2dPosition endPosition)
+		public _2dMovementRepresenter(_2dPosition endPosition)
 		{
 			StartPosition = new(0, 0, 0);
 			EndPosition = endPosition;
@@ -28,7 +30,7 @@ namespace SharpPhysics
 		/// </summary>
 		/// <param name="startPosition"></param>
 		/// <param name="endPosition"></param>
-		public _2dMovmentRepresenter(_2dPosition startPosition, _2dPosition endPosition)
+		public _2dMovementRepresenter(_2dPosition startPosition, _2dPosition endPosition)
 		{
 			StartPosition = startPosition;
 			EndPosition = endPosition;

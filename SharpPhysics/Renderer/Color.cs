@@ -1,4 +1,6 @@
-﻿namespace SharpPhysics
+﻿using SharpPhysics.Utilities.MISC.Errors;
+
+namespace SharpPhysics.Renderer
 {
 	public class Color
 	{

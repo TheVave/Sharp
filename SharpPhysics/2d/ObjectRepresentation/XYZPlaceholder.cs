@@ -1,4 +1,4 @@
-﻿namespace SharpPhysics
+﻿namespace SharpPhysics._2d.ObjectRepresentation
 {
 	/// <summary>
 	/// Placeholder for a direction.

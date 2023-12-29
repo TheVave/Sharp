@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace SharpPhysics
+namespace SharpPhysics.Utilities.MISC.Errors
 {
 	public static class ErrorHandler
 	{

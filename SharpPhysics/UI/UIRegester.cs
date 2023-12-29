@@ -1,4 +1,6 @@
-﻿namespace SharpPhysics
+﻿using SharpPhysics.UI.Representation.UIElements;
+
+namespace SharpPhysics.UI
 {
 	public static class UIRegester
 	{

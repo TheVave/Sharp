@@ -46,19 +46,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="2d\ObjectRepersentation\PhysicsPrams.cs">
+    <Compile Update="2d\ObjectRepresentation\PhysicsPrams.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
-    <Compile Update="2d\ObjectRepersentation\Point.cs">
+    <Compile Update="2d\ObjectRepresentation\Point.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
-    <Compile Update="2d\ObjectRepersentation\SimulatedObject.cs">
+    <Compile Update="2d\ObjectRepresentation\SimulatedObject.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
-    <Compile Update="2d\ObjectRepersentation\XYZPlaceholder.cs">
+    <Compile Update="2d\ObjectRepresentation\XYZPlaceholder.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
-    <Compile Update="2d\ObjectRepersentation\Translation\_2dTranslation.cs">
+    <Compile Update="2d\ObjectRepresentation\Translation\_2dTranslation.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
     <Compile Update="2d\Objects\_2dBaseObjects.cs">

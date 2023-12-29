@@ -1,5 +1,9 @@
 ﻿
-namespace SharpPhysics
+using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics.Utilities.MathUtils;
+using SharpPhysics.Utilities.MISC;
+
+namespace SharpPhysics._2d.Physics.CollisionManagement
 {
 	public static class _2dCollisionManager
 	{

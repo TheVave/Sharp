@@ -1,4 +1,6 @@
-﻿namespace SharpPhysics
+﻿using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics.UI.Representation;
+namespace SharpPhysics.UI.Parser
 {
 	public static class MainUIElementParser
 	{

@@ -1,4 +1,7 @@
-﻿namespace SharpPhysics
+﻿using SharpPhysics._2d.ObjectRepresentation.Translation;
+using SharpPhysics._2d.Raycasting;
+
+namespace SharpPhysics.Utilities.MathUtils
 {
 	public class Angle
 	{

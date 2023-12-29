@@ -1,4 +1,4 @@
-﻿namespace SharpPhysics
+﻿namespace SharpPhysics.Renderer
 {
 	/// <summary>
 	/// default pixel class designed for compatibility with C++

@@ -1,4 +1,6 @@
-﻿namespace SharpPhysics
+﻿using SharpPhysics._2d.ObjectRepresentation;
+
+namespace SharpPhysics._2d.Objects
 {
 	public static class _2dBaseObjects
 	{

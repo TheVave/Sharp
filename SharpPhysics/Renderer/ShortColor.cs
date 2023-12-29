@@ -1,4 +1,4 @@
-﻿namespace SharpPhysics
+﻿namespace SharpPhysics.Renderer
 {
 	/// <summary>
 	/// HTML / CSS Color declerations.

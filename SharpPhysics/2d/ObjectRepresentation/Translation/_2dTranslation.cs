@@ -1,4 +1,4 @@
-﻿namespace SharpPhysics
+﻿namespace SharpPhysics._2d.ObjectRepresentation.Translation
 {
 	public class _2dTranslation
 	{

@@ -1,4 +1,4 @@
-﻿namespace SharpPhysics
+﻿namespace SharpPhysics.Input
 {
 	/// <summary>
 	/// Gives a top level overveiw of all of the buttons pressed/mouse position

@@ -1,4 +1,7 @@
-﻿namespace SharpPhysics
+﻿using SharpPhysics.UI.Representation;
+using SharpPhysics.Utilities.MISC.Errors;
+
+namespace SharpPhysics.UI.Parser
 {
 	public static class MainUIElementPackager
 	{

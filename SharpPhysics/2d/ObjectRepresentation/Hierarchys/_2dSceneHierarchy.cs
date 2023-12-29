@@ -1,5 +1,7 @@
 ﻿
-namespace SharpPhysics
+using SharpPhysics.Utilities.MISC.Errors;
+
+namespace SharpPhysics._2d.ObjectRepresentation.Hierarchies
 {
 	public class _2dSceneHierarchy
 	{

@@ -1,4 +1,4 @@
-﻿namespace SharpPhysics
+﻿namespace SharpPhysics.Input
 {
 	/// <summary>
 	/// Virtual key codes for input.

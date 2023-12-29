@@ -1,5 +1,11 @@
 ﻿
-namespace SharpPhysics
+using SharpPhysics._2d.ObjectRepresentation.Translation;
+using SharpPhysics._2d.Objects;
+using SharpPhysics._2d.Physics;
+using SharpPhysics._2d.Raycasting;
+using SharpPhysics.Simulation.ObjectHierarchy;
+
+namespace SharpPhysics._2d.ObjectRepresentation
 {
 	public class _2dSimulatedObject
 	{

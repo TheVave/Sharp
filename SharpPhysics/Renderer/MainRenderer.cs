@@ -1,6 +1,7 @@
 ﻿
+using SharpPhysics.Utilities.MISC.Errors;
 using System.Diagnostics;
-namespace SharpPhysics
+namespace SharpPhysics.Renderer
 {
 	/// <summary>
 	/// This class (is going to) manage most of the rendering computation.

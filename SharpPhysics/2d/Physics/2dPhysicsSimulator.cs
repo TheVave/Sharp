@@ -1,5 +1,10 @@
 ﻿
-namespace SharpPhysics
+using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics._2d.ObjectRepresentation.Translation;
+using SharpPhysics._2d.Physics.CollisionManagement;
+using SharpPhysics.Utilities.MathUtils;
+
+namespace SharpPhysics._2d.Physics
 {
 	/// <summary>
 	/// The default 2d physics simulator. Based on the old unfinished 3d one.
@@ -31,7 +36,7 @@ namespace SharpPhysics
 		/// WARNING: this has a maximum of 1000
 		/// </summary>
 		public int TickSpeed = 60;
-		public _2dMovmentRepresenter CurrentMovement { get; private set; } = new(new _2dPosition(0, 0));
+		public _2dMovementRepresenter CurrentMovement { get; private set; } = new(new _2dPosition(0, 0));
 		public int SpeedMultiplier = 1;
 		public virtual void ExecuteAtCollision(_2dSimulatedObject hitObject, _2dSimulatedObject self) { }
 		public int DelayAmount;
