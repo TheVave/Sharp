@@ -2,6 +2,11 @@
 using SharpPhysics.Renderer.Demos;
 using SharpPhysics.Utilities.MISC.Errors;
 using System.Diagnostics;
+using GLFW;
+using OpenGL;
+using static OpenGL.GL;
+using SharpPhysics.Input;
+using SharpPhysics.Renderer.GameLoop;
 namespace SharpPhysics.Renderer
 {
 	/// <summary>
@@ -18,6 +23,11 @@ namespace SharpPhysics.Renderer
 		/// this value
 		/// </summary>
 		public static int maxRenderLength = 100;
+
+		/// <summary>
+		/// The title to display for the app window.
+		/// </summary>
+		public static string WindowTitle = "SharpPhysics";
 
 		/// <summary>
 		/// the target FPS, set with SetFrameRate.
@@ -37,12 +47,17 @@ namespace SharpPhysics.Renderer
 		/// <summary>
 		/// Window size as a Tuple<int,int> for x and y, x to Item1, and y to Item2
 		/// </summary>
-		public static Tuple<int, int> WndSize = Tuple.Create(1920, 1200);
+		public static Tuple<int, int> WndSize = Tuple.Create(800, 600);
 
 		/// <summary>
-		/// repersents the window size as a string
+		/// represents the window size as a string
 		/// </summary>
 		private static string wndSizeStr = "1920x1200";
+
+		/// <summary>
+		/// For random colors
+		/// </summary>
+		private static Random rand = new Random();
 
 		/// <summary>
 		/// If the renderer should use MonoGame for rendering
@@ -54,13 +69,21 @@ namespace SharpPhysics.Renderer
 		/// </summary>
 		public static int sceneRendered = 0;
 
+
+
+		public static void InitRendering()
+		{
+			Game game = new Tests.StandardTest(800, 600, "Test");
+			game.Run();
+		}
+
 		public static void TriangleTest()
 		{
 			HelloTriangle.Main(Array.Empty<string>());
 		}
 
 		/// <summary>
-		/// a method that sets the frame rate to a spesific speed. called when you set the FrameRate property
+		/// a method that sets the frame rate to a specific speed. called when you set the FrameRate property
 		/// </summary>
 		/// <param name="rate"></param>
 		public static void SetFrameRate(int rate)

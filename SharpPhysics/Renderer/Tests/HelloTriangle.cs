@@ -60,7 +60,7 @@ namespace SharpPhysics.Renderer.Demos
 			glUniform3f(location, r, g, b);
 		}
 
-		private static void PrepareContext()
+		internal static void PrepareContext()
 		{
 			// Set some common hints for the OpenGL profile creation
 			Glfw.WindowHint(Hint.ClientApi, ClientApi.OpenGL);
@@ -77,7 +77,7 @@ namespace SharpPhysics.Renderer.Demos
 		/// <param name="width">The width of the client area, in pixels.</param>
 		/// <param name="height">The height of the client area, in pixels.</param>
 		/// <returns>A handle to the created window.</returns>
-		private static Window CreateWindow(int width, int height)
+		internal static Window CreateWindow(int width, int height)
 		{
 			// Create window, make the OpenGL context current on the thread, and import graphics functions
 			var window = Glfw.CreateWindow(width, height, TITLE, GLFW.Monitor.None, Window.None);
@@ -100,7 +100,7 @@ namespace SharpPhysics.Renderer.Demos
 		/// Creates an extremely basic shader program that is capable of displaying a triangle on screen.
 		/// </summary>
 		/// <returns>The created shader program. No error checking is performed for this basic example.</returns>
-		private static uint CreateProgram()
+		internal static uint CreateProgram()
 		{
 			var vertex = CreateShader(GL_VERTEX_SHADER, @"#version 330 core
                                                     layout (location = 0) in vec3 pos;
@@ -151,7 +151,7 @@ namespace SharpPhysics.Renderer.Demos
 		/// </summary>
 		/// <param name="vao">The created vertex array object for the triangle.</param>
 		/// <param name="vbo">The created vertex buffer object for the triangle.</param>
-		private static unsafe void CreateVertices(out uint vao, out uint vbo)
+		internal static unsafe void CreateVertices(out uint vao, out uint vbo)
 		{
 
 			var vertices = new[] {
