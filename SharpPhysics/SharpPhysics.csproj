@@ -116,7 +116,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="O:\Users\tobya\source\repos\SharpPhysics\BuildIncrmtr\bin\Debug\BuildIncrmtr.exe&#xD;&#xA;call O:\users\tobya\source\repos\SharpPhysics\stackBuilds.cmd" />
+    <Exec Command="O:\Users\tobya\source\repos\SharpPhysics\BuildIncrmtr\bin\Debug\BuildIncrmtr.exe&#xD;&#xA;call O:\users\tobya\source\repos\random_batch_files\stackBuilds.cmd" />
   </Target>
 
 </Project>
