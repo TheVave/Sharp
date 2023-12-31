@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using static OpenGL.GL;
 using GLFW;
 using SharpPhysics.Utilities.MISC.Errors;
+using System.Numerics;
 
 namespace SharpPhysics.Renderer.Shaders
 {
@@ -62,6 +63,23 @@ namespace SharpPhysics.Renderer.Shaders
 		public void Use()
 		{
 			glUseProgram(ProgramID);
+		}
+
+		public virtual void SetMatrix4x4(string uniformName, Matrix4x4 val)
+		{
+			int Uniformlocation = glGetUniformLocation(ProgramID, uniformName);
+			glUniformMatrix4fv(Uniformlocation, 1, false, GetMatrix4x4Values(val));
+		}
+
+		private float[] GetMatrix4x4Values(Matrix4x4 m)
+		{
+			return new float[]
+			{
+		m.M11, m.M12, m.M13, m.M14,
+		m.M21, m.M22, m.M23, m.M24,
+		m.M31, m.M32, m.M33, m.M34,
+		m.M41, m.M42, m.M43, m.M44
+			};
 		}
 	}
 }
