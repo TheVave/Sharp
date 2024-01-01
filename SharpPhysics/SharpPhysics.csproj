@@ -1,23 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Title>SharpPhysics Physics Simulator and Renderer</Title>
-    <NeutralLanguage>en-001</NeutralLanguage>
+    <Title>SharpPhysics 2d Physics Simulator and Renderer</Title>
+    <Company />
+    <Authors />
+    <Version>1.4.3</Version>
+    <RepositoryUrl>https://github.com/TheVave/SharpPhysics</RepositoryUrl>
+    <AnalysisLevel>6.0-all</AnalysisLevel>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <WarningLevel>9999</WarningLevel>
-    <DebugType>embedded</DebugType>
+    <WarningLevel>1</WarningLevel>
+    <DebugType>portable</DebugType>
     <FileAlignment>1024</FileAlignment>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <WarningLevel>9999</WarningLevel>
-    <DebugType>embedded</DebugType>
+    <WarningLevel>0</WarningLevel>
+    <DebugType>portable</DebugType>
     <FileAlignment>1024</FileAlignment>
   </PropertyGroup>
 
@@ -116,7 +121,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="O:\Users\tobya\source\repos\SharpPhysics\BuildIncrmtr\bin\Debug\BuildIncrmtr.exe&#xD;&#xA;call O:\users\tobya\source\repos\random_batch_files\stackBuilds.cmd" />
+    <Exec Command="O:\Users\tobya\source\repos\SharpPhysics\BuildIncrmtr\bin\Debug\BuildIncrmtr.exe" />
   </Target>
 
 </Project>

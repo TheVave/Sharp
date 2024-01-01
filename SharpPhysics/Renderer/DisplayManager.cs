@@ -46,7 +46,7 @@ namespace SharpPhysics.Renderer
 
             Window = Glfw.CreateWindow(width, height, title, GLFW.Monitor.None, Window.None);
 
-            if (Window == Window.None) ErrorHandler.ThrowError("Error, Internal/External error, GLFW graphics init failed.", true);
+            if (Window == Window.None) MessageBoxDisplay.ThrowError("Error, Internal/External error, GLFW graphics init failed.", true);
 
             Glfw.MakeContextCurrent(Window);
 

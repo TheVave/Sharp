@@ -1,49 +1,52 @@
 ﻿using GLFW;
-
+using SharpPhysics.Utilities.MISC;
 namespace SharpPhysics.Renderer
 {
-    abstract public class Game
-    {
-        protected int InitialWindowWidth = 800;
-        protected int InitialWindowHeight = 600;
-        protected string WindowTitle = "SharpPhysics View Port";
+	abstract public class Game
+	{
 
-        protected Game(int initialWindowWidth, int initialWindowHeight, string windowTitle)
-        {
-            InitialWindowWidth = initialWindowWidth;
-            InitialWindowHeight = initialWindowHeight;
-            WindowTitle = windowTitle;
-        }
+		protected int InitialWindowWidth = 800;
+		protected int InitialWindowHeight = 600;
+		protected string WindowTitle = "SharpPhysics View Port";
 
-        public void Run()
-        {
-            Init();
+		protected Game(int initialWindowWidth, int initialWindowHeight, string windowTitle)
+		{
+			InitialWindowWidth = initialWindowWidth;
+			InitialWindowHeight = initialWindowHeight;
+			WindowTitle = windowTitle;
+		}
+		public void Run()
+		{
+#if DEBUG
+			MessageBoxDisplay.ThrowError("This is a debug build.", false);
+#endif
+			Init();
 
-            DisplayManager.CreateWindow(InitialWindowWidth, InitialWindowHeight, WindowTitle);
+			DisplayManager.CreateWindow(InitialWindowWidth, InitialWindowHeight, WindowTitle);
 
-            LoadContent();
+			LoadContent();
 
-            while (!Glfw.WindowShouldClose(DisplayManager.Window))
-            {
-                GameTime.DeltaTime = Glfw.Time - GameTime.TotalElapsedSeconds;
-                GameTime.TotalElapsedSeconds = Glfw.Time;
+			while (Glfw.WindowShouldClose(DisplayManager.Window))
+			{
+				GameTime.DeltaTime = Glfw.Time - GameTime.TotalElapsedSeconds;
+				GameTime.TotalElapsedSeconds = Glfw.Time;
 
-                Update();
+				Update();
 
-                Glfw.PollEvents();
+				Glfw.PollEvents();
 
-                Draw();
-            }
-            DisplayManager.CloseWindow();
-            Environment.Exit(0);
-        }
+				Draw();
+			}
+			DisplayManager.CloseWindow();
+			Environment.Exit(0);
+		}
 
-        /// <summary>
-        /// You can't use OpenGL here
-        /// </summary>
-        protected abstract void Init();
-        protected abstract void Update();
-        protected abstract void Draw();
-        protected abstract void LoadContent();
-    }
+		/// <summary>
+		/// You can't use OpenGL here
+		/// </summary>
+		protected abstract void Init();
+		protected abstract void Update();
+		protected abstract void Draw();
+		protected abstract void LoadContent();
+	}
 }

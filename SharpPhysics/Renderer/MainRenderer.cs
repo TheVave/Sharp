@@ -7,6 +7,7 @@ using OpenGL;
 using static OpenGL.GL;
 using SharpPhysics.Input;
 using SharpPhysics.Renderer.GameLoop;
+using SharpPhysics.Renderer.Tests;
 namespace SharpPhysics.Renderer
 {
 	/// <summary>
@@ -73,7 +74,8 @@ namespace SharpPhysics.Renderer
 
 		public static void InitRendering()
 		{
-			Game game = new Tests.StandardTest(800, 600, "Test");
+			Glfw.Init();
+			Game game = new StandardDisplay(800,600,"SharpPhysics");
 			game.Run();
 		}
 

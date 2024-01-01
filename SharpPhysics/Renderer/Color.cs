@@ -41,15 +41,16 @@ namespace SharpPhysics.Renderer
 			try
 			{
 				// interprets the ColorName style.
-				// the intager for the ColorName enum is RGB, e.g 255255255 (White)
+				// the int for the ColorName enum is RGB, e.g 255255255 (White)
+				
 				R = byte.Parse(rgbVal[0..3]);
-				G = byte.Parse(rgbVal[2..3]);
-				B = byte.Parse(rgbVal[5..3]);
+				G = byte.Parse(rgbVal[3..6]);
+				B = byte.Parse(rgbVal[6..9]);
 			}
 			catch
 			{
-				// if some error has occured, like some color not being formatted correctly.
-				ErrorHandler.ThrowError("Error, Internal Errror, Color.Color(ColorName key) failed with input " + key.ToString(), true);
+				// if some error has happened, like some color not being formatted correctly.
+				ErrorHandler.ThrowError("Error, Internal Error, Color.Color(ColorName key) failed with input " + key.ToString(), true);
 			}
 		}
 

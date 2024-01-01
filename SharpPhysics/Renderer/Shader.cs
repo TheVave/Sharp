@@ -48,7 +48,38 @@ namespace SharpPhysics.Renderer
                                     }";
 			VertexCode = vertexShader;
 			FragmentCode = fragmentShader;
-			Load();
+
+			uint vs = glCreateShader(GL_VERTEX_SHADER);
+			glShaderSource(vs, VertexCode);
+			glCompileShader(vs);
+
+			uint fs = glCreateShader(GL_FRAGMENT_SHADER);
+			glShaderSource(fs, FragmentCode);
+			glCompileShader(fs);
+
+			int[] vsstatus = glGetShaderiv(vs, GL_COMPILE_STATUS, 1);
+			int[] fsstatus = glGetShaderiv(fs, GL_COMPILE_STATUS, 1);
+
+			if (vsstatus[0] == 0 || fsstatus[0] == 0)
+			{
+				MessageBoxDisplay.ThrowError("External/internal error, Shader compilation failed.\n" +
+					" You may have supplied incorrect data for the fragment/vertex shader code. " +
+					"\nThe shaders are programmed in HLSL.", false);
+				MessageBoxDisplay.ThrowError("Complete error (fs): " + glGetShaderInfoLog(fs), false);
+				MessageBoxDisplay.ThrowError("Complete error (vs): " + glGetShaderInfoLog(vs), true);
+			}
+
+			ProgramID = glCreateProgram();
+			glAttachShader(ProgramID, vs);
+			glAttachShader(ProgramID, fs);
+
+			glLinkProgram(ProgramID);
+
+			// detaching unneeded opengl mem
+			glDetachShader(ProgramID, vs);
+			glDetachShader(ProgramID, fs);
+			glDeleteShader(vs);
+			glDeleteShader(fs);
 		}
 
 
@@ -67,11 +98,11 @@ namespace SharpPhysics.Renderer
 
             if (vsstatus[0] == 0 || fsstatus[0] == 0)
             {
-                ErrorHandler.ThrowError("External/internal error, Shader compilation failed.\n" +
+                MessageBoxDisplay.ThrowError("External/internal error, Shader compilation failed.\n" +
                     " You may have supplied incorrect data for the fragment/vertex shader code. " +
                     "\nThe shaders are programmed in HLSL.", false);
-                ErrorHandler.ThrowError("Complete error (fs): " + glGetShaderInfoLog(fs), false);
-                ErrorHandler.ThrowError("Complete error (vs): " + glGetShaderInfoLog(vs), true);
+                MessageBoxDisplay.ThrowError("Complete error (fs): " + glGetShaderInfoLog(fs), false);
+                MessageBoxDisplay.ThrowError("Complete error (vs): " + glGetShaderInfoLog(vs), true);
             }
 
             ProgramID = glCreateProgram();

@@ -1,30 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
+﻿//#define ENABLE_PAGE_DEBUG
 using SharpPhysics._2d.ObjectRepresentation;
-using SharpPhysics._2d.ObjectRepresentation.Translation;
 using SharpPhysics._2d.Objects;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MISC;
+using System.Numerics;
 
 namespace SharpPhysics.Renderer
 {
-    public class RenderedObject
+	public class RenderedObject
 	{
 
 		/// <summary>
 		/// Stores the compiled shaders
 		/// </summary>
-		public Shader ObjShader = new Shader();
+		public Shader ObjShader;
 
 		/// <summary>
 		/// The simulated object to link shader info to
 		/// </summary>
-		public _2dSimulatedObject ObjectToRender;
+		public _2dSimulatedObject Rendered2dSimulatedObject = new();
 
 		/// <summary>
 		/// WARNING: must be 2d
@@ -66,50 +60,88 @@ namespace SharpPhysics.Renderer
 		/// </summary>
 		public Camera2D Camera;
 
+#if ENABLE_PAGE_DEBUG
+		private int initReturnDebugger = 0;
+		private int initReturnSecondardDebugger = 0;
+#endif
+
 		/// <summary>
 		/// Loads necessary info to render the object
 		/// </summary>
-		// loads compiledVertexColorsArray.
+		// loads compiledVertexColorsArray. Currently does not work.
 		public void Init()
 		{
+#if ENABLE_PAGE_DEBUG
+			if (colors is null) MessageBoxDisplay.ThrowError("Error, External error, colors was null, RenderedObjectInstance.Init(), please initialize colors before calling Init().", true);
 			// could be improved ||
 			//                   ||
 			//                   \/
-			compiledVertexColorsArray = new float[vertices.Length + colors.Length];
-			for (int i = 0; i < compiledVertexColorsArray.Length; i++)
-			{
-				if (GenericMathUtils.GetDifferenceFromNearestMultiple(i, /* the length of vertex info */ 5) > 2) compiledVertexColorsArray[i] =
-						vertices[(int)GenericMathUtils.GetDifferenceFromNearestMultiple(i, /* the length of vertex info */ 5) + i / 5];
-				else compiledVertexColorsArray[i] =
-						colors[(int)GenericMathUtils.GetDifferenceFromNearestMultiple(i, /* the length of vertex info */ 5) + i / 5];
-			}
+			//compiledVertexColorsArray = new float[vertices.Length + colors.Length];
+			//for (int i = 0; i < compiledVertexColorsArray.Length; i++)
+			//{   
+			//	initReturnDebugger = (int)(GenericMathUtils.GetDifferenceFromNearestMultiple(i, /* the length of vertex info */ 5) + i / 5);
+			//	initReturnSecondardDebugger = (int)(GenericMathUtils.GetDifferenceFromNearestMultiple(i, /* the length of vertex info */ 5) + i / 5);
+			//	if (GenericMathUtils.GetDifferenceFromNearestMultiple(i, /* the length of vertex info */ 5) > 2) compiledVertexColorsArray[i] =
+			//			vertices[(int)(GenericMathUtils.GetDifferenceFromNearestMultiple(i, /* the length of vertex info */ 5) + i / 5)];
+			//	else compiledVertexColorsArray[i] =
+			//			colors[(int)GenericMathUtils.GetDifferenceFromNearestMultiple(i, /* the length of vertex info */ 5) + i / 5];
+			//}
+#else
+			if (colors is null) MessageBoxDisplay.ThrowError("Error, External error, colors was null, RenderedObjectInstance.Init(), please initialize colors before calling Init().", true);
+			// could be improved ||
+			//                   ||
+			//                   \/
+			//compiledVertexColorsArray = new float[vertices.Length + colors.Length];
+			//for (int i = 0; i < compiledVertexColorsArray.Length; i++)
+			//{
+			//	if (GenericMathUtils.GetDifferenceFromNearestMultiple(i, /* the length of vertex info */ 5) > 2) compiledVertexColorsArray[i] =
+			//			vertices[(int)(GenericMathUtils.GetDifferenceFromNearestMultiple(i, /* the length of vertex info */ 5) + i / 5)];
+			//	else compiledVertexColorsArray[i] =
+			//			colors[(int)GenericMathUtils.GetDifferenceFromNearestMultiple(i, /* the length of vertex info */ 5) + i / 5];
+			//}
+			compiledVertexColorsArray = [-0.5f, 0.5f, 1f, 0f, 0f,
+										0.5f, 0.5f, 0f, 1f, 0f,
+										-0.5f, -0.5f, 0f, 0f, 1f,
+
+										0.5f, 0.5f, 0f, 1f, 0f,
+										0.5f, -0.5f, 0f, 1f, 1f,
+										-0.5f, -0.5f, 0f, 0f, 1f,];
+#endif
 		}
 
 		public RenderedObject()
 		{
+			GLFW.Glfw.Init();
+			ObjShader = new Shader();
 			Mesh sqrMesh = _2dBaseObjects.LoadSquareMesh();
-			ObjectToRender = new _2dSimulatedObject(sqrMesh, new(), new(0,0,0));
+			Rendered2dSimulatedObject = new _2dSimulatedObject(sqrMesh, new(), new(0,0,0));
 			vertices = RenderingUtils.MeshToVerticies(sqrMesh);
 			colorOverride = new Color(ColorName.White);
 		}
 
 		public RenderedObject(_2dSimulatedObject objectToRender)
 		{
+			GLFW.Glfw.Init();
+			ObjShader = new Shader();
 			Mesh sqrMesh = _2dBaseObjects.LoadSquareMesh();
 			vertices = RenderingUtils.MeshToVerticies(sqrMesh);
-			ObjectToRender = objectToRender;
+			Rendered2dSimulatedObject = objectToRender;
 		}
 
 		public RenderedObject(_2dSimulatedObject objectToRender, Color colorOverride)
 		{
+			GLFW.Glfw.Init();
+			ObjShader = new Shader();
 			Mesh sqrMesh = _2dBaseObjects.LoadSquareMesh();
 			vertices = RenderingUtils.MeshToVerticies(sqrMesh);
-			ObjectToRender = objectToRender;
+			Rendered2dSimulatedObject = objectToRender;
 			this.colorOverride = colorOverride;
 		}
 
 		public RenderedObject(float[] vertices, Color colorOverride)
 		{
+			GLFW.Glfw.Init();
+			ObjShader = new Shader();
 			// construct object here
 			this.vertices = vertices;
 			this.colorOverride = colorOverride;
@@ -117,24 +149,30 @@ namespace SharpPhysics.Renderer
 
 		public RenderedObject(_2dSimulatedObject objectToRender, float[] vertices, float[] colors)
 		{
-			ObjectToRender = objectToRender;
+			GLFW.Glfw.Init();
+			ObjShader = new Shader();
+			Rendered2dSimulatedObject = objectToRender;
 			this.vertices = vertices;
 			this.colors = colors;
 		}
 
 		public RenderedObject(Shader objShader, _2dSimulatedObject objectToRender, float[] colors)
 		{
+			GLFW.Glfw.Init();
+			ObjShader = new Shader();
 			Mesh sqrMesh = _2dBaseObjects.LoadSquareMesh();
 			ObjShader = objShader;
-			ObjectToRender = objectToRender;
+			Rendered2dSimulatedObject = objectToRender;
 			vertices = RenderingUtils.MeshToVerticies(sqrMesh);
 			this.colors = colors;
 		}
 
 		public RenderedObject(Shader objShader, _2dSimulatedObject objectToRender, float[] vertices, float[] colors)
 		{
+			GLFW.Glfw.Init();
+			ObjShader = new Shader();
 			ObjShader = objShader;
-			ObjectToRender = objectToRender;
+			Rendered2dSimulatedObject = objectToRender;
 			this.vertices = vertices;
 			this.colors = colors;
 		}

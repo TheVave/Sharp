@@ -1,4 +1,6 @@
-﻿namespace SharpPhysics.Utilities.MathUtils
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace SharpPhysics.Utilities.MathUtils
 {
 	public static class GenericMathUtils
 	{
@@ -22,6 +24,10 @@
 		/// <param name="x"></param>
 		/// <returns></returns>
 		public static bool IsZero(double x) => x == 0;
+
+		public static bool IsOdd(double x) => (x / 2 != Math.Floor(x / 2)) ? true : false;
+
+		public static double GetDifferenceFromNearestMultiple(double x, double multipleSource) => x - (Math.Floor(x / multipleSource) * multipleSource);
 
 		/// <summary>
 		/// Sets a value to the negative value if the value is negative and positive if the value is positive.

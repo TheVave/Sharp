@@ -50,7 +50,7 @@ namespace SharpPhysics.Renderer.Tests
 			glBindVertexArray(vao);
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 
-			Glfw.SwapBuffers(Display.DisplayManager.Window);
+			Glfw.SwapBuffers(DisplayManager.Window);
 		}
 
 		protected override void Init()
