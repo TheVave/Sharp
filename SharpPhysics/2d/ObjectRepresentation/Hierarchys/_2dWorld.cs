@@ -1,5 +1,4 @@
-﻿
-using SharpPhysics._2d.ObjectRepresentation.Hierarchies;
+﻿using SharpPhysics._2d.ObjectRepresentation.Hierarchies;
 
 namespace SharpPhysics
 {
