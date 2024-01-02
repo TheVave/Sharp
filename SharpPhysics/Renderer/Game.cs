@@ -17,9 +17,6 @@ namespace SharpPhysics.Renderer
 		}
 		public void Run()
 		{
-#if DEBUG
-			MessageBoxDisplay.ThrowError("This is a debug build.", false);
-#endif
 			Init();
 
 			DisplayManager.CreateWindow(InitialWindowWidth, InitialWindowHeight, WindowTitle);

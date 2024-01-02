@@ -51,16 +51,6 @@ namespace SharpPhysics.Renderer
 		public static Tuple<int, int> WndSize = Tuple.Create(800, 600);
 
 		/// <summary>
-		/// represents the window size as a string
-		/// </summary>
-		private static string wndSizeStr = "1920x1200";
-
-		/// <summary>
-		/// For random colors
-		/// </summary>
-		private static Random rand = new Random();
-
-		/// <summary>
 		/// If the renderer should use MonoGame for rendering
 		/// </summary>
 		public static bool UseMonoGame = true;

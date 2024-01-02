@@ -24,7 +24,7 @@ namespace SharpPhysics.Utilities.MISC.DelaunayTriangulator
 			Vertex2 = vertex2;
 			Vertex3 = vertex3;
 
-			Edges = new Edge[] { new Edge(Vertex1, Vertex2), new Edge(Vertex2, Vertex3), new Edge(Vertex3, Vertex1) };
+			Edges = [new Edge(Vertex1, Vertex2), new Edge(Vertex2, Vertex3), new Edge(Vertex3, Vertex1)];
 		}
 
 		private const double Epsilon = 1e-6;
@@ -37,8 +37,6 @@ namespace SharpPhysics.Utilities.MISC.DelaunayTriangulator
 			double by = Vertex2.Y - point.Y;
 			double cx = Vertex3.X - point.X;
 			double cy = Vertex3.Y - point.Y;
-
-			Console.WriteLine($"Checking triangle: {this}");
 
 			double ab = ax * by - ay * bx;
 			double bc = bx * cy - by * cx;
@@ -54,10 +52,6 @@ namespace SharpPhysics.Utilities.MISC.DelaunayTriangulator
 		public override string ToString()
 		{
 			return $"Triangle: ({Vertex1.X}, {Vertex1.Y}), ({Vertex2.X}, {Vertex2.Y}), ({Vertex3.X}, {Vertex3.Y})";
-		}
-		public bool ContainsVertex(Point vertex)
-		{
-			return Vertex1.Equals(vertex) || Vertex2.Equals(vertex) || Vertex3.Equals(vertex);
 		}
 
 		public override bool Equals(object obj)
@@ -75,18 +69,11 @@ namespace SharpPhysics.Utilities.MISC.DelaunayTriangulator
 				   (AreVerticesEqual(Vertex3, other.Vertex1) || AreVerticesEqual(Vertex3, other.Vertex2) || AreVerticesEqual(Vertex3, other.Vertex3));
 		}
 
+		public override int GetHashCode() => Vertex1.GetHashCode() + Vertex2.GetHashCode() + Vertex3.GetHashCode();
+
 		private bool AreVerticesEqual(Point v1, Point v2)
 		{
 			return Math.Abs(v1.X - v2.X) < Epsilon && Math.Abs(v1.Y - v2.Y) < Epsilon;
-		}
-
-		public override int GetHashCode()
-		{
-			// Combine hash codes of vertices to get a unique hash code for the triangle
-			int hashCode = Vertex1.GetHashCode();
-			hashCode = (hashCode * 397) ^ Vertex2.GetHashCode();
-			hashCode = (hashCode * 397) ^ Vertex3.GetHashCode();
-			return hashCode;
 		}
 
 		public bool HasVertex(Point vertex)

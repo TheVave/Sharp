@@ -3,9 +3,13 @@ using SharpPhysics.Renderer;
 
 new Thread(() =>
 {
-	if (SharpPhysics.Input.InputManager.IsKeyDown(SharpPhysics.Input.VirtualKey.ESCAPE))
+	while (true)
 	{
-		Environment.Exit(0);
+		Task.Delay(16).Wait();
+		if (SharpPhysics.Input.InputManager.IsKeyDown(SharpPhysics.Input.VirtualKey.ESCAPE))
+		{
+			Environment.Exit(0);
+		}
 	}
 }).Start();
 MainRenderer.InitRendering();

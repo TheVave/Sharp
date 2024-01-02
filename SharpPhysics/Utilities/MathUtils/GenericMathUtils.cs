@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace SharpPhysics.Utilities.MathUtils
+﻿namespace SharpPhysics.Utilities.MathUtils
 {
 	public static class GenericMathUtils
 	{
@@ -25,9 +23,52 @@ namespace SharpPhysics.Utilities.MathUtils
 		/// <returns></returns>
 		public static bool IsZero(double x) => x == 0;
 
+		/// <summary>
+		/// Returns true if the value is odd.
+		/// </summary>
+		/// <param name="x"></param>
+		/// <returns></returns>
 		public static bool IsOdd(double x) => (x / 2 != Math.Floor(x / 2)) ? true : false;
 
+		/// <summary>
+		/// Returns true if the value is even.
+		/// </summary>
+		/// <param name="x"></param>
+		/// <returns></returns>
+		public static bool IsEven(double x) => (x / 2 == Math.Floor(x / 2)) ? true : false;
+
 		public static double GetDifferenceFromNearestMultiple(double x, double multipleSource) => x - (Math.Floor(x / multipleSource) * multipleSource);
+
+		/// <summary>
+		/// Finds the percentage with a value and minimum and maximum.
+		/// </summary>
+		/// <param name="min"></param>
+		/// <param name="max"></param>
+		/// <param name="val"></param>
+		/// <returns></returns>
+		public static double GetPercentageOverRange(double min, double max, double val) => ((val - min) / (max - min)) * 100;
+
+		/// <summary>
+		/// Finds the value from a percentage with the minimum and maximum.
+		/// </summary>
+		/// <param name="min"></param>
+		/// <param name="max"></param>
+		/// <param name="val"></param>
+		/// <returns></returns>
+		public static double GetValueFromPercentage(double min, double max, double val) => ((val * (max - min) / 100) + min);
+
+		/// <summary>
+		/// Smoothly clamps.
+		/// Example:
+		/// min: 0, max: 10, newMin: 0, newMax: 100, val: 3, output: 30
+		/// </summary>
+		/// <param name="min"></param>
+		/// <param name="max"></param>
+		/// <param name="newMin"></param>
+		/// <param name="newMax"></param>
+		/// <param name="val"></param>
+		/// <returns></returns>
+		public static double Clamp(double min, double max, double newMin, double newMax, double val) => GetValueFromPercentage(newMin, newMax, GetPercentageOverRange(min, max, val));
 
 		/// <summary>
 		/// Sets a value to the negative value if the value is negative and positive if the value is positive.

@@ -11,9 +11,7 @@ namespace SharpPhysics.Renderer.Tests
 		uint vao;
 		uint vbo;
 
-		public RenderedObject[] objectsToRender;
-
-		float rotation = 0;
+		public RenderedObject objectToRender;
 
 		public Camera2D cam;
 
@@ -26,18 +24,16 @@ namespace SharpPhysics.Renderer.Tests
 			glClearColor(0, 0, 0, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			for (int i = 0; i < objectsToRender.Length; i++)
-			{
-				objectsToRender[i].trans = Matrix4x4.CreateTranslation((float)objectsToRender[i].Rendered2dSimulatedObject.Translation.ObjectPosition.xPos, (float)objectsToRender[i].Rendered2dSimulatedObject.Translation.ObjectPosition.yPos, 0);
-				objectsToRender[i].sca = Matrix4x4.CreateScale(objectsToRender[i].Rendered2dSimulatedObject.Translation.ObjectScale.xSca * 128, objectsToRender[i].Rendered2dSimulatedObject.Translation.ObjectScale.ySca * 128, 1);
-				objectsToRender[i].rot = Matrix4x4.CreateRotationZ(objectsToRender[i].Rendered2dSimulatedObject.Translation.ObjectRotation.xRot);
+			objectToRender.Rendered2dSimulatedObject.Translation.ObjectRotation.xRot = MathF.Sin((float)GameTime.TotalElapsedSeconds) * MathF.PI;
 
-				objectsToRender[i].ObjShader.SetMatrix4x4("model", objectsToRender[i].sca * objectsToRender[i].rot * objectsToRender[i].trans);
+			objectToRender.trans = Matrix4x4.CreateTranslation((float)objectToRender.Rendered2dSimulatedObject.Translation.ObjectPosition.xPos, (float)objectToRender.Rendered2dSimulatedObject.Translation.ObjectPosition.yPos, 0);
+			objectToRender.sca = Matrix4x4.CreateScale(objectToRender.Rendered2dSimulatedObject.Translation.ObjectScale.xSca * 64, objectToRender.Rendered2dSimulatedObject.Translation.ObjectScale.ySca * 64, 1);
+			objectToRender.rot = Matrix4x4.CreateRotationZ(objectToRender.Rendered2dSimulatedObject.Translation.ObjectRotation.xRot);
 
+			objectToRender.ObjShader.SetMatrix4x4("model", objectToRender.sca * objectToRender.rot * objectToRender.trans);
 
-				objectsToRender[i].ObjShader.Use();
-				objectsToRender[i].ObjShader.SetMatrix4x4("projection", cam.GetProjectionMatrix());
-			}
+			objectToRender.ObjShader.Use();
+			objectToRender.ObjShader.SetMatrix4x4("projection", cam.GetProjectionMatrix());
 
 			glBindVertexArray(vao);
 			glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -52,11 +48,9 @@ namespace SharpPhysics.Renderer.Tests
 		protected unsafe override void LoadContent()
 		{
 			Glfw.Init();
-			objectsToRender = [new()];
+			objectToRender = new();
 			// shaders
-			for (int i = 0; i < objectsToRender.Length; i++)
-			{
-				string vertexShader = @"#version 330 core
+			string vertexShader = @"#version 330 core
                                     layout (location = 0) in vec2 aPosition;
                                     layout (location = 1) in vec3 aColor;
                                     out vec4 vertexColor;
@@ -69,7 +63,7 @@ namespace SharpPhysics.Renderer.Tests
                                         gl_Position = projection * model * vec4(aPosition.xy, 0, 1.0);
                                     }";
 
-				string fragmentShader = @"#version 330 core
+			string fragmentShader = @"#version 330 core
                                     out vec4 FragColor;
                                     in vec4 vertexColor;
 
@@ -77,8 +71,8 @@ namespace SharpPhysics.Renderer.Tests
                                     {
                                         FragColor = vertexColor;
                                     }";
-				objectsToRender[i].ObjShader = new Shader(vertexShader, fragmentShader);
-			}
+			objectToRender.ObjShader = new Shader(vertexShader, fragmentShader);
+
 
 			// creating vao and vbo
 			vao = glGenVertexArray();
@@ -87,25 +81,15 @@ namespace SharpPhysics.Renderer.Tests
 			// binding vao and vbo
 			glBindVertexArray(vao);
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			/*
-			float[] vertices =
-			{
-				-0.5f, 0.5f, 1f, 0f, 0f, // top left
-                0.5f, 0.5f, 0f, 1f, 0f,// top right
-                -0.5f, -0.5f, 0f, 0f, 1f, // bottom left
 
-                0.5f, 0.5f, 0f, 1f, 0f,// top right
-                0.5f, -0.5f, 0f, 1f, 1f, // bottom right
-                -0.5f, -0.5f, 0f, 0f, 1f, // bottom left
-            };
-			*/
-			objectsToRender[0].vertices = RenderingUtils.MeshToVertices(_2dBaseObjects.LoadSquareMesh());
-			objectsToRender[0].colors = new float[(objectsToRender[0].vertices.Length / 2) * 3];
-			for (int i = 0; i < objectsToRender[0].colors.Length; i++) objectsToRender[0].colors[i] = 1f;
-			objectsToRender[0].Init();
+			objectToRender.vertices = RenderingUtils.MeshToVertices(_2dBaseObjects.LoadSquareMesh());
+			objectToRender.colors = new float[(objectToRender.vertices.Length / 2) * 3];
+			Random rand = new Random();
+			for (int i = 0; i < objectToRender.colors.Length; i++) objectToRender.colors[i] = (float)rand.NextDouble();
+			objectToRender.Init();
 
-			fixed (float* floatPtr = &objectsToRender[0].compiledVertexColorsArray[0])
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * objectsToRender[0].vertices.Length, floatPtr, GL_STATIC_DRAW);
+			fixed (float* floatPtr = &objectToRender.compiledVertexColorsArray[0])
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * objectToRender.vertices.Length, floatPtr, GL_STATIC_DRAW);
 			// vertexes
 			glVertexAttribPointer(0, 2, GL_FLOAT, false, 5 * sizeof(float), (void*)0);
 			glEnableVertexAttribArray(0);
@@ -118,8 +102,6 @@ namespace SharpPhysics.Renderer.Tests
 			glBindVertexArray(0);
 
 			cam = new Camera2D(Display.DisplayManager.WindowSize / 2, 1);
-			
-			objectsToRender[0].Init();
 		}
 
 		protected override void Update()
