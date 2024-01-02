@@ -15,8 +15,6 @@ namespace SharpPhysics.Renderer.Tests
 
 		float rotation = 0;
 
-		public Shader shader;
-
 		public Camera2D cam;
 
 		public StandardDisplay(int initialWindowWidth, int initialWindowHeight, string windowTitle) : base(initialWindowWidth, initialWindowHeight, windowTitle)
@@ -35,10 +33,11 @@ namespace SharpPhysics.Renderer.Tests
 				objectsToRender[i].rot = Matrix4x4.CreateRotationZ(objectsToRender[i].Rendered2dSimulatedObject.Translation.ObjectRotation.xRot);
 
 				objectsToRender[i].ObjShader.SetMatrix4x4("model", objectsToRender[i].sca * objectsToRender[i].rot * objectsToRender[i].trans);
-			}
 
-			shader.Use();
-			shader.SetMatrix4x4("projection", cam.GetProjectionMatrix());
+
+				objectsToRender[i].ObjShader.Use();
+				objectsToRender[i].ObjShader.SetMatrix4x4("projection", cam.GetProjectionMatrix());
+			}
 
 			glBindVertexArray(vao);
 			glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -55,7 +54,9 @@ namespace SharpPhysics.Renderer.Tests
 			Glfw.Init();
 			objectsToRender = [new()];
 			// shaders
-			string vertexShader = @"#version 330 core
+			for (int i = 0; i < objectsToRender.Length; i++)
+			{
+				string vertexShader = @"#version 330 core
                                     layout (location = 0) in vec2 aPosition;
                                     layout (location = 1) in vec3 aColor;
                                     out vec4 vertexColor;
@@ -68,7 +69,7 @@ namespace SharpPhysics.Renderer.Tests
                                         gl_Position = projection * model * vec4(aPosition.xy, 0, 1.0);
                                     }";
 
-			string fragmentShader = @"#version 330 core
+				string fragmentShader = @"#version 330 core
                                     out vec4 FragColor;
                                     in vec4 vertexColor;
 
@@ -76,7 +77,8 @@ namespace SharpPhysics.Renderer.Tests
                                     {
                                         FragColor = vertexColor;
                                     }";
-			shader = new Shader(vertexShader, fragmentShader);
+				objectsToRender[i].ObjShader = new Shader(vertexShader, fragmentShader);
+			}
 
 			// creating vao and vbo
 			vao = glGenVertexArray();
@@ -98,9 +100,10 @@ namespace SharpPhysics.Renderer.Tests
             };
 			*/
 			objectsToRender[0].vertices = RenderingUtils.MeshToVerticies(_2dBaseObjects.LoadSquareMesh());
-			objectsToRender[0].colors = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1];
+			objectsToRender[0].colors = [1,1,1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+			objectsToRender[0].Init();
 
-			fixed (float* floatPtr = &objectsToRender[0].vertices[0])
+			fixed (float* floatPtr = &objectsToRender[0].compiledVertexColorsArray[0])
 				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * objectsToRender[0].vertices.Length, floatPtr, GL_STATIC_DRAW);
 			// vertexes
 			glVertexAttribPointer(0, 2, GL_FLOAT, false, 5 * sizeof(float), (void*)0);

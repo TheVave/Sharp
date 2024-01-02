@@ -1,1 +1,2 @@
-SharpPhysics is a (somewhat small) (2d) physics library that is set up with OpenGL and GLFW bindings.
+SharpPhysics is a (somewhat small) (2d) (C#) physics library that is set up with OpenGL and GLFW bindings.
+The renderer is not fully set up, right now it has just a few small tests, but I am working on the renderer.

@@ -26,7 +26,7 @@ namespace SharpPhysics.Renderer
 
 			LoadContent();
 
-			while (Glfw.WindowShouldClose(DisplayManager.Window))
+			while (!Glfw.WindowShouldClose(DisplayManager.Window))
 			{
 				GameTime.DeltaTime = Glfw.Time - GameTime.TotalElapsedSeconds;
 				GameTime.TotalElapsedSeconds = Glfw.Time;

@@ -28,7 +28,7 @@ namespace SharpPhysics.Utilities.MISC
 
 		public static void ThrowError(string message, bool crash)
 		{
-			MessageBox(IntPtr.Zero, message, "Error", /* 0x01 is MB_ICONERROR (error symbol) and 0x00 is MB_OK (ok message box) */ 0x10 | 0x00);
+			MessageBox(IntPtr.Zero, message, "Error", MB_ICONERROR | MB_OK);
 			if (crash) throw new Exception(message + " (Shown in message box)");
 		}
 
@@ -39,10 +39,6 @@ namespace SharpPhysics.Utilities.MISC
 		public static void ThrowNotImplementedException()
 		{
 			ThrowError("Not Implemented.", true);
-		}
-		public static void Message()
-		{
-
 		}
 		public static bool YesNoQuestion(string question, string title, bool crashOnNo)
 		{
