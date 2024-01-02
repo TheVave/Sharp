@@ -99,8 +99,9 @@ namespace SharpPhysics.Renderer.Tests
                 -0.5f, -0.5f, 0f, 0f, 1f, // bottom left
             };
 			*/
-			objectsToRender[0].vertices = RenderingUtils.MeshToVerticies(_2dBaseObjects.LoadSquareMesh());
-			objectsToRender[0].colors = [1,1,1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+			objectsToRender[0].vertices = RenderingUtils.MeshToVertices(_2dBaseObjects.LoadSquareMesh());
+			objectsToRender[0].colors = new float[(objectsToRender[0].vertices.Length / 2) * 3];
+			for (int i = 0; i < objectsToRender[0].colors.Length; i++) objectsToRender[0].colors[i] = 1f;
 			objectsToRender[0].Init();
 
 			fixed (float* floatPtr = &objectsToRender[0].compiledVertexColorsArray[0])

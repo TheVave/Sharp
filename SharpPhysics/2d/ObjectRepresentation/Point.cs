@@ -21,6 +21,8 @@
 		/// 
 		/// </summary>
 		internal bool Is3d = false;
+		public override string ToString() => (Is3d) ? $"({X},{Y},{zPos})" : $"({X},{Y}";
+
 		internal Point(double xPos, double yPos, double zPos, bool is3d)
 		{
 			this.X = xPos;
@@ -39,6 +41,11 @@
 		{
 			this.X = x;
 			this.Y = y;
+		}
+		public Point()
+		{
+			X = 0;
+			Y = 0;
 		}
 
 		public static Point Rotate2dPoint(double radians, Point pnt)

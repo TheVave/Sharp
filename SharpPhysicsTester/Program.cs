@@ -1,16 +1,11 @@
 ﻿using SharpPhysics;
-using SharpPhysics.Input;
-using SharpPhysics.Input.Keyboard;
 using SharpPhysics.Renderer;
 
 new Thread(() =>
 {
-
-	while (true)
+	if (SharpPhysics.Input.InputManager.IsKeyDown(SharpPhysics.Input.VirtualKey.ESCAPE))
 	{
-		if (InputManager.IsKeyDown(VirtualKey.ESCAPE)) Environment.Exit(0);
-		else Task.Delay(60);
+		Environment.Exit(0);
 	}
 }).Start();
-
 MainRenderer.InitRendering();

@@ -96,7 +96,7 @@ namespace SharpPhysics.Renderer
 			ObjShader = new Shader();
 			Mesh sqrMesh = _2dBaseObjects.LoadSquareMesh();
 			Rendered2dSimulatedObject = new _2dSimulatedObject(sqrMesh, new(), new(0,0,0));
-			vertices = RenderingUtils.MeshToVerticies(sqrMesh);
+			vertices = RenderingUtils.MeshToVertices(sqrMesh);
 			colorOverride = new Color(ColorName.White);
 		}
 
@@ -105,7 +105,7 @@ namespace SharpPhysics.Renderer
 			GLFW.Glfw.Init();
 			ObjShader = new Shader();
 			Mesh sqrMesh = _2dBaseObjects.LoadSquareMesh();
-			vertices = RenderingUtils.MeshToVerticies(sqrMesh);
+			vertices = RenderingUtils.MeshToVertices(sqrMesh);
 			Rendered2dSimulatedObject = objectToRender;
 		}
 
@@ -114,7 +114,7 @@ namespace SharpPhysics.Renderer
 			GLFW.Glfw.Init();
 			ObjShader = new Shader();
 			Mesh sqrMesh = _2dBaseObjects.LoadSquareMesh();
-			vertices = RenderingUtils.MeshToVerticies(sqrMesh);
+			vertices = RenderingUtils.MeshToVertices(sqrMesh);
 			Rendered2dSimulatedObject = objectToRender;
 			this.colorOverride = colorOverride;
 		}
@@ -123,7 +123,6 @@ namespace SharpPhysics.Renderer
 		{
 			GLFW.Glfw.Init();
 			ObjShader = new Shader();
-			// construct object here
 			this.vertices = vertices;
 			this.colorOverride = colorOverride;
 		}
@@ -144,7 +143,7 @@ namespace SharpPhysics.Renderer
 			Mesh sqrMesh = _2dBaseObjects.LoadSquareMesh();
 			ObjShader = objShader;
 			Rendered2dSimulatedObject = objectToRender;
-			vertices = RenderingUtils.MeshToVerticies(sqrMesh);
+			vertices = RenderingUtils.MeshToVertices(sqrMesh);
 			this.colors = colors;
 		}
 
