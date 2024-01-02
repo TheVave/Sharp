@@ -1,4 +1,6 @@
-﻿using SharpPhysics._2d.ObjectRepresentation;
+﻿using Microsoft.VisualBasic;
+using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics.Utilities.MISC.Errors;
 
 namespace SharpPhysics.Utilities.MISC.DelaunayTriangulator
 {
@@ -35,14 +37,17 @@ namespace SharpPhysics.Utilities.MISC.DelaunayTriangulator
 			triangles.Add(new Triangle(superVertex1, superVertex2, superVertex3));
 
 			// Add each point to the triangulation
-			for (int i = 0; i < points.Length; i++)
+			int iteration = 0;
+
+			foreach (var point in points)
 			{
 				List<Triangle> badTriangles = new List<Triangle>();
 				List<Edge> polygon = new List<Edge>();
 
+				// Find bad triangles
 				foreach (var triangle in triangles)
 				{
-					if (triangle.IsPointInsideCircumcircle(points[i]))
+					if (triangle.IsPointInsideCircumcircle(point))
 					{
 						badTriangles.Add(triangle);
 
@@ -56,30 +61,23 @@ namespace SharpPhysics.Utilities.MISC.DelaunayTriangulator
 					}
 				}
 
-				foreach (var triangle in badTriangles)
-				{
-					triangles.Remove(triangle);
-				}
+				// Remove bad triangles
+				triangles.RemoveAll(triangle => badTriangles.Contains(triangle));
 
+				// Add new triangles to the triangulation
 				foreach (var edge in polygon)
 				{
-					triangles.Add(new Triangle(edge.Vertex1, edge.Vertex2, points[i]));
+					triangles.Add(new Triangle(edge.Vertex1, edge.Vertex2, point));
 				}
-			}
-			foreach (var triangle in triangles)
-			{
-				Console.WriteLine($"Triangle: ({triangle.Vertex1.X}, {triangle.Vertex1.Y}), " +
-								  $"({triangle.Vertex2.X}, {triangle.Vertex2.Y}), " +
-								  $"({triangle.Vertex3.X}, {triangle.Vertex3.Y})");
+
+				iteration++;
 			}
 
-			// Remove super-triangle vertices
+			// Remove triangles with super-triangle vertices
 			triangles.RemoveAll(t =>
-				t.Vertex1.Equals(superVertex1) || t.Vertex1.Equals(superVertex2) || t.Vertex1.Equals(superVertex3) ||
-				t.Vertex2.Equals(superVertex1) || t.Vertex2.Equals(superVertex2) || t.Vertex2.Equals(superVertex3) ||
-				t.Vertex3.Equals(superVertex1) || t.Vertex3.Equals(superVertex2) || t.Vertex3.Equals(superVertex3));
+				t.HasVertex(superVertex1) || t.HasVertex(superVertex2) || t.HasVertex(superVertex3));
 
-			return triangles;
+			return triangles.Distinct().ToList();
 		}
 	}
 }

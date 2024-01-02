@@ -21,7 +21,7 @@
 		/// 
 		/// </summary>
 		internal bool Is3d = false;
-		public override string ToString() => (Is3d) ? $"({X},{Y},{zPos})" : $"({X},{Y}";
+		public override string ToString() => (Is3d) ? $"({X},{Y},{zPos})" : $"({X},{Y})";
 
 		internal Point(double xPos, double yPos, double zPos, bool is3d)
 		{
