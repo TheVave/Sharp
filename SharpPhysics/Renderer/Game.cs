@@ -42,8 +42,20 @@ namespace SharpPhysics.Renderer
 		/// You can't use OpenGL here
 		/// </summary>
 		protected abstract void Init();
+
+		/// <summary>
+		/// Called every frame. Execute any position or rotation related things here.
+		/// </summary>
 		protected abstract void Update();
+
+		/// <summary>
+		/// Called every frame.
+		/// </summary>
 		protected abstract void Draw();
+
+		/// <summary>
+		/// Load all the content that is needed for OpenGL here.
+		/// </summary>
 		protected abstract void LoadContent();
 	}
 }

@@ -37,6 +37,12 @@
 		/// <returns></returns>
 		public static bool IsEven(double x) => (x / 2 == Math.Floor(x / 2)) ? true : false;
 
+		/// <summary>
+		/// Finds the difference from the nearest multiple multipleSource
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="multipleSource"></param>
+		/// <returns></returns>
 		public static double GetDifferenceFromNearestMultiple(double x, double multipleSource) => x - (Math.Floor(x / multipleSource) * multipleSource);
 
 		/// <summary>

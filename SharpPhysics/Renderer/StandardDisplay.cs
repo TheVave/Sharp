@@ -1,5 +1,12 @@
-﻿using GLFW;
+﻿using SharpPhysics.Renderer.GameLoop;
+using GLFW;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using static OpenGL.GL;
+using SharpPhysics.Renderer.Cameras;
 using System.Numerics;
 using SharpPhysics._2d.Objects;
 using SharpPhysics.Utilities.MISC;
@@ -11,9 +18,18 @@ namespace SharpPhysics.Renderer.Tests
 		uint vao;
 		uint vbo;
 
-		public RenderedObject objectToRender;
+		RenderedObject objectToRender;
 
-		public Camera2D cam;
+		Vector2 position = new Vector2(300, 300);
+		Vector2 scale = new Vector2(150, 150);
+		float rotation = 0;
+		Matrix4x4 trans;
+		Matrix4x4 sca;
+		Matrix4x4 rot;
+
+		Shaders.Shader shader;
+
+		Camera2D cam;
 
 		public StandardDisplay(int initialWindowWidth, int initialWindowHeight, string windowTitle) : base(initialWindowWidth, initialWindowHeight, windowTitle)
 		{
@@ -24,16 +40,16 @@ namespace SharpPhysics.Renderer.Tests
 			glClearColor(0, 0, 0, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			objectToRender.Rendered2dSimulatedObject.Translation.ObjectRotation.xRot = MathF.Sin((float)GameTime.TotalElapsedSeconds) * MathF.PI;
+			rotation = MathF.Sin((float)GameTime.TotalElapsedSeconds) * MathF.PI;
 
-			objectToRender.trans = Matrix4x4.CreateTranslation((float)objectToRender.Rendered2dSimulatedObject.Translation.ObjectPosition.xPos, (float)objectToRender.Rendered2dSimulatedObject.Translation.ObjectPosition.yPos, 0);
-			objectToRender.sca = Matrix4x4.CreateScale(objectToRender.Rendered2dSimulatedObject.Translation.ObjectScale.xSca * 64, objectToRender.Rendered2dSimulatedObject.Translation.ObjectScale.ySca * 64, 1);
-			objectToRender.rot = Matrix4x4.CreateRotationZ(objectToRender.Rendered2dSimulatedObject.Translation.ObjectRotation.xRot);
+			trans = Matrix4x4.CreateTranslation(position.X, position.Y, 0);
+			sca = Matrix4x4.CreateScale(scale.X, scale.Y, 1);
+			rot = Matrix4x4.CreateRotationZ(rotation);
 
-			objectToRender.ObjShader.SetMatrix4x4("model", objectToRender.sca * objectToRender.rot * objectToRender.trans);
+			shader.SetMatrix4x4("model", sca * rot * trans);
 
-			objectToRender.ObjShader.Use();
-			objectToRender.ObjShader.SetMatrix4x4("projection", cam.GetProjectionMatrix());
+			shader.Use();
+			shader.SetMatrix4x4("projection", cam.GetProjectionMatrix());
 
 			glBindVertexArray(vao);
 			glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -47,7 +63,6 @@ namespace SharpPhysics.Renderer.Tests
 
 		protected unsafe override void LoadContent()
 		{
-			Glfw.Init();
 			objectToRender = new();
 			// shaders
 			string vertexShader = @"#version 330 core
@@ -71,8 +86,7 @@ namespace SharpPhysics.Renderer.Tests
                                     {
                                         FragColor = vertexColor;
                                     }";
-			objectToRender.ObjShader = new Shader(vertexShader, fragmentShader);
-
+			shader = new Shaders.Shader(vertexShader, fragmentShader);
 
 			// creating vao and vbo
 			vao = glGenVertexArray();
@@ -89,7 +103,7 @@ namespace SharpPhysics.Renderer.Tests
 			objectToRender.Init();
 
 			fixed (float* floatPtr = &objectToRender.compiledVertexColorsArray[0])
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * objectToRender.vertices.Length, floatPtr, GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * objectToRender.compiledVertexColorsArray.Length, floatPtr, GL_STATIC_DRAW);
 			// vertexes
 			glVertexAttribPointer(0, 2, GL_FLOAT, false, 5 * sizeof(float), (void*)0);
 			glEnableVertexAttribArray(0);
@@ -101,7 +115,7 @@ namespace SharpPhysics.Renderer.Tests
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			glBindVertexArray(0);
 
-			cam = new Camera2D(Display.DisplayManager.WindowSize / 2, 1);
+			cam = new Camera2D(DisplayManager.WindowSize / 2, 1);
 		}
 
 		protected override void Update()
