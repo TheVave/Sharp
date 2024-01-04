@@ -87,8 +87,8 @@
 		// for cleaning up the code:
 		public static double NegativePositiveSet(double valueToSet, double setTo)
 		{
-			if (IsPositive(valueToSet)) 
-				 return setTo;
+			if (IsPositive(valueToSet))
+				return setTo;
 
 			else return -setTo;
 		}
@@ -123,8 +123,8 @@
 		/// <param name="minuend"></param>
 		/// <param name="subtrahend"></param>
 		/// <returns></returns>
-		public static int SubtractAwayFromZero(int minuend, int subtrahend) => 
-			(IsNegative(minuend)) ? 
+		public static int SubtractAwayFromZero(int minuend, int subtrahend) =>
+			(IsNegative(minuend)) ?
 				minuend - subtrahend : minuend + subtrahend;
 
 		/// <summary>
@@ -146,8 +146,8 @@
 		public static int ParseStrToInt32(string str)
 		{
 			toReturn = ((str.StartsWith('-')) ? -0 : 0);
-			foreach (char c in str) 
-				try { SubtractAwayFromZero(toReturn, int.Parse(c.ToString())); } 
+			foreach (char c in str)
+				try { SubtractAwayFromZero(toReturn, int.Parse(c.ToString())); }
 				catch { return toReturn; }
 			return int.MinValue;
 		}

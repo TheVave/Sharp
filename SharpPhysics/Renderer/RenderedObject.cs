@@ -95,7 +95,7 @@ namespace SharpPhysics.Renderer
 			GLFW.Glfw.Init();
 			ObjShader = new Shader();
 			Mesh sqrMesh = _2dBaseObjects.LoadSquareMesh();
-			Rendered2dSimulatedObject = new _2dSimulatedObject(sqrMesh, new(), new(0,0,0));
+			Rendered2dSimulatedObject = new _2dSimulatedObject(sqrMesh, new(), new(0, 0, 0));
 			vertices = RenderingUtils.MeshToVertices(sqrMesh);
 			colorOverride = new Color(ColorName.White);
 		}

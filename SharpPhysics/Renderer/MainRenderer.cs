@@ -1,12 +1,6 @@
 ﻿
-using SharpPhysics.Renderer.Demos;
-using SharpPhysics.Utilities.MISC.Errors;
-using System.Diagnostics;
 using GLFW;
-using OpenGL;
-using static OpenGL.GL;
-using SharpPhysics.Input;
-using SharpPhysics.Renderer.GameLoop;
+using SharpPhysics.Renderer.Demos;
 using SharpPhysics.Renderer.Tests;
 namespace SharpPhysics.Renderer
 {
@@ -60,7 +54,7 @@ namespace SharpPhysics.Renderer
 		public static void InitRendering()
 		{
 			Glfw.Init();
-			Game game = new StandardDisplay(800,600,"SharpPhysics");
+			Game game = new StandardDisplay(800, 600, "SharpPhysics");
 			game.Run();
 		}
 

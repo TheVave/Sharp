@@ -1,5 +1,4 @@
-﻿using SharpPhysics._2d.ObjectRepresentation;
-using SharpPhysics.UI.Representation;
+﻿using SharpPhysics.UI.Representation;
 namespace SharpPhysics.UI.Parser
 {
 	public class UIPage

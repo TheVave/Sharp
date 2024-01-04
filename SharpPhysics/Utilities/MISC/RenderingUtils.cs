@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace SharpPhysics.Utilities.MISC
 {
-    public static class RenderingUtils
+	public static class RenderingUtils
 	{
 		static int i6 = 0;
 		public static float[] MeshToVertices(Mesh mesh)
@@ -38,7 +38,7 @@ namespace SharpPhysics.Utilities.MISC
 				i6 += 6;
 			}
 
-			
+
 			return vertices;
 		}
 

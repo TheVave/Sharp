@@ -1,11 +1,11 @@
 ﻿namespace SharpPhysics.Utilities.MathUtils
 {
-    public enum LineDirections
-    {
-        On = 0,
-        Left = 1,
-        Right = -1,
-        Up = 1,
-        Down = -1
-    }
+	public enum LineDirections
+	{
+		On = 0,
+		Left = 1,
+		Right = -1,
+		Up = 1,
+		Down = -1
+	}
 }

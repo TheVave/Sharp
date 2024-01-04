@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static OpenGL.GL;
-using GLFW;
-using SharpPhysics.Utilities.MISC.Errors;
+﻿using SharpPhysics.Utilities.MISC.Errors;
 using System.Numerics;
+using static OpenGL.GL;
 
 namespace SharpPhysics.Renderer.Shaders
 {
@@ -25,7 +19,7 @@ namespace SharpPhysics.Renderer.Shaders
 		}
 
 
-		public virtual void Load() 
+		public virtual void Load()
 		{
 			uint vs = glCreateShader(GL_VERTEX_SHADER);
 			glShaderSource(vs, VertexCode);

@@ -42,7 +42,7 @@ namespace SharpPhysics.Renderer
 			{
 				// interprets the ColorName style.
 				// the int for the ColorName enum is RGB, e.g 255255255 (White)
-				
+
 				R = byte.Parse(rgbVal[0..3]);
 				G = byte.Parse(rgbVal[3..6]);
 				B = byte.Parse(rgbVal[6..9]);

@@ -1,33 +1,31 @@
-﻿using System;
-
-namespace GLFW
+﻿namespace GLFW
 {
-    /// <summary>
-    ///     Arguments supplied with file drag-drop events.
-    /// </summary>
-    /// <seealso cref="EventArgs" />
-    public class FileDropEventArgs : EventArgs
-    {
-        #region Constructors
+	/// <summary>
+	///     Arguments supplied with file drag-drop events.
+	/// </summary>
+	/// <seealso cref="EventArgs" />
+	public class FileDropEventArgs : EventArgs
+	{
+		#region Constructors
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="FileDropEventArgs" /> class.
-        /// </summary>
-        /// <param name="filenames">The dropped filenames.</param>
-        public FileDropEventArgs(string[] filenames) { Filenames = filenames; }
+		/// <summary>
+		///     Initializes a new instance of the <see cref="FileDropEventArgs" /> class.
+		/// </summary>
+		/// <param name="filenames">The dropped filenames.</param>
+		public FileDropEventArgs(string[] filenames) { Filenames = filenames; }
 
-        #endregion
+		#endregion
 
-        #region Properties
+		#region Properties
 
-        /// <summary>
-        ///     Gets the filenames of the dropped files.
-        /// </summary>
-        /// <value>
-        ///     The filenames.
-        /// </value>
-        public string[] Filenames { get; }
+		/// <summary>
+		///     Gets the filenames of the dropped files.
+		/// </summary>
+		/// <value>
+		///     The filenames.
+		/// </value>
+		public string[] Filenames { get; }
 
-        #endregion
-    }
+		#endregion
+	}
 }

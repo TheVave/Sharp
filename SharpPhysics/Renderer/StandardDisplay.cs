@@ -1,15 +1,8 @@
-﻿using SharpPhysics.Renderer.GameLoop;
-using GLFW;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static OpenGL.GL;
-using SharpPhysics.Renderer.Cameras;
-using System.Numerics;
+﻿using GLFW;
 using SharpPhysics._2d.Objects;
 using SharpPhysics.Utilities.MISC;
+using System.Numerics;
+using static OpenGL.GL;
 
 namespace SharpPhysics.Renderer.Tests
 {

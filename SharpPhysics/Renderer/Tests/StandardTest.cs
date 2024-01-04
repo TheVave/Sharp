@@ -1,13 +1,6 @@
-﻿using SharpPhysics.Renderer.GameLoop;
-using GLFW;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static OpenGL.GL;
-using SharpPhysics.Renderer.Cameras;
+﻿using GLFW;
 using System.Numerics;
+using static OpenGL.GL;
 
 namespace SharpPhysics.Renderer.Tests
 {
@@ -16,7 +9,7 @@ namespace SharpPhysics.Renderer.Tests
 		uint vao;
 		uint vbo;
 
-		Vector2 position = new Vector2(300,300);
+		Vector2 position = new Vector2(300, 300);
 		Vector2 scale = new Vector2(150, 150);
 		float rotation = 0;
 		Matrix4x4 trans;

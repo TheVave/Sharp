@@ -1,11 +1,5 @@
 ﻿using GLFW;
-using SharpPhysics.Renderer;
 using static OpenGL.GL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpPhysics.Renderer.Demos
 {

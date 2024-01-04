@@ -14,5 +14,5 @@ namespace SharpPhysics._2d.Physics.CollisionManagement
 		public int ObjectToCheckIfCollidedMeshIndex { get; set; } = 0;
 		public int objectToCheckMeshIndex { get; set; } = 0;
 		public _2dSimulatedObject CollidedObject { get; set; } = new();
-    }
+	}
 }

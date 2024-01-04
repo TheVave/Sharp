@@ -82,7 +82,7 @@ namespace SharpPhysics._2d.Physics
 			if (resultFromCheckCollision != null)
 			{
 				_2dSimulatedObject collidedObject;
-				for (int i = 0; i < resultFromCheckCollision.Length; i++) 
+				for (int i = 0; i < resultFromCheckCollision.Length; i++)
 				{
 					collidedObject = resultFromCheckCollision[i].CollidedObject;
 					SimulateCollision(ref ObjectToSimulate, resultFromCheckCollision[i].ObjectToCheckIfCollidedMeshIndex, resultFromCheckCollision[i].objectToCheckMeshIndex, ref collidedObject);
@@ -134,7 +134,7 @@ namespace SharpPhysics._2d.Physics
 			}
 
 
-			
+
 		}
 
 		/// <summary>

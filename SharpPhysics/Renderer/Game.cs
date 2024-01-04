@@ -1,5 +1,4 @@
 ﻿using GLFW;
-using SharpPhysics.Utilities.MISC;
 namespace SharpPhysics.Renderer
 {
 	abstract public class Game
