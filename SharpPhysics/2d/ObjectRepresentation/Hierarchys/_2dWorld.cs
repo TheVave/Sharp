@@ -1,4 +1,5 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation.Hierarchies;
+using SharpPhysics.Utilities.MISC.Errors;
 
 namespace SharpPhysics
 {
@@ -9,7 +10,14 @@ namespace SharpPhysics
 		internal static int[] ids = new int[0];
 		public static void RegisterSceneHierarchy(_2dSceneHierarchy hierarchy)
 		{
-			SceneHierarchies = SceneHierarchies.Append(hierarchy).ToArray();
+			try
+			{
+				SceneHierarchies = SceneHierarchies.Append(hierarchy).ToArray();
+			}
+			catch (System.Exception e)
+			{
+				ErrorHandler.ThrowError("Error, Unknown Error, Exact error: " + e, true);
+			}
 		}
 	}
 }

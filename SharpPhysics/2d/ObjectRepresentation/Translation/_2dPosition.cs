@@ -23,8 +23,8 @@ namespace SharpPhysics._2d.ObjectRepresentation.Translation
 			xPos = 0;
 			yPos = 0;
 		}
-		public double xPos;
-		public double yPos;
-		public double zPos;
+		public double xPos = 0;
+		public double yPos = 0;
+		public double zPos = 0;
 	}
 }
