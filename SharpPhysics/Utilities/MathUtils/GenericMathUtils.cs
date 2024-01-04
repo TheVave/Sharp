@@ -74,7 +74,7 @@
 		/// <param name="newMax"></param>
 		/// <param name="val"></param>
 		/// <returns></returns>
-		public static double Clamp(double min, double max, double newMin, double newMax, double val) => GetValueFromPercentage(newMin, newMax, GetPercentageOverRange(min, max, val));
+		public static double SmoothClamp(double min, double max, double newMin, double newMax, double val) => GetValueFromPercentage(newMin, newMax, GetPercentageOverRange(min, max, val));
 
 		/// <summary>
 		/// Sets a value to the negative value if the value is negative and positive if the value is positive.
@@ -115,6 +115,41 @@
 				if (toSubtract > a) return 0;
 				else return a - toSubtract;
 			}
+		}
+
+		/// <summary>
+		/// Subtracts away from zero
+		/// </summary>
+		/// <param name="minuend"></param>
+		/// <param name="subtrahend"></param>
+		/// <returns></returns>
+		public static int SubtractAwayFromZero(int minuend, int subtrahend) => 
+			(IsNegative(minuend)) ? 
+				minuend - subtrahend : minuend + subtrahend;
+
+		/// <summary>
+		/// The same as the normal int.TryParse, but if it fails returns int.MinValue
+		/// </summary>
+		/// <param name="str"></param>
+		/// <returns></returns>
+		public static int TryParse(string str) =>
+			(int.TryParse(str, out int result)) ? result : int.MinValue;
+
+		private static int toReturn = 0;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="str"></param>
+		/// <returns></returns>
+		// designed to not be a lot of code.
+		public static int ParseStrToInt32(string str)
+		{
+			toReturn = ((str.StartsWith('-')) ? -0 : 0);
+			foreach (char c in str) 
+				try { SubtractAwayFromZero(toReturn, int.Parse(c.ToString())); } 
+				catch { return toReturn; }
+			return int.MinValue;
 		}
 	}
 }

@@ -1,12 +1,12 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
-using SharpPhysics.Utilities.MISC.DelaunayTriangulator;
+using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
 namespace SharpPhysics.Utilities.MISC
 {
-	public static class RenderingUtils
+    public static class RenderingUtils
 	{
 		static int i6 = 0;
 		public static float[] MeshToVertices(Mesh mesh)
@@ -22,7 +22,7 @@ namespace SharpPhysics.Utilities.MISC
 					mesh.MeshPoints[i].Y = mesh.MeshPointsY[i];
 				}
 			}
-			List<Triangle> triangles = DelaunayTriangulator.DelaunayTriangulator.DelaunayTriangulation(mesh.MeshPoints);
+			List<Triangle> triangles = DelaunayTriangulator.DelaunayTriangulation(mesh.MeshPoints);
 			float[] vertices = new float[triangles.Count * 6]; // Each triangle has 3 vertices with 2 coordinates each
 			i6 = 0;
 			for (int i = 0; i < triangles.Count; i++)
