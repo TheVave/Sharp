@@ -1,5 +1,6 @@
 ﻿
 using SharpPhysics.Utilities.MISC.Errors;
+using System.Runtime.CompilerServices;
 
 namespace SharpPhysics._2d.ObjectRepresentation.Hierarchies
 {
@@ -7,9 +8,9 @@ namespace SharpPhysics._2d.ObjectRepresentation.Hierarchies
 	{
         public _2dSimulatedObject[] Objects = [];
         public byte HierarchyId = 0;
-		public static void RegisterObject(byte hierarchyId)
+		public static void RegisterObject(byte hierarchyId, _2dSimulatedObject obj)
 		{
-			ErrorHandler.ThrowNotImplementedExcepetion();
+			_2dWorld.SceneHierarchies[hierarchyId].Objects = _2dWorld.SceneHierarchies[hierarchyId].Objects.Append(obj).ToArray();
 		}
 	}
 }
