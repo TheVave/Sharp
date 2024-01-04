@@ -38,7 +38,7 @@ namespace SharpPhysics._2d.Physics
 		public int TickSpeed = 60;
 		public _2dMovementRepresenter CurrentMovement { get; private set; } = new(new _2dPosition(0, 0));
 		public int SpeedMultiplier = 1;
-		public virtual void ExecuteAtCollision(_2dSimulatedObject hitObject, _2dSimulatedObject self) { }
+		public IExecuteAtCollision ToExecuteAtCollision;
 		public int DelayAmount;
 		public double TimePerSimulationTick = 0.001;
 
@@ -85,6 +85,7 @@ namespace SharpPhysics._2d.Physics
 				for (int i = 0; i < resultFromCheckCollision.Length; i++)
 				{
 					collidedObject = resultFromCheckCollision[i].CollidedObject;
+					ToExecuteAtCollision.Execute(collidedObject, ObjectToSimulate);
 					SimulateCollision(ref ObjectToSimulate, resultFromCheckCollision[i].ObjectToCheckIfCollidedMeshIndex, resultFromCheckCollision[i].ObjectToCheckMeshIndex, ref collidedObject);
 				}
 
@@ -114,7 +115,7 @@ namespace SharpPhysics._2d.Physics
 			CurrentMovement.EndPosition = ObjectToSimulate.Translation.ObjectPosition;
 
 			// new code for rotation similar to momentum and position.
-			// may change. Ideas for rotation may be from https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/10%3A_Rotational_Motion_and_Angular_Momentum/10.03%3A_Dynamics_of_Rotational_Motion_-_Rotational_Inertia
+			// may change. Ideas for rotational momentum impulse may be from https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/10%3A_Rotational_Motion_and_Angular_Momentum/10.03%3A_Dynamics_of_Rotational_Motion_-_Rotational_Inertia
 			// r in the upper link can be found by finding the area of the object, then working backward from the circle area equation, A = [pi]r^2, rearranged to r = r = [pi] / sqr(a).
 			rotationalAmount = ((ObjectToSimulate.ObjectPhysicsParams.RotationalAcceleration + ObjectToSimulate.ObjectPhysicsParams.RotationalMomentum) * TimePerSimulationTick);
 			ObjectToSimulate.Translation.ObjectRotation.xRot += (float)(rotationalAmount);
@@ -132,9 +133,6 @@ namespace SharpPhysics._2d.Physics
 				ObjectToSimulate.ObjectMesh.MeshPointsX[i] = ObjectToSimulate.ObjectMesh.MeshPointsActualX[i] + ObjectToSimulate.Translation.ObjectPosition.xPos;
 				ObjectToSimulate.ObjectMesh.MeshPointsY[i] = ObjectToSimulate.ObjectMesh.MeshPointsActualY[i] + ObjectToSimulate.Translation.ObjectPosition.yPos;
 			}
-
-
-
 		}
 
 		/// <summary>
