@@ -38,7 +38,7 @@ namespace SharpPhysics._2d.Physics.CollisionManagement
 
 		private static bool hasBeenCollision;
 
-		private static int indx;
+		private static int index;
 
 
 		/// <summary>
@@ -60,7 +60,7 @@ namespace SharpPhysics._2d.Physics.CollisionManagement
 			{
 				// resets the IsInside array for a new object
 				isInsides = new bool[objectToCheckIfCollided.ObjectMesh.MeshPointsX.Length * objectToCheck.ObjectMesh.MeshPointsX.Length];
-				indx = 0;
+				index = 0;
 				for (int i = 0; i < objectToCheckIfCollided.ObjectMesh.MeshPointsX.Length /* -2 for index errors because mesh points x.length + 2 is outside of the array */ - 2; i++)
 				{
 					for (int j = 0; j < objectToCheck.ObjectMesh.MeshPointsX.Length; j++)
@@ -100,8 +100,8 @@ namespace SharpPhysics._2d.Physics.CollisionManagement
 					// there has been a collision.
 					if (calcCollision)
 					{
-						ToReturn = ArrayUtils.AddSpanObject(ToReturn, new CollisionData(objectToCheckIfCollidedMeshIndices[indx], objectToCheckMeshIndexes[indx], collidedObjects[indx]));
-						indx++;
+						ToReturn = ArrayUtils.AddSpanObject(ToReturn, new CollisionData(objectToCheckIfCollidedMeshIndices[index], objectToCheckMeshIndexes[index], collidedObjects[index]));
+						index++;
 						hasBeenCollision = true;
 					}
 

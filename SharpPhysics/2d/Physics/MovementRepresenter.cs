@@ -16,7 +16,7 @@ namespace SharpPhysics._2d.Physics
 		public _2dPosition EndPosition;
 
 		/// <summary>
-		/// WARNING: this code creates a MovmentRepersenter with the StartPosition of 0,0,0.
+		/// WARNING: this code creates a MovementRepresenter with the StartPosition of 0,0,0.
 		/// </summary>
 		/// <param name="endPosition"></param>
 		public _2dMovementRepresenter(_2dPosition endPosition)

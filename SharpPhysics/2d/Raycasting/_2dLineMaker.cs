@@ -3,7 +3,7 @@
 	public class _2dLineMaker
 	{
 		/// <summary>
-		/// the starting x and y values for the ray (do not change from RayMaker to Ray)
+		/// the starting x and y values for the ray
 		/// </summary>
 		public double xStart, yStart;
 		/// <summary>

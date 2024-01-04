@@ -1,4 +1,7 @@
-﻿namespace SharpPhysics._2d.Physics
+﻿using SharpPhysics.Utilities.MISC.Errors;
+using System.Reflection.Metadata.Ecma335;
+
+namespace SharpPhysics._2d.Physics
 {
 	/// <summary>
 	/// This class is the main calculator of the ([nothing]/_2d)PhysicsSimulator class
@@ -31,25 +34,6 @@
 		/// Displacement
 		/// </summary>
 		public double S { get; set; }
-
-		/// <summary>
-		/// input variation
-		/// </summary>
-		/// <param name="ToCheck"></param>
-		/// <returns></returns>
-		/// <exception cref="NullReferenceException"></exception>
-		bool CheckIfNull(object ToCheck, string messageIfNull)
-		{
-			if (ToCheck is null)
-			{
-				throw new NullReferenceException(messageIfNull);
-			}
-			else
-			{
-				return true;
-			}
-		}
-
 
 		/// <summary>
 		/// Solving for time, knowing VS A S VE
