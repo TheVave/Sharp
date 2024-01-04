@@ -1,11 +1,8 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
-using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MISC.DelaunayTriangulator;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace SharpPhysics.Utilities.MISC
 {
@@ -16,8 +13,8 @@ namespace SharpPhysics.Utilities.MISC
 		{
 			if (mesh.MeshPoints is null)
 			{
-				mesh.MeshPoints = new Point[mesh.MeshPointsActualX.Length];
-				for (int i = 0; i < mesh.MeshPoints.Length; i++) mesh.MeshPoints[i] = new Point();
+				mesh.MeshPoints = new SharpPhysics._2d.ObjectRepresentation.Point[mesh.MeshPointsActualX.Length];
+				for (int i = 0; i < mesh.MeshPoints.Length; i++) mesh.MeshPoints[i] = new SharpPhysics._2d.ObjectRepresentation.Point();
 
 				for (int i = 0; i < mesh.MeshPointsActualX.Length; i++)
 				{
@@ -43,6 +40,27 @@ namespace SharpPhysics.Utilities.MISC
 
 			
 			return vertices;
+		}
+
+		//Code from: https://stackoverflow.com/questions/18407349/systemdrawingbitmap-to-unsigned-char
+		/// <summary>
+		/// Converts a bitmap image to a byte[]
+		/// </summary>
+		/// <param name="bitmap"></param>
+		/// <returns></returns>
+		public static unsafe byte[] GetImageBytes(Bitmap bitmap)
+		{
+			Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+			BitmapData bmpData = bitmap.LockBits(rect, ImageLockMode.ReadOnly,
+				bitmap.PixelFormat);
+
+			IntPtr ptr = bmpData.Scan0;
+			int bytes = Math.Abs(bmpData.Stride) * bitmap.Height;
+			byte[] rgbValues = new byte[bytes];
+			Marshal.Copy(ptr, rgbValues, 0, bytes);
+			bitmap.UnlockBits(bmpData);
+			return rgbValues;
+			//do whatever with data
 		}
 	}
 }

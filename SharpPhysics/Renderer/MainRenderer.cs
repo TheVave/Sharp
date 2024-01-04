@@ -51,11 +51,6 @@ namespace SharpPhysics.Renderer
 		public static Tuple<int, int> WndSize = Tuple.Create(800, 600);
 
 		/// <summary>
-		/// If the renderer should use MonoGame for rendering
-		/// </summary>
-		public static bool UseMonoGame = true;
-
-		/// <summary>
 		/// The scene to be rendered
 		/// </summary>
 		public static int sceneRendered = 0;

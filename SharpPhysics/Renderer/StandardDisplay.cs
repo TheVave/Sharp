@@ -20,7 +20,7 @@ namespace SharpPhysics.Renderer.Tests
 
 		RenderedObject objectToRender;
 
-		Vector2 position = new Vector2(300, 300);
+		Vector2 position = new Vector2(200, 200);
 		Vector2 scale = new Vector2(150, 150);
 		float rotation = 0;
 		Matrix4x4 trans;
@@ -40,7 +40,6 @@ namespace SharpPhysics.Renderer.Tests
 			glClearColor(0, 0, 0, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			rotation = MathF.Sin((float)GameTime.TotalElapsedSeconds) * MathF.PI;
 
 			trans = Matrix4x4.CreateTranslation(position.X, position.Y, 0);
 			sca = Matrix4x4.CreateScale(scale.X, scale.Y, 1);
@@ -87,19 +86,19 @@ namespace SharpPhysics.Renderer.Tests
                                         FragColor = vertexColor;
                                     }";
 			shader = new Shaders.Shader(vertexShader, fragmentShader);
+			vao = glGenVertexArray();
 
 			// creating vao and vbo
-			vao = glGenVertexArray();
 			vbo = glGenBuffer();
+			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 			// binding vao and vbo
 			glBindVertexArray(vao);
-			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 			objectToRender.vertices = RenderingUtils.MeshToVertices(_2dBaseObjects.LoadSquareMesh());
 			objectToRender.colors = new float[(objectToRender.vertices.Length / 2) * 3];
 			Random rand = new Random();
-			for (int i = 0; i < objectToRender.colors.Length; i++) objectToRender.colors[i] = (float)rand.NextDouble();
+			for (int j = 0; j < objectToRender.colors.Length; j++) objectToRender.colors[j] = (float)rand.NextDouble();
 			objectToRender.Init();
 
 			fixed (float* floatPtr = &objectToRender.compiledVertexColorsArray[0])

@@ -12,18 +12,21 @@
     <RepositoryUrl>https://github.com/TheVave/SharpPhysics</RepositoryUrl>
     <AnalysisLevel>6.0-all</AnalysisLevel>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <AssemblyName>SharpPhysics</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningLevel>1</WarningLevel>
-    <DebugType>portable</DebugType>
+    <DebugType>embedded</DebugType>
     <FileAlignment>1024</FileAlignment>
+    <IsTrimmable>True</IsTrimmable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <WarningLevel>0</WarningLevel>
-    <DebugType>portable</DebugType>
+    <DebugType>embedded</DebugType>
     <FileAlignment>1024</FileAlignment>
+    <IsTrimmable>True</IsTrimmable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -118,6 +121,10 @@
 
   <ItemGroup>
     <Folder Include="UI\Renderer\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

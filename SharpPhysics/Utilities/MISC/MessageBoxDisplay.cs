@@ -15,7 +15,7 @@ namespace SharpPhysics.Utilities.MISC
 		MB_ICONHAND =                     0x10,
 		MB_ICONEXCLAMATION =              0x30,
 		MB_ICONWARNING =                  0x30,
-		MB_INCONINFO =                    0x40,
+		MB_ICONINFO =                     0x40,
 		MB_NOICON =                       0x00,
 		MB_ABORTRETRYIGNORE =             0x02,
 		MB_CANCELTRYCONTINUE =            0x06,
@@ -32,17 +32,11 @@ namespace SharpPhysics.Utilities.MISC
 			if (crash) throw new Exception(message + " (Shown in message box)");
 		}
 
-		public static MessageBoxResult ShowMessageBox(int iconStyle, int buttonStyle, string message, string title)
-		{
-			return (MessageBoxResult)MessageBox(IntPtr.Zero, message, title, iconStyle | buttonStyle);
-		}
-		public static void ThrowNotImplementedException()
-		{
+		public static MessageBoxResult ShowMessageBox(int iconStyle, int buttonStyle, string message, string title) =>
+			(MessageBoxResult)MessageBox(IntPtr.Zero, message, title, iconStyle | buttonStyle);
+		public static void ThrowNotImplementedException() =>
 			ThrowError("Not Implemented.", true);
-		}
-		public static bool YesNoQuestion(string question, string title, bool crashOnNo)
-		{
-			return true;
-		}
+		public static bool YesNoQuestion(string question, string title, bool crashOnNo) => 
+			(ShowMessageBox(MB_ICONINFO, MB_YESNO, question, title) == MessageBoxResult.YES) ? true : false;
 	}
 }
