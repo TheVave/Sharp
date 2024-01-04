@@ -2,8 +2,8 @@
 {
 	public class Circle
 	{
-		public Point Center { get; }
-		public double Radius { get; }
+		public Point Center { get; } = new Point();
+		public double Radius { get; } = 0;
 
 		public Circle(Point center, double radius)
 		{

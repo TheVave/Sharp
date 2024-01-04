@@ -55,6 +55,10 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			double[] zCopyLayer = new double[MeshPointsX.Length];
 			Array.Copy(MeshPointsX, zCopyLayer, MeshPointsZ.Length);
 			MeshPointsActualZ = xCopyLayer;
+
+			MeshPoints = new Point[MeshPointsActualX.Length];
+			for (int i = 0; i < MeshPointsActualX.Length; i++)
+				MeshPoints[i] = new Point(MeshPointsActualX[i], MeshPointsActualY[i]);
 		}
 		public Mesh(double[] MeshPointsX, double[] MeshPointsY)
 		{

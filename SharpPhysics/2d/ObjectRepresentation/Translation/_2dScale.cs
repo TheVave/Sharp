@@ -22,8 +22,9 @@ namespace SharpPhysics._2d.ObjectRepresentation.Translation
 			xSca = 0;
 			ySca = 0;
 		}
-		public short xSca;
-		public short ySca;
-		public short zSca;
+		/// <summary>
+		/// Scale in pixels
+		/// </summary>
+		public short xSca, ySca, zSca = 0;
 	}
 }

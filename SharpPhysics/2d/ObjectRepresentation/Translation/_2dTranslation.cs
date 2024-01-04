@@ -2,11 +2,11 @@
 {
 	public class _2dTranslation
 	{
-		public _2dTranslation(int xPos, int yPos, int zPos)
+		public _2dTranslation(double xPos, double yPos, double zPos)
 		{
 			ObjectPosition = new _2dPosition(xPos, yPos, zPos);
 			ObjectRotation = new _2dRotation(0);
-			ObjectScale = new _2dScale(1, 1, 1);
+			ObjectScale = new _2dScale(128, 128, 0);
 		}
 
 		public _2dTranslation()

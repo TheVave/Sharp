@@ -15,6 +15,6 @@ namespace SharpPhysics._2d.ObjectRepresentation.Translation
 		{
 			xRot = 0;
 		}
-		public float xRot;
+		public float xRot = 0;
 	}
 }
