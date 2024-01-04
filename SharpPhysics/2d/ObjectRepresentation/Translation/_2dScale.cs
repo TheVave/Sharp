@@ -7,11 +7,6 @@ namespace SharpPhysics._2d.ObjectRepresentation.Translation
 		{
 			return $"Scale:{xSca},{ySca},{zSca}";
 		}
-		public _2dScale(short x, short y, short z)
-		{
-			xSca = x;
-			ySca = y;
-		}
 		public _2dScale(short x, short y)
 		{
 			xSca = x;

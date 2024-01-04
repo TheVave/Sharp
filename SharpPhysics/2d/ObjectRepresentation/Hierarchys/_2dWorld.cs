@@ -5,14 +5,14 @@ namespace SharpPhysics
 {
 	public static class _2dWorld
 	{
-		public static _2dSceneHierarchy[] SceneHierarchies = new _2dSceneHierarchy[0];
-		public static string[] HierarchyNames = new string[0];
-		internal static int[] ids = new int[0];
+		public static _2dSceneHierarchy[] SceneHierarchies = [];
+		public static string[] HierarchyNames = [];
+		internal static int[] ids = [];
 		public static void RegisterSceneHierarchy(_2dSceneHierarchy hierarchy)
 		{
 			try
 			{
-				SceneHierarchies = SceneHierarchies.Append(hierarchy).ToArray();
+				SceneHierarchies = [.. SceneHierarchies, hierarchy];
 			}
 			catch (System.Exception e)
 			{

@@ -1,4 +1,7 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+
 namespace SharpPhysics._2d.ObjectRepresentation
 {
 	public struct _2dPhysicsParams
@@ -21,12 +24,12 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// <summary>
 		/// The objects that the object to simulate can collide with
 		/// </summary>
-		public _2dSimulatedObject[] CollidableObjects = Array.Empty<_2dSimulatedObject>();
+		public _2dSimulatedObject[] CollidableObjects = [];
 
 		/// <summary>
 		/// The objects that the object is linked with, so that it will follow the motion of the parent.
 		/// </summary>
-		public _2dSimulatedObject[] LinkedObjects = Array.Empty<_2dSimulatedObject>();
+		public _2dSimulatedObject[] LinkedObjects = [];
 
 		/// <summary>
 		/// the time multiplier
@@ -64,13 +67,13 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// eg. SpeedDirection = new double { 10,0 }
 		/// the object would go ten units in the x direction and 10 in the y direction
 		/// </summary>
-		public double[] Acceleration = new double[] { 0, 0 };
+		public double[] Acceleration = [0, 0];
 
 
 		/// <summary>
 		/// momentum
 		/// </summary>
-		public double[] Momentum = new double[] { 0, 0 };
+		public double[] Momentum = [0, 0];
 
 		/// <summary>
 		/// The acceleration that the object will be experiencing.

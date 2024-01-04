@@ -12,7 +12,7 @@ namespace SharpPhysics.Renderer.Textures
 	{
 		public static Texture GetFilePreloadedInfo(string name)
 		{
-			string[] txtrContents = Array.Empty<string>();
+			string[] txtrContents = [];
 			try
 			{
 				txtrContents = File.ReadAllLines($@"{Environment.CurrentDirectory}\Ctnt\Txtrs\{name}");
@@ -35,7 +35,7 @@ namespace SharpPhysics.Renderer.Textures
 			{
 				ErrorHandler.ThrowError("Error, External error, Image too big for short. Image width/height can't exceed 32000.", true);
 			}
-			List<byte> imageContents = new();
+			List<byte> imageContents = [];
 			try
 			{
 				foreach (string line in txtrContents) imageContents.AddRange(Encoding.GetEncoding("UTF-8").GetBytes(line));
@@ -68,7 +68,7 @@ namespace SharpPhysics.Renderer.Textures
 		}
 		public static void SaveTexture(string name, Bitmap bmp)
 		{
-			MemoryStream strm = new MemoryStream();
+			MemoryStream strm = new();
 			try
 			{
 				bmp.Save(strm, ImageFormat.Bmp);
@@ -77,7 +77,7 @@ namespace SharpPhysics.Renderer.Textures
 			{
 				Console.Error.WriteLine("Non-Windows OS, SharpPhysics is only compatible with Windows.");
 			}
-			catch (ArgumentNullException e)
+			catch
 			{
 				ErrorHandler.ThrowError("Unknown Error, TexturePreloader class. SaveTexture(string, bitmap)", true);
 			}

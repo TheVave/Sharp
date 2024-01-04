@@ -4,6 +4,7 @@ using SharpPhysics._2d.Objects;
 using SharpPhysics._2d.Physics;
 using SharpPhysics._2d.Raycasting;
 using SharpPhysics.Simulation.ObjectHierarchy;
+using SharpPhysics.Utilities.MISC.Errors;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
@@ -35,7 +36,14 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			ObjectMesh = objectMesh;
 			ObjectPhysicsParams = objectPhysicsParams;
 			Translation = translation;
-			SimulationHierarchy.Hierarchies[0].Objects = SimulationHierarchy.Hierarchies[0].Objects.Append(this).ToArray();
+			try
+			{
+				SimulationHierarchy.Hierarchies[0].Objects = [.. SimulationHierarchy.Hierarchies[0].Objects, this];
+			}
+			catch (Exception e)
+			{
+				ErrorHandler.ThrowError("Error, Unknown error, _2dSimulatedObject.cs _2dSimulatedObject(Mesh,_2dPhysicsParams,_2dTranslation), exact error: " + e, true);
+			}
 		}
 
 		/// <summary>
@@ -58,7 +66,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// <param name="scene"></param>
 		public void RegisterToScene(int scene)
 		{
-			SimulationHierarchy.Hierarchies[scene].Objects = SimulationHierarchy.Hierarchies[0].Objects.Append(this).ToArray();
+			SimulationHierarchy.Hierarchies[scene].Objects = [.. SimulationHierarchy.Hierarchies[0].Objects, this];
 		}
 
 		/// <summary>
@@ -66,7 +74,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// </summary>
 		public void RegisterToScene()
 		{
-			SimulationHierarchy.Hierarchies[0].Objects = SimulationHierarchy.Hierarchies[0].Objects.Append(this).ToArray();
+			SimulationHierarchy.Hierarchies[0].Objects = [.. SimulationHierarchy.Hierarchies[0].Objects, this];
 		}
 
 		public void ApplyVectorMomentum(_2dVector force)
@@ -85,9 +93,15 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		public _2dPhysicsSimulator StartPhysicsSimulation()
 		{
 			_2dPhysicsSimulator physicsSimulator = new(this);
-			physicsSimulator.StartPhysicsSimulator();
+			try
+			{
+				physicsSimulator.StartPhysicsSimulator();
+			}
+			catch (Exception e) 
+			{
+				ErrorHandler.ThrowError("Error, Unknown error, _2dSimulatedObject.cs, StartPhysicsSimulation() exact error: " + e, true);
+			}
 			return physicsSimulator;
-
 		}
 	}
 }

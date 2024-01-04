@@ -22,7 +22,9 @@ namespace SharpPhysics.Renderer
 		/// <summary>
 		/// The title to display for the app window.
 		/// </summary>
+#pragma warning disable CA2211 // Non-constant fields should not be visible
 		public static string WindowTitle = "SharpPhysics";
+#pragma warning restore CA2211 // Non-constant fields should not be visible
 
 		/// <summary>
 		/// the target FPS, set with SetFrameRate.
@@ -60,7 +62,7 @@ namespace SharpPhysics.Renderer
 
 		public static void TriangleTest()
 		{
-			HelloTriangle.Main(Array.Empty<string>());
+			HelloTriangle.Main([]);
 		}
 
 		/// <summary>
