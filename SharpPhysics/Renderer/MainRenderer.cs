@@ -56,7 +56,9 @@ namespace SharpPhysics.Renderer
 		/// <summary>
 		/// What the renderer should execute before the StandardDisplay.Init method.
 		/// </summary>
-		public static event EventHandler<string> ExecuteBeforeLoad;
+		public static event EventHandler ExecuteBeforeLoad;
+
+		public static event EventHandler ExecuteAfterLoad;
 
 		private static bool startRun = false;
 		public static void InitRendering()
@@ -65,8 +67,14 @@ namespace SharpPhysics.Renderer
 			Game game = new StandardDisplay(800, 600, "SharpPhysics");
 			Display = (StandardDisplay)game;
 			if (ExecuteBeforeLoad is not null)
-				ExecuteBeforeLoad.Invoke(null, string.Empty);
+				ExecuteBeforeLoad.Invoke(null, null);
 			game.Run();
+		}
+
+		private static void ExecuteAfterLoad_()
+		{
+			if (ExecuteAfterLoad is not null)
+				ExecuteAfterLoad.Invoke(null, null);
 		}
 
 		public static void TriangleTest()

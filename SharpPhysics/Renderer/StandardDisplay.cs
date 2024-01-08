@@ -3,6 +3,7 @@ using SharpPhysics._2d.Objects;
 using SharpPhysics.Utilities.MISC;
 using System.Numerics;
 using static OpenGL.GL;
+using static SharpPhysics.Renderer.MainRenderer;
 
 namespace SharpPhysics.Renderer
 {
@@ -129,6 +130,9 @@ namespace SharpPhysics.Renderer
 			glGenerateMipmap(GL_TEXTURE_2D);
 
 			cam = new Camera2D(DisplayManager.WindowSize / 2, 1);
+
+			if (ExecuteBeforeLoad is not null)
+				ExecuteBeforeLoad.Invoke()
 		}
 
 		protected override void Update()
