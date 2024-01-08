@@ -15,7 +15,7 @@ namespace SharpPhysics.Renderer.Textures
 			string[] txtrContents = [];
 			try
 			{
-				txtrContents = File.ReadAllLines($@"{Environment.CurrentDirectory}\Ctnt\Txtrs\{name}");
+				txtrContents = File.ReadAllLines($@"{Environment.CurrentDirectory}\Ctnt\Txtrs\{name}.txr");
 			}
 			catch
 			{
@@ -33,7 +33,7 @@ namespace SharpPhysics.Renderer.Textures
 			}
 			catch (InvalidCastException e)
 			{
-				ErrorHandler.ThrowError("Error, External error, Image too big for short. Image width/height can't exceed 32000.", true);
+				ErrorHandler.ThrowError("Error, External error, Image too big for short. Image width/height can't exceed 32600.", true);
 			}
 			List<byte> imageContents = [];
 			try
@@ -73,7 +73,7 @@ namespace SharpPhysics.Renderer.Textures
 			{
 				bmp.Save(strm, ImageFormat.Bmp);
 			}
-			catch (ExternalException ex) 
+			catch (ExternalException ex)
 			{
 				Console.Error.WriteLine("Non-Windows OS, SharpPhysics is only compatible with Windows.");
 			}
@@ -82,14 +82,15 @@ namespace SharpPhysics.Renderer.Textures
 				ErrorHandler.ThrowError("Unknown Error, TexturePreloader class. SaveTexture(string, bitmap)", true);
 			}
 			strm.Position = 0;
+			byte[] bytes = [];
 			try
 			{
-				byte[] bytes = new byte[strm.Length];
+				bytes = new byte[strm.Length];
 				strm.Read(bytes, 0, (int)strm.Length);
 			}
 			catch (ObjectDisposedException e)
 			{
-				ErrorHandler.ThrowError("Error, Internal Error, image disposed, " + name, false);
+				ErrorHandler.ThrowError("Error, Internal Error, image disposed, " + name, true);
 			}
 			catch (InvalidCastException ice)
 			{
@@ -99,6 +100,9 @@ namespace SharpPhysics.Renderer.Textures
 			{
 				ErrorHandler.ThrowError("Error, Internal Error, Unknown exception, TexturePreloader class. Exact error: " + e.Message, true);
 			}
+			string firstLine = bmp.Width + " " + bmp.Height + "\n";
+			File.WriteAllText($"{Environment.CurrentDirectory}\\Ctnt\\Txtrs\\main.txr", firstLine);
+			File.WriteAllBytes($"{Environment.CurrentDirectory}\\Ctnt\\Txtrs\\main.txr", File.ReadAllBytes($"{Environment.CurrentDirectory}\\Ctnt\\Txtrs\\main.txr").Concat(bytes).ToArray());
 		}
 	}
 }

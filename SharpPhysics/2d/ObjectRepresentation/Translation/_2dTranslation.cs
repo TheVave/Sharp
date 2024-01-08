@@ -6,14 +6,14 @@
 		{
 			ObjectPosition = new _2dPosition(xPos, yPos, zPos);
 			ObjectRotation = new _2dRotation(0);
-			ObjectScale = new _2dScale(128, 128, 0);
+			ObjectScale = new _2dScale(128, 128);
 		}
 
 		public _2dTranslation()
 		{
 			ObjectPosition = new _2dPosition(0, 0, 0);
 			ObjectRotation = new _2dRotation(0);
-			ObjectScale = new _2dScale(128, 128, 128);
+			ObjectScale = new _2dScale(128, 128);
 		}
 		public override string ToString()
 		{

@@ -1,14 +1,11 @@
 ﻿using SharpPhysics.Renderer;
+using SharpPhysics.Renderer.Textures;
 
-new Thread(() =>
+
+MainRenderer.ExecuteBeforeLoad += Load;
+void Load(object? sender, string e)
 {
-	while (true)
-	{
-		Task.Delay(16).Wait();
-		if (SharpPhysics.Input.InputManager.IsKeyDown(SharpPhysics.Input.VirtualKey.ESCAPE))
-		{
-			Environment.Exit(0);
-		}
-	}
-}).Start();
+	MainRenderer.Display.objectToRender.OTexture = TexturePreloader.GetFilePreloadedInfo("main");
+}
+
 MainRenderer.InitRendering();

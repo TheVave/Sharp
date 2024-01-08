@@ -26,6 +26,8 @@ namespace SharpPhysics.Renderer
 		public static string WindowTitle = "SharpPhysics";
 #pragma warning restore CA2211 // Non-constant fields should not be visible
 
+		public static StandardDisplay Display;
+
 		/// <summary>
 		/// the target FPS, set with SetFrameRate.
 		/// </summary>
@@ -51,12 +53,19 @@ namespace SharpPhysics.Renderer
 		/// </summary>
 		public static int sceneRendered = 0;
 
+		/// <summary>
+		/// What the renderer should execute before the StandardDisplay.Init method.
+		/// </summary>
+		public static event EventHandler<string> ExecuteBeforeLoad;
 
-
+		private static bool startRun = false;
 		public static void InitRendering()
 		{
 			Glfw.Init();
 			Game game = new StandardDisplay(800, 600, "SharpPhysics");
+			Display = (StandardDisplay)game;
+			if (ExecuteBeforeLoad is not null)
+				ExecuteBeforeLoad.Invoke(null, string.Empty);
 			game.Run();
 		}
 

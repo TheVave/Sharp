@@ -138,7 +138,7 @@
 		private static int toReturn = 0;
 
 		/// <summary>
-		/// 
+		/// Converts an string to an int without length.
 		/// </summary>
 		/// <param name="str"></param>
 		/// <returns></returns>
@@ -146,9 +146,16 @@
 		public static int ParseStrToInt32(string str)
 		{
 			toReturn = ((str.StartsWith('-')) ? -0 : 0);
+			int multiply_val = 1;
 			foreach (char c in str)
-				try { SubtractAwayFromZero(toReturn, int.Parse(c.ToString())); }
-				catch { return toReturn; }
+				try {
+					toReturn = SubtractAwayFromZero(toReturn,
+					int.Parse(c.ToString()) * multiply_val);
+					multiply_val *= 10;
+				}
+				catch { 
+					return int.Parse(toReturn.ToString().Reverse().ToArray()); 
+				}
 			return int.MinValue;
 		}
 	}
