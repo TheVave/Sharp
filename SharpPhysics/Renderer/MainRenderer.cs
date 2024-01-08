@@ -71,7 +71,7 @@ namespace SharpPhysics.Renderer
 			game.Run();
 		}
 
-		private static void ExecuteAfterLoad_()
+		public static void ExecuteAfterLoad_()
 		{
 			if (ExecuteAfterLoad is not null)
 				ExecuteAfterLoad.Invoke(null, null);

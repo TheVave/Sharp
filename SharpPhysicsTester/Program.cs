@@ -3,7 +3,7 @@ using SharpPhysics.Renderer.Textures;
 
 
 MainRenderer.ExecuteBeforeLoad += Load;
-void Load(object? sender, string e)
+void Load(object? sender, EventArgs e)
 {
 	MainRenderer.Display.objectToRender.OTexture = TexturePreloader.GetFilePreloadedInfo("main");
 }

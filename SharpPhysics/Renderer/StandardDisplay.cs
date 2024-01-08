@@ -131,8 +131,7 @@ namespace SharpPhysics.Renderer
 
 			cam = new Camera2D(DisplayManager.WindowSize / 2, 1);
 
-			if (ExecuteBeforeLoad is not null)
-				ExecuteBeforeLoad.Invoke()
+			ExecuteAfterLoad_();
 		}
 
 		protected override void Update()
