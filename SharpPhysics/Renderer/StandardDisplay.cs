@@ -113,7 +113,9 @@ namespace SharpPhysics.Renderer
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			glBindVertexArray(0);
 
-			//texture
+			TextureLoad();
+
+			//textures
 			uint texture;
 			glGenTextures(1, &texture);
 			glBindTexture(GL_TEXTURE_2D, texture);
