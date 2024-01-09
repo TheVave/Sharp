@@ -50,7 +50,7 @@ namespace SharpPhysics.Renderer.Textures
 			}
 			try
 			{
-				texture.ImageBytes = new byte[imageContents.Count];
+				texture.ImageBytes = new byte[texture.ImageWidth * texture.ImageHeight];
 			}
 			catch
 			{
@@ -62,7 +62,7 @@ namespace SharpPhysics.Renderer.Textures
 			}
 			catch (System.Exception e)
 			{
-				ErrorHandler.ThrowError("Error, Internal Error, Possible missing data.", true);
+				ErrorHandler.ThrowError("Error, Internal Error, Possible missing data or incorrect image size.", true);
 			}
 			return texture;
 		}

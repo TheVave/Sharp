@@ -60,6 +60,8 @@ namespace SharpPhysics.Renderer
 
 		public static event EventHandler ExecuteAfterLoad;
 
+		public static event EventHandler TextureLoader;
+
 		private static bool startRun = false;
 		public static void InitRendering()
 		{
@@ -71,10 +73,16 @@ namespace SharpPhysics.Renderer
 			game.Run();
 		}
 
-		public static void ExecuteAfterLoad_()
+		internal static void ExecuteAfterLoad_()
 		{
 			if (ExecuteAfterLoad is not null)
 				ExecuteAfterLoad.Invoke(null, null);
+		}
+
+		internal static void TextureLoad()
+		{
+			if (TextureLoader is not null)
+				TextureLoader.Invoke(null, null);
 		}
 
 		public static void TriangleTest()
