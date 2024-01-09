@@ -1,4 +1,7 @@
-﻿namespace SharpPhysics.Utilities.MathUtils
+﻿using System;
+using System.Linq;
+
+namespace SharpPhysics.Utilities.MathUtils
 {
 	public static class GenericMathUtils
 	{

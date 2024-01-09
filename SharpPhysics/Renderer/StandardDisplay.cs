@@ -91,7 +91,7 @@ namespace SharpPhysics.Renderer
 
 			objectToRender.vertices = RenderingUtils.MeshToVertices(_2dBaseObjects.LoadSquareMesh());
 			objectToRender.colors = new float[(objectToRender.vertices.Length / 2) * 3];
-			Random rand = new Random();
+            System.Random rand = new System.Random();
 			for (int j = 0; j < objectToRender.colors.Length; j++) objectToRender.colors[j] = (float)rand.NextDouble();
 			objectToRender.Init();
 
