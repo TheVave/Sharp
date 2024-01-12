@@ -38,7 +38,7 @@ namespace SharpPhysics._2d.Physics
 		public int TickSpeed = 60;
 		public _2dMovementRepresenter CurrentMovement { get; private set; } = new(new _2dPosition(0, 0));
 		public int SpeedMultiplier = 1;
-		public IExecuteAtCollision ToExecuteAtCollision;
+		public IExecuteAtCollision? ToExecuteAtCollision;
 		public int DelayAmount;
 		public double TimePerSimulationTick = 0.001;
 
