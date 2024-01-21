@@ -34,17 +34,14 @@
     <Compile Remove="bin\**" />
     <Compile Remove="deps\**" />
     <Compile Remove="NewFolder1\**" />
-    <Compile Remove="NewFolder\**" />
     <Compile Remove="obj\**" />
     <EmbeddedResource Remove="bin\**" />
     <EmbeddedResource Remove="deps\**" />
     <EmbeddedResource Remove="NewFolder1\**" />
-    <EmbeddedResource Remove="NewFolder\**" />
     <EmbeddedResource Remove="obj\**" />
     <None Remove="bin\**" />
     <None Remove="deps\**" />
     <None Remove="NewFolder1\**" />
-    <None Remove="NewFolder\**" />
     <None Remove="obj\**" />
   </ItemGroup>
 
