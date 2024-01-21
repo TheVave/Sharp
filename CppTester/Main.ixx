@@ -4,8 +4,7 @@ export module Main;
 
 using namespace std;
 extern "C" {
-	int main();
-}
-int main() {
-	MessageBoxW(NULL, L"test", L"also test", MB_OK | MB_ICONINFORMATION);
+	__declspec (dllexport) void __cdecl mn() {
+		MessageBoxW(NULL, L"test", L"also test", MB_OK | MB_ICONINFORMATION);
+	}
 }

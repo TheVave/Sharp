@@ -55,6 +55,7 @@
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
+    <None Include="..\x64\Debug\CppTester.dll" Link="CppTester.dll" />
   </ItemGroup>
 
   <ItemGroup>
