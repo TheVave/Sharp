@@ -3,4 +3,5 @@ using SharpPhysics.Renderer;
 using SharpPhysics.Renderer.Textures;
 
 
-DXRenderer.Test();
+StandardDXDisplay displayMain = new StandardDXDisplay();
+displayMain.InitRendering();

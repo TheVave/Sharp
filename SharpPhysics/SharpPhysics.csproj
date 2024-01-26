@@ -69,7 +69,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+    <PackageReference Include="Silk.NET" Version="2.20.0" />
+    <PackageReference Include="Silk.NET.Core" Version="2.20.0" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
   </ItemGroup>
 
 </Project>
