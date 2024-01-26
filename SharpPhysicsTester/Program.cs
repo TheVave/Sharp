@@ -1,7 +1,15 @@
-﻿using SharpPhysics.DXRendering;
-using SharpPhysics.Renderer;
+﻿using SharpPhysics.Renderer;
 using SharpPhysics.Renderer.Textures;
 
 
-StandardDXDisplay displayMain = new StandardDXDisplay();
-displayMain.InitRendering();
+
+MainRenderer.TextureLoader += MainLoadTextures;
+
+void MainLoadTextures(object? sender, RenderedObject e)
+{
+	e.OTexture = TexturePreloader.GetFilePreloadedInfo("main");
+};
+
+
+
+MainRenderer.InitRendering();

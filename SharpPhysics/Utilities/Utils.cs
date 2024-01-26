@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace SharpPhysics.Utilities
 {
-	public class Utils
+	public static class Utils
 	{
-		public unsafe void InvokeMethod(Method methd, object* parameters)
-		{
-
-		}
+		public static nint NULLPTR = 0;
 	}
 }

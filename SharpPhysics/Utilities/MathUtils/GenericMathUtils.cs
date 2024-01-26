@@ -156,10 +156,10 @@ namespace SharpPhysics.Utilities.MathUtils
 					int.Parse(c.ToString()) * multiply_val);
 					multiply_val *= 10;
 				}
-				catch { 
-					return int.Parse(toReturn.ToString().Reverse().ToArray()); 
+				catch {
+					break;
 				}
-			return int.MinValue;
+			return int.Parse(toReturn.ToString().Reverse().ToArray());
 		}
 	}
 }

@@ -23,9 +23,7 @@ namespace SharpPhysics.Renderer
 		/// <summary>
 		/// The title to display for the app window.
 		/// </summary>
-#pragma warning disable CA2211 // Non-constant fields should not be visible
 		public static string WindowTitle = "SharpPhysics";
-#pragma warning restore CA2211 // Non-constant fields should not be visible
 
 		public static StandardDisplay Display;
 
@@ -61,13 +59,17 @@ namespace SharpPhysics.Renderer
 
 		public static event EventHandler ExecuteAfterLoad;
 
-		public static event EventHandler TextureLoader;
+		public static event EventHandler<RenderedObject> TextureLoader;
+
+		public static StandardDisplay game1;
 
 		private static bool startRun = false;
 		public static void InitRendering()
 		{
 			Glfw.Init();
+			
 			Game game = new StandardDisplay(800, 600, "SharpPhysics");
+			game1 = new StandardDisplay(800, 600, "SharpPhysics");
 			Display = (StandardDisplay)game;
 			if (ExecuteBeforeLoad is not null)
 				ExecuteBeforeLoad.Invoke(null, null);
@@ -83,7 +85,7 @@ namespace SharpPhysics.Renderer
 		internal static void TextureLoad()
 		{
 			if (TextureLoader is not null)
-				TextureLoader.Invoke(null, null);
+				TextureLoader.Invoke(null, game1.);
 		}
 
 		public static void TriangleTest()

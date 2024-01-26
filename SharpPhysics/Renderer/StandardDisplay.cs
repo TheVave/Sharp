@@ -115,21 +115,21 @@ namespace SharpPhysics.Renderer
 
 			TextureLoad();
 
-			////textures
-			//uint texture;
-			//glGenTextures(1, &texture);
-			//glBindTexture(GL_TEXTURE_2D, texture);
-			//// set the texture wrapping/filtering options (on the currently bound texture object)
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			//textures
+			uint texture;
+			glGenTextures(1, &texture);
+			glBindTexture(GL_TEXTURE_2D, texture);
+			// set the texture wrapping/filtering options (on the currently bound texture object)
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			//fixed (byte* data = &objectToRender.OTexture.ImageBytes[0])
-			//{
-			//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, objectToRender.OTexture.ImageHeight, objectToRender.OTexture.ImageWidth, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-			//}
-			//glGenerateMipmap(GL_TEXTURE_2D);
+			fixed (byte* data = &objectToRender.OTexture.ImageBytes[0])
+			{
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, objectToRender.OTexture.ImageHeight, objectToRender.OTexture.ImageWidth, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			}
+			glGenerateMipmap(GL_TEXTURE_2D);
 
 			cam = new Camera2D(DisplayManager.WindowSize / 2, 1);
 
