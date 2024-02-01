@@ -5,11 +5,6 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpPhysics", "SharpPhysics\SharpPhysics.csproj", "{7429726C-6660-4ED0-BC34-3C03E5BD1353}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BCE0470E-B547-455B-9D30-C7198D880CFD}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpPhysicsTester", "SharpPhysicsTester\SharpPhysicsTester.csproj", "{00CF71D5-2721-4E97-87B7-9EC7A56D02A6}"
 EndProject
 Global

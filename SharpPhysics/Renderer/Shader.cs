@@ -50,7 +50,7 @@ namespace SharpPhysics.Renderer
 			uint fs = glCreateShader(GL_FRAGMENT_SHADER);
 			glShaderSource(fs, FragmentCode);
 			glCompileShader(fs);
-
+			
 			int[] vsstatus = glGetShaderiv(vs, GL_COMPILE_STATUS, 1);
 			int[] fsstatus = glGetShaderiv(fs, GL_COMPILE_STATUS, 1);
 

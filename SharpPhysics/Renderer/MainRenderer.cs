@@ -85,7 +85,7 @@ namespace SharpPhysics.Renderer
 		internal static void TextureLoad()
 		{
 			if (TextureLoader is not null)
-				TextureLoader.Invoke(null, game1.);
+				TextureLoader.Invoke(null, game1.objectToRender);
 		}
 
 		public static void TriangleTest()

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using SharpPhysics._2d.ObjectRepresentation.Translation;
+using System;
 using System.Linq;
+using System.Numerics;
 
 namespace SharpPhysics.Utilities.MathUtils
 {
@@ -106,19 +108,18 @@ namespace SharpPhysics.Utilities.MathUtils
 		/// <param name="a"></param>
 		/// <param name="toSubtract"></param>
 		/// <returns></returns>
-		public static double SubtractToZero(double a, double toSubtract)
-		{
-			if (IsNegative(a))
-			{
-				if (toSubtract < a) return 0;
-				else return a + toSubtract;
-			}
-			else /* if (IsPositive(a)) */
-			{
-				if (toSubtract > a) return 0;
-				else return a - toSubtract;
-			}
-		}
+		public static double SubtractToZero(double a, double toSubtract) =>
+			(IsNegative(a)) ? ((toSubtract < a) ? 0 : a + toSubtract) : ((toSubtract > a) ? 0 : a - toSubtract);
+
+		// /\ (This is the above functionality in a readable form)
+		// ||
+		// ||
+		// if (isNegative(a)
+		//  if (toSubtract < a) return 0;
+		//	else return a + tosubtract;
+		// else
+		//	if (tosubtract > a) return 0;
+		//  else return a - tosubtract;
 
 		/// <summary>
 		/// Subtracts away from zero
@@ -151,15 +152,34 @@ namespace SharpPhysics.Utilities.MathUtils
 			toReturn = ((str.StartsWith('-')) ? -0 : 0);
 			int multiply_val = 1;
 			foreach (char c in str)
-				try {
+				try
+				{
 					toReturn = SubtractAwayFromZero(toReturn,
 					int.Parse(c.ToString()) * multiply_val);
 					multiply_val *= 10;
 				}
-				catch {
+				catch
+				{
 					break;
 				}
 			return int.Parse(toReturn.ToString().Reverse().ToArray());
+		}
+
+		public static double DegreesToRadians(double degrees) => degrees / 57.2957795;
+		public static double RadiansToDegrees(double radians) => radians * 57.2957795;
+
+		public static double GetAngleFromPoints(_2dPosition a, _2dPosition b)
+		{
+			double strangeDegrees = RadiansToDegrees(Math.Atan((a.xPos - b.xPos) / (a.yPos - b.yPos)));
+			double newDegrees = 0;
+			// very hacky ||
+			//            ||
+			//            \/
+			if      (b.xPos > a.xPos && b.yPos > a.yPos) newDegrees = strangeDegrees;
+			else if (b.xPos > a.xPos && b.yPos < a.yPos) newDegrees = Math.Abs(strangeDegrees) + 90;
+			else if (b.xPos < a.xPos && b.yPos < a.yPos) newDegrees = strangeDegrees + 180;
+			else if (b.xPos < a.xPos && b.yPos > a.yPos) newDegrees = Math.Abs(strangeDegrees) + 180;
+			return newDegrees;
 		}
 	}
 }

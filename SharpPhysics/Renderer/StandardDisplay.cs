@@ -27,6 +27,7 @@ namespace SharpPhysics.Renderer
 
 		public StandardDisplay(int initialWindowWidth, int initialWindowHeight, string windowTitle) : base(initialWindowWidth, initialWindowHeight, windowTitle)
 		{
+			objectToRender = new RenderedObject();
 		}
 
 		protected override void Draw()

@@ -6977,6 +6977,7 @@ namespace OpenGL
 				_glDrawElementsInstanced(mode, count, GL_UNSIGNED_BYTE, i, instanceCount);
 			}
 		}
+
 		/// <summary>
 		/// Draw multiple instances of a set of elements.
 		/// </summary>
@@ -6991,6 +6992,7 @@ namespace OpenGL
 				_glDrawElementsInstanced(mode, count, GL_UNSIGNED_SHORT, i, instanceCount);
 			}
 		}
+
 		/// <summary>
 		/// Draw multiple instances of a set of elements.
 		/// </summary>
@@ -9236,6 +9238,7 @@ namespace OpenGL
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		private delegate void PFNGLSECONDARYCOLORP3UIVPROC(int type, /*const*/ uint* color);
+
 		private static PFNGLCULLFACEPROC _glCullFace;
 		private static PFNGLFRONTFACEPROC _glFrontFace;
 		private static PFNGLHINTPROC _glHint;
@@ -9610,6 +9613,7 @@ namespace OpenGL
 		private static PFNGLCOLORP4UIVPROC _glColorP4uiv;
 		private static PFNGLSECONDARYCOLORP3UIPROC _glSecondaryColorP3ui;
 		private static PFNGLSECONDARYCOLORP3UIVPROC _glSecondaryColorP3uiv;
+
 		/// <summary>
 		///     Imports all OpenGL functions using the specified loader.
 		/// </summary>
