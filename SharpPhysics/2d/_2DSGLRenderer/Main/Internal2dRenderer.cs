@@ -1,6 +1,7 @@
 ﻿using SharpPhysics.Renderer;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
+using System.Numerics;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
 {
@@ -117,6 +118,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 
 		}
 
+
+
 		/// <summary>
 		/// Initializes the OpenGL context
 		/// </summary>
@@ -157,6 +160,22 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		public virtual void CLR()
 		{
 			gl.Clear(ClearBufferMask.ColorBufferBit);
+		}
+
+		/// <summary>
+		/// Gets float[] from matrix4x4
+		/// </summary>
+		/// <param name="m"></param>
+		/// <returns></returns>
+		private float[] GetMatrix4x4Values(Matrix4x4 m)
+		{
+			return new float[]
+			{
+		m.M11, m.M12, m.M13, m.M14,
+		m.M21, m.M22, m.M23, m.M24,
+		m.M31, m.M32, m.M33, m.M34,
+		m.M41, m.M42, m.M43, m.M44
+			};
 		}
 	}
 }

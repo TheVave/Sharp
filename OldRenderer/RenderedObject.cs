@@ -79,34 +79,26 @@ namespace SharpPhysics.Renderer
 		// loads compiledVertexColorsArray. Currently does not work.
 		public void Init()
 		{
+			verticesIndex = 0;
+			colorsIndex = 0;
+			compiledVertexColorsArray = new float[vertices.Length + colors.Length];
+			for (int i = 0; i < compiledVertexColorsArray.Length; i++)
+			{
+				if (GenericMathUtils.GetDifferenceFromNearestMultiple(i, /* the length of vertex info */ 5) < 2)
+				{
+					compiledVertexColorsArray[i] =
+						vertices[verticesIndex];
 
-			//verticesIndex = 0;
-			//colorsIndex = 0;
-			//compiledVertexColorsArray = new float[vertices.Length + colors.Length];
-			//for (int i = 0; i < compiledVertexColorsArray.Length; i++)
-			//{
-			//	if (GenericMathUtils.GetDifferenceFromNearestMultiple(i, /* the length of vertex info */ 5) < 2)
-			//	{
-			//		compiledVertexColorsArray[i] =
-			//			vertices[verticesIndex];
+					verticesIndex++;
+				}
+				else if (GenericMathUtils.GetDifferenceFromNearestMultiple(i, /* the length of vertex info */ 5) < 5)
+				{
+					compiledVertexColorsArray[i] =
+						colors[colorsIndex];
 
-			//		verticesIndex++;
-			//	}
-			//	else if (GenericMathUtils.GetDifferenceFromNearestMultiple(i, /* the length of vertex info */ 5) < 5)
-			//	{
-			//		compiledVertexColorsArray[i] =
-			//			colors[colorsIndex];
-
-			//		colorsIndex++;
-			//	}
-			//}
-			compiledVertexColorsArray = [
-				// positions          // colors           // texture cords
-				 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-				 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-				-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-				-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
-			];
+					colorsIndex++;
+				}
+			}
 		}
 
 		public RenderedObject()
