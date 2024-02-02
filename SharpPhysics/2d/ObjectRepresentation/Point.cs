@@ -1,4 +1,6 @@
-﻿namespace SharpPhysics._2d.ObjectRepresentation
+﻿using SharpPhysics.Utilities.MISC;
+
+namespace SharpPhysics._2d.ObjectRepresentation
 {
 	public class Point
 	{
@@ -46,6 +48,25 @@
 		{
 			X = 0;
 			Y = 0;
+		}
+
+		public static implicit operator float[](Point p)
+		{
+			return [(float)p.X, (float)p.Y];
+		}
+
+
+		/// <summary>
+		/// Warning! Slow!
+		/// </summary>
+		public static float[] ToFloatArray(Point[] points)
+		{
+			float[] toReturn = [];
+			ParallelFor.ParallelForLoop((int loopIdx) =>
+			{
+				toReturn = toReturn.Concat((float[])points[loopIdx]).ToArray();
+			}, points.Length * 2);
+			return toReturn;
 		}
 
 		public static Point Rotate2dPoint(double radians, Point pnt)

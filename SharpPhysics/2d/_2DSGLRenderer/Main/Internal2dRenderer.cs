@@ -1,4 +1,6 @@
-﻿using SharpPhysics.Renderer;
+﻿using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics.Renderer;
+using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using System.Numerics;
@@ -16,6 +18,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// Window ref
 		/// </summary>
 		public IWindow Wnd;
+
+		public SGLRenderedObject[] objectToRender = [new()];
 
 		/// <summary>
 		/// wnd title
@@ -118,7 +122,19 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 
 		}
 
-
+		/// <summary>
+		/// Gets a float[] containing the points from a mesh object
+		/// </summary>
+		public virtual float[] GVFPS(Mesh msh)
+		{
+			List<Triangle> triangles = DelaunayTriangulator.DelaunayTriangulation(msh.MeshPoints);
+			float[] floats = new float[triangles.Count * 3];
+			for (int i = 0; i < triangles.Count * 3; i++)
+			{
+				floats = floats.Append()
+				
+			}
+		}
 
 		/// <summary>
 		/// Initializes the OpenGL context

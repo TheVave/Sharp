@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
+using System.Numerics;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
 {
@@ -7,8 +8,10 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		public uint BoundVao;
 		public uint vbo;
 
-		public SGLRenderedObject() { }
+		public SharpPhysics._2d.ObjectRepresentation.Point[] objPoints;
+		public Triangle[] triangles;
+		
 
-		Matr
+		public SGLRenderedObject() { }
 	}
 }

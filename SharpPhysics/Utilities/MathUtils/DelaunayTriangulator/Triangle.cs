@@ -43,10 +43,11 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 			// Check if point is inside the circumcircle
 			return alift * bc + blift * ca + clift * ab > Epsilon;
 		}
-		public override string ToString()
-		{
-			return $"Triangle: ({Vertex1.X}, {Vertex1.Y}), ({Vertex2.X}, {Vertex2.Y}), ({Vertex3.X}, {Vertex3.Y})";
-		}
+		public override string ToString() => 
+			$"Triangle: ({Vertex1.X}, {Vertex1.Y}), ({Vertex2.X}, {Vertex2.Y}), ({Vertex3.X}, {Vertex3.Y})";
+
+		public static explicit operator Point[](Triangle tri) =>
+			[tri.Vertex1, tri.Vertex2, tri.Vertex3];
 
 		public override bool Equals(object obj)
 		{

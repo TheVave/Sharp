@@ -1,4 +1,5 @@
-** This directory contains the main code for the SharpPhysics library. **
+### The main code ##
+# SHARPPHYSICS #
 
 ### FOLDERS ###
 [2d](SharpPhysics/2d) This folder contains all of the 2d physics and object code. Most of the (functional) code is here.
@@ -10,5 +11,4 @@
 [Utilities](SharpPhysics/Utilities) This folder contained all of the utility methods.
 
 ### FILES ###
-[Docs.txt](SharpPhysics/Docs.txt) This was an old doc for SharpPhysics that is out of date.
 [SharpPhysics.csproj](SharpPhysics/SharpPhysics.csproj) This is the SharpPhysics project file.
