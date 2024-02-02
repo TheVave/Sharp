@@ -67,4 +67,13 @@
     <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="2d\_2DSGLRenderer\Shaders\FragStdrd.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="2d\_2DSGLRenderer\Shaders\VrtxStdrd.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

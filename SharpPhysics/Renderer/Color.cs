@@ -7,7 +7,6 @@ namespace SharpPhysics.Renderer
 		/// <summary>
 		/// The colors possible with a standard RGBA style.
 		/// </summary>
-
 		public byte R = 255, G = 255, B = 255, A = 255;
 
 		/// <summary>
@@ -52,6 +51,18 @@ namespace SharpPhysics.Renderer
 				// if some error has happened, like some color not being formatted correctly.
 				ErrorHandler.ThrowError("Error, Internal Error, Color.Color(ColorName key) failed with input " + key.ToString(), true);
 			}
+		}
+		/// <summary>
+		/// Returns a color with the specified rgb values and a alpha of 255
+		/// </summary>
+		/// <param name="r"></param>
+		/// <param name="g"></param>
+		/// <param name="b"></param>
+		public Color(byte r, byte g, byte b)
+		{
+			R = r;
+			G = g;
+			B = b;
 		}
 
 		/// <summary>
