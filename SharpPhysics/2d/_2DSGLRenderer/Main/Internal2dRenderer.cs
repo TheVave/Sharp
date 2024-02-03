@@ -2,13 +2,10 @@
 using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Renderer;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
-using SharpPhysics.Utilities.MISC;
 using SharpPhysics.Utilities.MISC.Errors;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using System.Numerics;
-using System.Runtime.InteropServices.Marshalling;
-using System.Xml.Linq;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
 {
@@ -24,6 +21,9 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public IWindow Wnd;
 
+		/// <summary>
+		/// The objects to render
+		/// </summary>
 		public SGLRenderedObject[] objectToRender = [new()];
 
 		/// <summary>
@@ -50,7 +50,6 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// The color to clear to
 		/// </summary>
 		public Color clearBufferBit = new(ColorName.Black);
-
 
 		/// <summary>
 		/// Initializes SGL (Silk.net openGL) and the Wnd object
@@ -240,7 +239,16 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 
 			gl.BindVertexArray(objectToRender[0].BoundVao);
 			gl.UseProgram(objectToRender[0].Program.ProgramPtr);
-			gl.DrawArrays(PrimitiveType.Triangles, 0,6);
+
+			gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)objectToRender[0].Mesh.MeshTriangles.Length * 3);
+		}
+
+		public unsafe virtual void INITOBJS()
+		{
+			foreach (SGLRenderedObject obj in objectToRender)
+			{
+				objectToRender[0].Mesh.MeshTriangles = DelaunayTriangulator.DelaunayTriangulation(objectToRender[0].Mesh.MeshPoints).ToArray();
+			}
 		}
 
 		/// <summary>
@@ -256,6 +264,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public virtual void LD()
 		{
+			// loads some necessary info for the objects.
+			INITOBJS();
 			// inits the OpenGL context
 			INTGLCNTXT();
 			// binds vao
@@ -276,7 +286,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// Gets a float[] containing the points from a mesh object
 		/// </summary>
 		public virtual float[] GVFPS(Mesh msh) =>
-			Triangle.ToFloats(DelaunayTriangulator.DelaunayTriangulation(msh.MeshPoints).ToArray());
+			Triangle.ToFloats3D(objectToRender[0].Mesh.MeshTriangles);
 
 		/// <summary>
 		/// Binds a VAO object

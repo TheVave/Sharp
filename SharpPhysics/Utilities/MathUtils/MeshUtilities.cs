@@ -5,13 +5,13 @@ namespace SharpPhysics.Utilities.MathUtils
 {
 	public static class MeshUtilities
 	{
-		public static int CalculateDistFromPoint(_2dPosition position)
+		public static double CalculateDistFromPoint(_2dPosition position)
 		{
-			return (int)(Math.Abs(position.xPos) + Math.Abs(position.yPos) + Math.Abs(position.zPos));
+			return Math.Abs(position.xPos) + Math.Abs(position.yPos) + Math.Abs(position.zPos);
 		}
-		public static int CalculateMaxDistFromCenter(Mesh mesh, _2dPosition placeholderPositionObject)
+		public static double CalculateMaxDistFromCenter(Mesh mesh, _2dPosition placeholderPositionObject)
 		{
-			int maxDist = 0;
+			double maxDist = 0;
 			for (int i = 0; i < mesh.MeshPointsX.Length; i++)
 			{
 				placeholderPositionObject.xPos = mesh.MeshPointsX[i];

@@ -6,7 +6,7 @@ namespace SharpPhysics._2d.Objects
 	{
 		public static Mesh LoadSquareMesh()
 		{
-			return new([2, -2, -2, 2], [2, 2, -2, -2], [0, 0, 0, 0]);
+			return new([0.5, -0.5, -0.5, 0.5], [0.5, 0.5, -0.5, -0.5], [0, 0, 0, 0]);
 		}
 	}
 }

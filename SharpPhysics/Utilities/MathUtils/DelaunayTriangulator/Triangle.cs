@@ -78,16 +78,16 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 		/// <param name="tri"></param>
 		/// <returns></returns>
 		// abomination of code.
-		public static float[] ToFloats(Triangle tri)
+		public static float[] ToFloats3D(Triangle tri)
 		{
-			return ArrayUtils.ConcatArray(ArrayUtils.ConcatArray((float[])tri.Vertex1, (float[])tri.Vertex2), (float[])tri.Vertex3);
+			return ArrayUtils.ConcatArray(ArrayUtils.ConcatArray(tri.Vertex1.ToFloatArray3D(), tri.Vertex2.ToFloatArray3D()), tri.Vertex3.ToFloatArray3D());
 		}
-		public static float[] ToFloats(Triangle[] tri)
+		public static float[] ToFloats3D(Triangle[] tri)
 		{
 			float[] floats = [];
-			for (int i = 0; i < tri.Length; i+=3)
+			for (int i = 0; i < tri.Length; i++)
 			{
-				floats = ToFloats(tri[i]);
+				floats = ArrayUtils.ConcatArray(floats, ToFloats3D(tri[i]));
 			}
 			return floats;
 		}

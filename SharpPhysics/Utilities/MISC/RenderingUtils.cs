@@ -1,4 +1,5 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -8,6 +9,7 @@ namespace SharpPhysics.Utilities.MISC
 {
 	public static class RenderingUtils
 	{
+
 		static int i6 = 0;
 		public static float[] MeshToVertices(Mesh mesh)
 		{
@@ -61,6 +63,23 @@ namespace SharpPhysics.Utilities.MISC
 			bitmap.UnlockBits(bmpData);
 			return rgbValues;
 			//do whatever with data
+		}
+
+		/// <summary>
+		/// Gets a float[] containing the texture cords
+		/// </summary>
+		/// <param name="msh"></param>
+		/// <returns></returns>
+		public static float[] GetTXCords(Mesh msh)
+		{
+			_2d.ObjectRepresentation.Point[] output = new _2d.ObjectRepresentation.Point[msh.MeshPoints.Length];
+			double maxDist = MeshUtilities.CalculateMaxDistFromCenter(msh, new());
+			int idx = 0;
+			foreach (_2d.ObjectRepresentation.Point pnt in msh.MeshPoints)
+			{
+				output[idx] = msh.MeshPoints[idx++] * (1 / maxDist);
+			}
+			return _2d.ObjectRepresentation.Point.ToFloatArray(output);
 		}
 	}
 }
