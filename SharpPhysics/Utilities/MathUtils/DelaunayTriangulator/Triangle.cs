@@ -1,4 +1,5 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics.Utilities.MISC;
 
 namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 {
@@ -69,6 +70,26 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 		private bool AreVerticesEqual(Point v1, Point v2)
 		{
 			return Math.Abs(v1.X - v2.X) < Epsilon && Math.Abs(v1.Y - v2.Y) < Epsilon;
+		}
+
+		/// <summary>
+		/// Converts a triangle to a float[]
+		/// </summary>
+		/// <param name="tri"></param>
+		/// <returns></returns>
+		// abomination of code.
+		public static float[] ToFloats(Triangle tri)
+		{
+			return ArrayUtils.ConcatArray(ArrayUtils.ConcatArray((float[])tri.Vertex1, (float[])tri.Vertex2), (float[])tri.Vertex3);
+		}
+		public static float[] ToFloats(Triangle[] tri)
+		{
+			float[] floats = [];
+			for (int i = 0; i < tri.Length * 3; i++)
+			{
+				floats = ArrayUtils.ConcatArray(floats, (float[])tri[i / 3].Vertex1);
+			}
+			return floats;
 		}
 
 		public bool HasVertex(Point vertex)

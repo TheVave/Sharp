@@ -1,6 +1,7 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Renderer;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
+using SharpPhysics.Utilities.MISC;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using System.Numerics;
@@ -119,21 +120,45 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		{
 			// inits the OpenGL context
 			INTGLCNTXT();
-
+			// binds vao
+			BNDVAO();
+			// creates vbo
+			INITVBO();
+			// sets vbo data
+			STVBO();
 		}
 
 		/// <summary>
 		/// Gets a float[] containing the points from a mesh object
 		/// </summary>
-		public virtual float[] GVFPS(Mesh msh)
+		public virtual float[] GVFPS(Mesh msh) =>
+			Triangle.ToFloats(DelaunayTriangulator.DelaunayTriangulation(msh.MeshPoints).ToArray());
+
+		/// <summary>
+		/// Binds a VAO object
+		/// </summary>
+		public virtual void BNDVAO()
 		{
-			List<Triangle> triangles = DelaunayTriangulator.DelaunayTriangulation(msh.MeshPoints);
-			float[] floats = new float[triangles.Count * 3];
-			for (int i = 0; i < triangles.Count * 3; i++)
-			{
-				floats = floats.Append()
-				
-			}
+			objectToRender[0].BoundVao = gl.GenVertexArray();
+			gl.BindVertexArray(objectToRender[0].BoundVao);
+		}
+
+		/// <summary>
+		/// Sets the inside of the vbo to objectToRender[0].triangles
+		/// </summary>
+		public virtual unsafe void STVBO()
+		{
+			fixed (float* buf = Triangle.ToFloats(objectToRender[0].triangles))
+				gl.BufferData(BufferTargetARB.ArrayBuffer, (nuint)(objectToRender[0].objPoints.Length * 2 * sizeof(float)), buf, BufferUsageARB.StaticDraw);
+		}
+
+		/// <summary>
+		/// Creates a vbo
+		/// </summary>
+		public virtual void INITVBO()
+		{
+			objectToRender[0].vbo = gl.GenBuffer();
+			gl.BindBuffer(BufferTargetARB.ArrayBuffer, objectToRender[0].vbo);
 		}
 
 		/// <summary>
@@ -183,15 +208,12 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		/// <param name="m"></param>
 		/// <returns></returns>
-		private float[] GetMatrix4x4Values(Matrix4x4 m)
-		{
-			return new float[]
-			{
-		m.M11, m.M12, m.M13, m.M14,
-		m.M21, m.M22, m.M23, m.M24,
-		m.M31, m.M32, m.M33, m.M34,
-		m.M41, m.M42, m.M43, m.M44
-			};
-		}
+		private float[] GetMatrix4x4Values(Matrix4x4 m) =>
+			[
+				m.M11, m.M12, m.M13, m.M14,
+				m.M21, m.M22, m.M23, m.M24,
+				m.M31, m.M32, m.M33, m.M34,
+				m.M41, m.M42, m.M43, m.M44
+			];
 	}
 }

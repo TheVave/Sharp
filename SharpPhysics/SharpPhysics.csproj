@@ -50,6 +50,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="2d\_2DSGLRenderer\Shaders\FragStdrd.glsl" />
+    <None Remove="2d\_2DSGLRenderer\Shaders\VrtxPosShader.glsl" />
+    <None Remove="2d\_2DSGLRenderer\Shaders\VrtxStdrd.glsl" />
     <None Remove="Cursor1.cur" />
   </ItemGroup>
 
@@ -68,12 +71,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="2d\_2DSGLRenderer\Shaders\FragStdrd.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="2d\_2DSGLRenderer\Shaders\VrtxStdrd.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Resource Include="2d\_2DSGLRenderer\Shaders\FragStdrd.glsl">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="2d\_2DSGLRenderer\Shaders\VrtxPosShader.glsl">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="2d\_2DSGLRenderer\Shaders\VrtxStdrd.glsl">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="2d\_2DSGLRenderer\Shaders\shaders.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
