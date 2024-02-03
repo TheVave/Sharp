@@ -236,9 +236,11 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public unsafe virtual void RNDR(double deltaTime)
 		{
+			gl.Clear(ClearBufferMask.ColorBufferBit);
+
 			gl.BindVertexArray(objectToRender[0].BoundVao);
 			gl.UseProgram(objectToRender[0].Program.ProgramPtr);
-			gl.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, (void*)0);
+			gl.DrawArrays(PrimitiveType.Triangles, 0,6);
 		}
 
 		/// <summary>
@@ -264,6 +266,10 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			STVBO();
 			// compiles shaders and shader progs
 			CMPLPROGC(objectToRender[0].VrtxShader, objectToRender[0].FragShader, 0);
+			// sets clear color
+			STCLRCOLR(ColorName.Blue);
+			// sets the normal attributes
+			STSTDATTRIB();
 		}
 
 		/// <summary>

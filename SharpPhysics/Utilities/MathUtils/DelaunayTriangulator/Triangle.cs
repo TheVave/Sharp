@@ -85,9 +85,9 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 		public static float[] ToFloats(Triangle[] tri)
 		{
 			float[] floats = [];
-			for (int i = 0; i < tri.Length * 3; i++)
+			for (int i = 0; i < tri.Length; i+=3)
 			{
-				floats = ArrayUtils.ConcatArray(floats, (float[])tri[i / 3].Vertex1);
+				floats = ToFloats(tri[i]);
 			}
 			return floats;
 		}

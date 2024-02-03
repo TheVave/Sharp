@@ -46,7 +46,7 @@ namespace SharpPhysics
 		/// </summary>
 		public static void InitRendering()
 		{
-			renderer.wndSize = new _2d._2DSGLRenderer.Size(800, 600);
+			renderer.wndSize = new _2d._2DSGLRenderer.Size(1080, 1500);
 			renderer.ISGL();
 		}
 	}
