@@ -71,7 +71,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 
 			double[] yCopyLayer = new double[MeshPointsX.Length];
 			Array.Copy(MeshPointsY, yCopyLayer, MeshPointsY.Length);
-			MeshPointsActualY = xCopyLayer;
+			MeshPointsActualY = yCopyLayer;
 
 			double[] zCopyLayer = new double[MeshPointsX.Length];
 			Array.Copy(MeshPointsX, zCopyLayer, MeshPointsZ.Length);
