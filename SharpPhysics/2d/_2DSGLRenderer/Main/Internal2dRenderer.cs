@@ -3,9 +3,12 @@ using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Renderer;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using SharpPhysics.Utilities.MISC;
+using SharpPhysics.Utilities.MISC.Errors;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using System.Numerics;
+using System.Runtime.InteropServices.Marshalling;
+using System.Xml.Linq;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
 {
@@ -84,6 +87,135 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		}
 
 		/// <summary>
+		/// Compiles the shader with the specified name in shaders.resx
+		/// </summary>
+		/// <param name="name"></param>
+		public virtual uint CMPLSHDRN(string name, Silk.NET.OpenGL.ShaderType type, int objID)
+		{
+			uint ptr = gl.CreateShader(type);
+			gl.ShaderSource(ptr, ShaderCollector.GetShader(name));
+
+			gl.CompileShader(ptr);
+			gl.GetShader(ptr, ShaderParameterName.CompileStatus, out int status);
+			if (status != /* if it has failed */ 1)
+			{
+				ErrorHandler.ThrowError($"Error, Internal/External error, shader compilation failed with name {name}.", true);
+			}
+			if (type is Silk.NET.OpenGL.ShaderType.VertexShader)
+			{
+				objectToRender[objID].Program.Vrtx.ShaderCode = ShaderCollector.GetShader(name);
+				objectToRender[objID].Program.Vrtx.ShaderCompilePtr = ptr;
+				objectToRender[objID].Program.Vrtx.ShaderType = type;
+			}
+			else if (type is Silk.NET.OpenGL.ShaderType.FragmentShader)
+			{
+				objectToRender[objID].Program.Frag.ShaderCode = ShaderCollector.GetShader(name);
+				objectToRender[objID].Program.Frag.ShaderCompilePtr = ptr;
+				objectToRender[objID].Program.Frag.ShaderType = type;
+			}
+			return ptr;
+		}
+		public virtual uint CMPLSHDRC(string code, Silk.NET.OpenGL.ShaderType type, int objID)
+		{
+			uint ptr = gl.CreateShader(type);
+			gl.ShaderSource(ptr, code);
+
+			gl.CompileShader(ptr);
+			gl.GetShader(ptr, ShaderParameterName.CompileStatus, out int status);
+			if (status != /* if it has failed */ 1)
+			{
+				ErrorHandler.ThrowError($"Error, Internal/External error, shader compilation failed with code\n {code}.", true);
+			}
+			if (type is Silk.NET.OpenGL.ShaderType.VertexShader)
+			{
+				objectToRender[objID].Program.Vrtx.ShaderCode = code;
+				objectToRender[objID].Program.Vrtx.ShaderCompilePtr = ptr;
+				objectToRender[objID].Program.Vrtx.ShaderType = type;
+			}
+			else if (type is Silk.NET.OpenGL.ShaderType.FragmentShader)
+			{
+				objectToRender[objID].Program.Frag.ShaderCode = code;
+				objectToRender[objID].Program.Frag.ShaderCompilePtr = ptr;
+				objectToRender[objID].Program.Frag.ShaderType = type;
+			}
+			return ptr;
+		}
+
+		/// <summary>
+		/// Compiles a shader program with the specified names
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="name2"></param>
+		/// <returns></returns>
+		public virtual uint CMPLPROGN(string name, string name2, int objID)
+		{
+			uint shdr1 = CMPLSHDRN(name,Silk.NET.OpenGL.ShaderType.VertexShader, objID);
+			uint shdr2 = CMPLSHDRN(name2, Silk.NET.OpenGL.ShaderType.FragmentShader, objID);
+
+			uint prog;
+			prog = gl.CreateProgram();
+
+			gl.AttachShader(prog, shdr1);
+			gl.AttachShader(prog, shdr2);
+
+			gl.LinkProgram(prog);
+
+			gl.GetProgram(prog, ProgramPropertyARB.LinkStatus, out int status);
+			// 1s good.
+			if (status is not 1)
+			{
+				ErrorHandler.ThrowError($"Internal Error, Compiler link failed with input names {name},{name2}.", true);
+			}
+
+			gl.DeleteShader(shdr1);
+			gl.DeleteShader(shdr2);
+
+			gl.DetachShader(prog, shdr1);
+			gl.DetachShader(prog, shdr2);
+
+			objectToRender[objID].Program.ProgramPtr = prog;
+
+			return prog;
+		}
+
+		/// <summary>
+		/// Creates a shader program with the specified code.
+		/// </summary>
+		/// <param name="code"></param>
+		/// <param name="code2"></param>
+		/// <returns></returns>
+		public virtual uint CMPLPROGC(string code, string code2, int objID)
+		{
+			uint shdr1 = CMPLSHDRC(code, Silk.NET.OpenGL.ShaderType.VertexShader, objID);
+			uint shdr2 = CMPLSHDRC(code2, Silk.NET.OpenGL.ShaderType.FragmentShader, objID);
+
+			uint prog;
+			prog = gl.CreateProgram();
+
+			gl.AttachShader(prog, shdr1);
+			gl.AttachShader(prog, shdr2);
+
+			gl.LinkProgram(prog);
+
+			gl.GetProgram(prog, ProgramPropertyARB.LinkStatus, out int status);
+			// 1s good.
+			if (status is not 1)
+			{
+				ErrorHandler.ThrowError($"Internal Error, Compiler link failed with input code\n {code}\n\n{code2}.", true);
+			}
+
+			gl.DeleteShader(shdr1);
+			gl.DeleteShader(shdr2);
+
+			gl.DetachShader(prog, shdr1);
+			gl.DetachShader(prog, shdr2);
+
+			objectToRender[objID].Program.ProgramPtr = prog;
+
+			return prog;
+		}
+
+		/// <summary>
 		/// Initializes the window
 		/// </summary>
 		public virtual void INITWND()
@@ -102,9 +234,11 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// Called every frame to render the object(s)
 		/// </summary>
-		public virtual void RNDR(double deltaTime)
+		public unsafe virtual void RNDR(double deltaTime)
 		{
-
+			gl.BindVertexArray(objectToRender[0].BoundVao);
+			gl.UseProgram(objectToRender[0].Program.ProgramPtr);
+			gl.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, (void*)0);
 		}
 
 		/// <summary>
@@ -116,7 +250,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		}
 
 		/// <summary>
-		/// Called before anything else, only called once.
+		/// Called before anything else (other than OpenGL.Init), only called once.
 		/// </summary>
 		public virtual void LD()
 		{
@@ -128,6 +262,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			INITVBO();
 			// sets vbo data
 			STVBO();
+			// compiles shaders and shader progs
+			CMPLPROGC(objectToRender[0].VrtxShader, objectToRender[0].FragShader, 0);
 		}
 
 		/// <summary>
@@ -143,6 +279,16 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		{
 			objectToRender[0].BoundVao = gl.GenVertexArray();
 			gl.BindVertexArray(objectToRender[0].BoundVao);
+		}
+
+		/// <summary>
+		/// Sets standard attribs
+		/// </summary>
+		public unsafe virtual void STSTDATTRIB()
+		{
+			const uint positionLoc = 0;
+			gl.EnableVertexAttribArray(positionLoc);
+			gl.VertexAttribPointer(positionLoc, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), (void*)0);
 		}
 
 		/// <summary>

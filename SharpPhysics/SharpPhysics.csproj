@@ -82,10 +82,4 @@
     </Resource>
   </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="2d\_2DSGLRenderer\Shaders\shaders.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-
 </Project>
