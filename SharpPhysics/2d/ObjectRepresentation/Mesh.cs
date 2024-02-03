@@ -1,4 +1,6 @@
-﻿
+﻿using SharpPhysics._2d.Objects;
+using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
+
 namespace SharpPhysics._2d.ObjectRepresentation
 {
 	public class Mesh
@@ -37,6 +39,25 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// The Z points in the mesh with, no offset, exactly how the model was first made.
 		/// </summary>
 		public double[] MeshPointsActualZ;
+
+		/// <summary>
+		/// The triangles that make up the mesh. Used for collision and rendering.
+		/// </summary>
+		public Triangle[] MeshTriangles;
+
+		public Mesh()
+		{
+			Mesh mesh = _2dBaseObjects.LoadSquareMesh();
+			MeshPointsX = mesh.MeshPointsX;
+			MeshPointsY = mesh.MeshPointsY;
+			MeshPointsZ = mesh.MeshPointsZ;
+
+			MeshPoints = mesh.MeshPoints;
+
+			MeshPointsActualX = mesh.MeshPointsX;
+			MeshPointsActualY = mesh.MeshPointsY;
+			MeshPointsActualZ = mesh.MeshPointsZ;
+		}
 
 		public Mesh(double[] MeshPointsX, double[] MeshPointsY, double[] MeshPointsZ)
 		{

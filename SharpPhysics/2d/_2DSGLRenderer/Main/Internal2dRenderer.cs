@@ -48,6 +48,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public Color clearBufferBit = new(ColorName.Black);
 
+
 		/// <summary>
 		/// Initializes SGL (Silk.net openGL) and the Wnd object
 		/// 
@@ -156,8 +157,9 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public virtual unsafe void STVBO()
 		{
-			fixed (float* buf = Triangle.ToFloats(objectToRender[0].triangles))
-				gl.BufferData(BufferTargetARB.ArrayBuffer, (nuint)(objectToRender[0].objPoints.Length * 2 * sizeof(float)), buf, BufferUsageARB.StaticDraw);
+			float[] data = GVFPS(objectToRender[0].Mesh);
+			fixed (float* buf = data)
+				gl.BufferData(BufferTargetARB.ArrayBuffer, (nuint)(sizeof(float) * data.Length), buf, BufferUsageARB.StaticDraw);
 		}
 
 		/// <summary>
