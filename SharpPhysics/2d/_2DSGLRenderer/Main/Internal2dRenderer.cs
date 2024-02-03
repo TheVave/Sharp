@@ -1,4 +1,5 @@
-﻿using SharpPhysics._2d.ObjectRepresentation;
+﻿using SharpPhysics._2d._2DSGLRenderer.Shaders;
+using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Renderer;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using SharpPhysics.Utilities.MISC;
@@ -142,6 +143,13 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			objectToRender[0].BoundVao = gl.GenVertexArray();
 			gl.BindVertexArray(objectToRender[0].BoundVao);
 		}
+
+		/// <summary>
+		/// Gets the shader with the specified name
+		/// </summary>
+		/// <param name="nm"></param>
+		public virtual void GTSHDR(string nm) =>
+			ShaderCollector.GetShader(nm);
 
 		/// <summary>
 		/// Sets the inside of the vbo to objectToRender[0].triangles

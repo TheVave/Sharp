@@ -5,7 +5,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Shaders
 {
 	public static class ShaderCollector
 	{
-		static string GetShader(string name)
+		public static string GetShader(string name)
 		{
 			string resourceName = "SharpPhysics.shaders";
 
