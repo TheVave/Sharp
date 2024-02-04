@@ -1,6 +1,7 @@
 ﻿using SharpPhysics._2d._2DSGLRenderer.Shaders;
 using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics._2d.Objects;
+using SharpPhysics.Renderer.Textures;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
@@ -18,12 +19,17 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// The fragment shader to use. Don't mess with this unless you know what you're doing.
 		/// </summary>
-		public string FragShader = ShaderCollector.GetShader("FragSnglClr");
+		public string FragShader = ShaderCollector.GetShader("FragTxtr");
 
 		/// <summary>
 		/// The vertex shader to use. Don't mess with this unless you know what you're doing.
 		/// </summary>
-		public string VrtxShader = ShaderCollector.GetShader("VrtxNPs");
+		public string VrtxShader = ShaderCollector.GetShader("VrtxTxtrSprt");
+
+		/// <summary>
+		/// The pointer to the object texture
+		/// </summary>
+		public uint TexturePtr;
 
 		/// <summary>
 		/// Mesh to render
@@ -34,5 +40,10 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// The shader program
 		/// </summary>
 		public ShaderProgram Program = new();
+
+		/// <summary>
+		/// The object's texture
+		/// </summary>
+		public Texture objTexture;
 	}
 }

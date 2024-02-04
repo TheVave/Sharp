@@ -1,10 +1,5 @@
 ﻿using SharpPhysics._2d._2DSGLRenderer.Main;
 using SharpPhysics.Renderer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpPhysics
 {
@@ -39,7 +34,6 @@ namespace SharpPhysics
 				renderer.title = value;
 			}
 		}
-
 
 		/// <summary>
 		/// Starts rendering

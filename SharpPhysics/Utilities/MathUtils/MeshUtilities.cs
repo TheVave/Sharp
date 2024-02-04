@@ -14,9 +14,9 @@ namespace SharpPhysics.Utilities.MathUtils
 			double maxDist = 0;
 			for (int i = 0; i < mesh.MeshPointsX.Length; i++)
 			{
-				placeholderPositionObject.xPos = mesh.MeshPointsX[i];
-				placeholderPositionObject.yPos = mesh.MeshPointsY[i];
-				placeholderPositionObject.zPos = mesh.MeshPointsZ[i];
+				placeholderPositionObject.xPos = mesh.MeshPointsActualX[i];
+				placeholderPositionObject.yPos = mesh.MeshPointsActualY[i];
+				placeholderPositionObject.zPos = 0;
 				if (CalculateDistFromPoint(placeholderPositionObject) > maxDist)
 					maxDist = CalculateDistFromPoint(placeholderPositionObject);
 			}

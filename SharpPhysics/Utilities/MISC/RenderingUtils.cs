@@ -72,14 +72,48 @@ namespace SharpPhysics.Utilities.MISC
 		/// <returns></returns>
 		public static float[] GetTXCords(Mesh msh)
 		{
-			_2d.ObjectRepresentation.Point[] output = new _2d.ObjectRepresentation.Point[msh.MeshPoints.Length];
+			_2d.ObjectRepresentation.Point[] output = new _2d.ObjectRepresentation.Point[msh.MeshTriangles.Length * 3];
 			double maxDist = MeshUtilities.CalculateMaxDistFromCenter(msh, new());
 			int idx = 0;
-			foreach (_2d.ObjectRepresentation.Point pnt in msh.MeshPoints)
+			Triangle triAn;
+			foreach (Triangle tri in msh.MeshTriangles)
 			{
-				output[idx] = msh.MeshPoints[idx++] * (1 / maxDist);
+				triAn = new(tri.Vertex1, tri.Vertex2, tri.Vertex3);
+				//triAn.Vertex1 = 
+				output[idx    ] = tri.Vertex1 * -1 / maxDist;
+				output[idx + 1] = tri.Vertex2 * -1 / maxDist;
+				output[idx + 2] = tri.Vertex3 * -1 / maxDist;
+
+				idx += 3;
 			}
 			return _2d.ObjectRepresentation.Point.ToFloatArray(output);
+		}
+
+		/// <summary>
+		/// Style:
+		/// posCords[3] TxCords[2]
+		/// [0,0,0],[1,0]
+		/// </summary>
+		/// <param name="first"></param>
+		/// <param name="last"></param>
+		/// <param name="MashEvery"></param>
+		/// <returns></returns>
+		public static float[] MashMeshTextureFloats(float[] first, float[] last)
+		{
+			float[] toRet = new float[first.Length + last.Length];
+			int firstIdx = 0;
+			int lastIdx = 0;
+			int mthRtrn;
+
+			for (int i = 0; i < toRet.Length; i++)
+			{
+				mthRtrn = i - (int)(Math.Floor(i / 5d) * 5);
+				if (mthRtrn <= 2)
+					toRet[i] = first[firstIdx++];
+				else
+					toRet[i] = -last[lastIdx++];
+			}
+			return toRet;
 		}
 	}
 }

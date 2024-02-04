@@ -1,5 +1,6 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Utilities.MISC;
+using System.Runtime.CompilerServices;
 
 namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 {
@@ -19,10 +20,22 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 			Vertex2 = vertex2;
 			Vertex3 = vertex3;
 
-			Edges = [new Edge(Vertex1, Vertex2), new Edge(Vertex2, Vertex3), new Edge(Vertex3, Vertex1)];
+			Edges = GetEdges(this);
+		}
+
+		public Triangle()
+		{
+			Vertex1 = new(0, 0);
+			Vertex2 = new(0, 0);
+			Vertex3 = new(0, 0);
+
+			Edges = GetEdges(this);
 		}
 
 		private const double Epsilon = 1e-6;
+
+		private static Edge[] GetEdges(Triangle tri) =>
+			[new Edge(tri.Vertex1, tri.Vertex2), new Edge(tri.Vertex2, tri.Vertex3), new Edge(tri.Vertex3, tri.Vertex1)];
 
 		public bool IsPointInsideCircumcircle(Point point)
 		{
@@ -91,6 +104,9 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 			}
 			return floats;
 		}
+
+		public static Triangle Duplicate(Triangle triangle) =>
+			new(triangle.Vertex1.GetPointCopy(), triangle.Vertex2.GetPointCopy(), triangle.Vertex3.GetPointCopy());
 
 		public bool HasVertex(Point vertex)
 		{

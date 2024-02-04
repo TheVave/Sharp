@@ -1,10 +1,13 @@
 ﻿using SharpPhysics._2d._2DSGLRenderer.Shaders;
 using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Renderer;
+using SharpPhysics.Renderer.Textures;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
+using SharpPhysics.Utilities.MISC;
 using SharpPhysics.Utilities.MISC.Errors;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
+using StbImageSharp;
 using System.Numerics;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
@@ -219,7 +222,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public virtual void INITWND()
 		{
-			Wnd = Window.Create(WndOptions);
+			Wnd = Silk.NET.Windowing.Window.Create(WndOptions);
 		}
 
 		/// <summary>
@@ -235,10 +238,14 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public unsafe virtual void RNDR(double deltaTime)
 		{
-			gl.Clear(ClearBufferMask.ColorBufferBit);
+			CLR();
 
 			gl.BindVertexArray(objectToRender[0].BoundVao);
 			gl.UseProgram(objectToRender[0].Program.ProgramPtr);
+
+			// use texture
+			gl.ActiveTexture(TextureUnit.Texture0);
+			gl.BindTexture(TextureTarget.Texture2D, objectToRender[0].TexturePtr);
 
 			gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)objectToRender[0].Mesh.MeshTriangles.Length * 3);
 		}
@@ -278,8 +285,92 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			CMPLPROGC(objectToRender[0].VrtxShader, objectToRender[0].FragShader, 0);
 			// sets clear color
 			STCLRCOLR(ColorName.Blue);
-			// sets the normal attributes
+			// sets the texture supporting attributes
 			STSTDATTRIB();
+			// cleans up some stuff mid-way
+			CLNUP();
+			// binds texture info
+			TXINIT();
+			// sets the texture info
+			TXST();
+			// sets texture settings
+			TXRHINTS();
+			// generates mipmaps
+			GNMPMPS();
+			// sets the texture info to the shader
+			STTXTRUNI();
+		}
+
+		/// <summary>
+		/// Initializes some info for the textures
+		/// </summary>
+		public virtual void TXINIT()
+		{
+			objectToRender[0].TexturePtr = gl.GenTexture();
+			gl.ActiveTexture(TextureUnit.Texture0);
+			gl.BindTexture(TextureTarget.Texture2D, objectToRender[0].TexturePtr);
+		}
+
+		/// <summary>
+		/// Sets the texture info
+		/// </summary>
+		public unsafe virtual void TXST()
+		{
+			ImageResult result = ImageResult.FromMemory(File.ReadAllBytes(@$"{Environment.CurrentDirectory}\Ctnt\Txtrs\test.bmp"), ColorComponents.RedGreenBlueAlpha);
+			fixed (byte* ptr = result.Data)
+			{
+				gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba, (uint)result.Width,
+					(uint)result.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, ptr);
+			}
+		}
+
+		/// <summary>
+		/// Sets some settings for OpenGL and textures.
+		/// </summary>
+		public unsafe virtual void TXRHINTS()
+		{
+			gl.TextureParameter(objectToRender[0].TexturePtr, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+			gl.TextureParameter(objectToRender[0].TexturePtr, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+			gl.TextureParameter(objectToRender[0].TexturePtr, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
+			gl.TextureParameter(objectToRender[0].TexturePtr, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+		}
+
+		/// <summary>
+		/// Generates all the mipmaps for OpenGL
+		/// </summary>
+		public virtual void GNMPMPS()
+		{
+			gl.GenerateMipmap(TextureTarget.Texture2D);
+		}
+
+		/// <summary>
+		/// Sets the texture info in the shader
+		/// </summary>
+		public virtual void STTXTRUNI()
+		{
+			gl.BindTexture(TextureTarget.Texture2D, 0);
+
+			int location = gl.GetUniformLocation(objectToRender[0].Program.ProgramPtr, "uTexture");
+			gl.Uniform1(location, 0);
+		}
+
+		/// <summary>
+		/// Enables blending
+		/// </summary>
+		public virtual void ENABLBLEND()
+		{
+			gl.Enable(EnableCap.Blend);
+			gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+		}
+
+		/// <summary>
+		/// Does a bit of clean up with the buffers
+		/// </summary>
+		public virtual void CLNUP()
+		{
+			gl.BindVertexArray(0);
+			gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
+			gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, 0);
 		}
 
 		/// <summary>
@@ -287,6 +378,15 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public virtual float[] GVFPS(Mesh msh) =>
 			Triangle.ToFloats3D(objectToRender[0].Mesh.MeshTriangles);
+
+		/// <summary>
+		/// Connects the mesh and texture cords
+		/// </summary>
+		/// <param name="points"></param>
+		/// <param name="msh"></param>
+		/// <returns></returns>
+		public virtual float[] MSHTXCRDS(float[] points, Mesh msh) =>
+			RenderingUtils.MashMeshTextureFloats(points, RenderingUtils.GetTXCords(msh));
 
 		/// <summary>
 		/// Binds a VAO object
@@ -298,13 +398,19 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		}
 
 		/// <summary>
-		/// Sets standard attribs
+		/// Sets standard attribs for support with textures
 		/// </summary>
 		public unsafe virtual void STSTDATTRIB()
 		{
+			const uint stride = (3 * sizeof(float)) + (2 * sizeof(float));
+
 			const uint positionLoc = 0;
 			gl.EnableVertexAttribArray(positionLoc);
-			gl.VertexAttribPointer(positionLoc, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), (void*)0);
+			gl.VertexAttribPointer(positionLoc, 3, VertexAttribPointerType.Float, false, stride, (void*)0);
+
+			const uint textureLoc = 1;
+			gl.EnableVertexAttribArray(textureLoc);
+			gl.VertexAttribPointer(textureLoc, 2, VertexAttribPointerType.Float, false, stride, (void*)(3 * sizeof(float)));
 		}
 
 		/// <summary>
@@ -319,7 +425,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public virtual unsafe void STVBO()
 		{
-			float[] data = GVFPS(objectToRender[0].Mesh);
+			float[] data = MSHTXCRDS(GVFPS(objectToRender[0].Mesh), objectToRender[0].Mesh);
 			fixed (float* buf = data)
 				gl.BufferData(BufferTargetARB.ArrayBuffer, (nuint)(sizeof(float) * data.Length), buf, BufferUsageARB.StaticDraw);
 		}
@@ -340,7 +446,6 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		{
 			gl = Wnd.CreateOpenGL();
 		}
-
 		/// <summary>
 		/// sets the clear color.
 		/// </summary>
