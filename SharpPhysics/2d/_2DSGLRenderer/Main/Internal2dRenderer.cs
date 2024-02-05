@@ -1,7 +1,6 @@
 ﻿using SharpPhysics._2d._2DSGLRenderer.Shaders;
 using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Renderer;
-using SharpPhysics.Renderer.Textures;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using SharpPhysics.Utilities.MISC;
 using SharpPhysics.Utilities.MISC.Errors;
@@ -247,14 +246,14 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			gl.ActiveTexture(TextureUnit.Texture0);
 			gl.BindTexture(TextureTarget.Texture2D, objectToRender[0].TexturePtr);
 
-			gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)objectToRender[0].Mesh.MeshTriangles.Length * 3);
+			gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)objectToRender[0].objToSim.ObjectMesh.MeshTriangles.Length * 3);
 		}
 
 		public unsafe virtual void INITOBJS()
 		{
 			foreach (SGLRenderedObject obj in objectToRender)
 			{
-				objectToRender[0].Mesh.MeshTriangles = DelaunayTriangulator.DelaunayTriangulation(objectToRender[0].Mesh.MeshPoints).ToArray();
+				objectToRender[0].objToSim.ObjectMesh.MeshTriangles = DelaunayTriangulator.DelaunayTriangulation(objectToRender[0].objToSim.ObjectMesh.MeshPoints).ToArray();
 			}
 		}
 
@@ -316,7 +315,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public unsafe virtual void TXST()
 		{
-			ImageResult result = ImageResult.FromMemory(File.ReadAllBytes(@$"{Environment.CurrentDirectory}\Ctnt\Txtrs\test.bmp"), ColorComponents.RedGreenBlueAlpha);
+			ImageResult result = ImageResult.FromMemory(File.ReadAllBytes(@$"{Environment.CurrentDirectory}\Ctnt\Txtrs\Enemy Thing.png"), ColorComponents.RedGreenBlueAlpha);
 			fixed (byte* ptr = result.Data)
 			{
 				gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba, (uint)result.Width,
@@ -377,7 +376,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// Gets a float[] containing the points from a mesh object
 		/// </summary>
 		public virtual float[] GVFPS(Mesh msh) =>
-			Triangle.ToFloats3D(objectToRender[0].Mesh.MeshTriangles);
+			Triangle.ToFloats3D(objectToRender[0].objToSim.ObjectMesh.MeshTriangles);
 
 		/// <summary>
 		/// Connects the mesh and texture cords
@@ -425,7 +424,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public virtual unsafe void STVBO()
 		{
-			float[] data = MSHTXCRDS(GVFPS(objectToRender[0].Mesh), objectToRender[0].Mesh);
+			float[] data = MSHTXCRDS(GVFPS(objectToRender[0].objToSim.ObjectMesh), objectToRender[0].objToSim.ObjectMesh);
 			fixed (float* buf = data)
 				gl.BufferData(BufferTargetARB.ArrayBuffer, (nuint)(sizeof(float) * data.Length), buf, BufferUsageARB.StaticDraw);
 		}

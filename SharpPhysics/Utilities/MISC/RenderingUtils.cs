@@ -1,9 +1,9 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
-using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using static SharpPhysics.Utilities.MathUtils.GenericMathUtils;
 
 namespace SharpPhysics.Utilities.MISC
 {
@@ -15,7 +15,7 @@ namespace SharpPhysics.Utilities.MISC
 		{
 			if (mesh.MeshPoints is null)
 			{
-				mesh.MeshPoints = new SharpPhysics._2d.ObjectRepresentation.Point[mesh.MeshPointsActualX.Length];
+				mesh.MeshPoints = new Point[mesh.MeshPointsActualX.Length];
 				for (int i = 0; i < mesh.MeshPoints.Length; i++) mesh.MeshPoints[i] = new SharpPhysics._2d.ObjectRepresentation.Point();
 
 				for (int i = 0; i < mesh.MeshPointsActualX.Length; i++)
@@ -50,9 +50,9 @@ namespace SharpPhysics.Utilities.MISC
 		/// </summary>
 		/// <param name="bitmap"></param>
 		/// <returns></returns>
-		public static unsafe byte[] GetImageBytes(Bitmap bitmap)
+		public static unsafe byte[] GetImageBytes(System.Drawing.Bitmap bitmap)
 		{
-			Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+			System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
 			BitmapData bmpData = bitmap.LockBits(rect, ImageLockMode.ReadOnly,
 				bitmap.PixelFormat);
 
@@ -72,21 +72,65 @@ namespace SharpPhysics.Utilities.MISC
 		/// <returns></returns>
 		public static float[] GetTXCords(Mesh msh)
 		{
-			_2d.ObjectRepresentation.Point[] output = new _2d.ObjectRepresentation.Point[msh.MeshTriangles.Length * 3];
+			Point[] output = new Point[msh.MeshTriangles.Length * 3];
 			double maxDist = MeshUtilities.CalculateMaxDistFromCenter(msh, new());
 			int idx = 0;
-			Triangle triAn;
+			Point[] points = new Point[3];
+			Point[] shifters = new Point[3 * msh.MeshTriangles.Length];
 			foreach (Triangle tri in msh.MeshTriangles)
 			{
-				triAn = new(tri.Vertex1, tri.Vertex2, tri.Vertex3);
-				//triAn.Vertex1 = 
-				output[idx    ] = tri.Vertex1 * -1 / maxDist;
-				output[idx + 1] = tri.Vertex2 * -1 / maxDist;
-				output[idx + 2] = tri.Vertex3 * -1 / maxDist;
+				points = [new(tri.Vertex1.X, tri.Vertex1.Y), new(tri.Vertex2.X, tri.Vertex2.Y), new(tri.Vertex3.X, tri.Vertex3.Y)];
+
+				shifters[idx + 0] = new((IsNegative(tri.Vertex1.X)) ? Math.Abs(tri.Vertex1.X) : 0, (IsNegative(tri.Vertex1.Y)) ? Math.Abs(tri.Vertex1.Y) : 0);
+				shifters[idx + 1] = new((IsNegative(tri.Vertex2.X)) ? Math.Abs(tri.Vertex2.X) : 0, (IsNegative(tri.Vertex2.Y)) ? Math.Abs(tri.Vertex2.Y) : 0);
+				shifters[idx + 2] = new((IsNegative(tri.Vertex3.X)) ? Math.Abs(tri.Vertex3.X) : 0, (IsNegative(tri.Vertex3.Y)) ? Math.Abs(tri.Vertex3.Y) : 0);
+				
+
+				output[idx + 0]  = points[0] * (-1 / maxDist);
+				output[idx + 1]  = points[1] * (-1 / maxDist);
+				output[idx + 2]  = points[2] * (-1 / maxDist);
 
 				idx += 3;
 			}
-			return _2d.ObjectRepresentation.Point.ToFloatArray(output);
+
+			Point ToShiftBy = GetGreatestPointFromArray(shifters);
+
+			for (int i = 0; i < output.Length; i++)
+				output[i] += ToShiftBy;
+
+			return Point.ToFloatArray(output);
+		}
+
+		/// <summary>
+		/// Gets the greatest shifter point
+		/// </summary>
+		/// <param name="arr"></param>
+		/// <returns></returns>
+		public static Point GetGreatestPointFromArray(Point[] arr)
+		{
+			Point curGreatest = new Point(0,0);
+			foreach (Point p in arr)
+			{
+				if (p.X > curGreatest.X) curGreatest.X = p.X;
+				if (p.Y > curGreatest.Y) curGreatest.Y = p.Y;
+			}
+			return curGreatest;
+		}
+
+		/// <summary>
+		/// Gets the lowest shifter point
+		/// </summary>
+		/// <param name="arr"></param>
+		/// <returns></returns>
+		public static Point GetLowestPointFromArray(Point[] arr)
+		{
+			Point curLowest = new Point(0, 0);
+			foreach (Point p in arr)
+			{
+				if (p.X < curLowest.X) curLowest.X = p.X;
+				if (p.Y < curLowest.Y) curLowest.Y = p.Y;
+			}
+			return curLowest;
 		}
 
 		/// <summary>

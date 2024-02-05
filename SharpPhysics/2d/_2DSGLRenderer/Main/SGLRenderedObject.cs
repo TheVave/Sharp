@@ -9,12 +9,11 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 	public class SGLRenderedObject
 	{
 		public uint BoundVao;
-		public uint vbo;
 
 		/// <summary>
-		/// Object triangles
+		/// The vbo containing the buffer data
 		/// </summary>
-		public Triangle[] triangles;
+		public uint vbo;
 
 		/// <summary>
 		/// The fragment shader to use. Don't mess with this unless you know what you're doing.
@@ -32,11 +31,6 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		public uint TexturePtr;
 
 		/// <summary>
-		/// Mesh to render
-		/// </summary>
-		public Mesh Mesh = _2dBaseObjects.LoadSquareMesh();
-
-		/// <summary>
 		/// The shader program
 		/// </summary>
 		public ShaderProgram Program = new();
@@ -45,5 +39,10 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// The object's texture
 		/// </summary>
 		public Texture objTexture;
+
+		/// <summary>
+		/// the object to simulate
+		/// </summary>
+		public _2dSimulatedObject objToSim = new();
 	}
 }

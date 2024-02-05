@@ -71,6 +71,49 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			(p1.Is3d) ? new Point(p1.X / scale, p1.Y / scale, p1.Z / scale) : new Point(p1.X / scale, p1.Y);
 		public static Point operator *(Point p1, double scale) =>
 			(p1.Is3d) ? new Point(p1.X * scale, p1.Y * scale, p1.Z * scale) : new Point(p1.X * scale, p1.Y);
+		public static Point operator +(Point p1, Point p2) =>
+			(p1.Is3d || p2.Is3d) ? new(p1.X + p2.X, p1.Y + p2.Y, p1.Z + p2.Z) : new(p1.X + p2.X, p1.Y + p2.Y);
+		public static Point operator -(Point p1, Point p2) =>
+			(p1.Is3d || p2.Is3d) ? new(p1.X - p2.X, p1.Y - p2.Y, p1.Z - p2.Z) : new(p1.X - p2.X, p1.Y - p2.Y);
+
+		/// <summary>
+		/// Checks if a point contains a value
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns></returns>
+		public bool ContainsValue(double value) =>
+			(value == X || value == Y || value == Z) ? false : true;
+
+		/// <summary>
+		/// Checks if a point array contains a value
+		/// </summary>
+		/// <param name="points"></param>
+		/// <param name="val"></param>
+		/// <returns></returns>
+		public static bool ArrayContainsValue(Point[] points, double val)
+		{
+			foreach (Point p in points)
+			{
+				if (p.ContainsValue(val) is true) return true;
+			}
+			return false;
+ 		}
+
+		/// <summary>
+		/// The opposite of ArrayContainsValue
+		/// </summary>
+		/// <param name="points"></param>
+		/// <param name="val"></param>
+		/// <returns></returns>
+		public static bool ArrayNotContainValue(Point[] points, double val)
+		{
+			foreach (Point p in points)
+			{
+				if (!p.ContainsValue(val)) return true;
+			}
+			return false;
+		}
+			
 
 		/// <summary>
 		/// Warning! Slow!
