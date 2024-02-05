@@ -1,5 +1,6 @@
 ### The main code ##
 # SHARPPHYSICS #
+---------------------------------------
 
 ### FOLDERS ###
 [2d](SharpPhysics/2d) This folder contains all of the 2d physics and object code. Most of the (functional) code is here.

@@ -51,18 +51,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="2d\_2DSGLRenderer\Shaders\FragStandardSingleColor.glsl" />
-    <None Remove="2d\_2DSGLRenderer\Shaders\FragTextureSupport.glsl" />
-    <None Remove="2d\_2DSGLRenderer\Shaders\VertexNoPosition.glsl" />
-    <None Remove="2d\_2DSGLRenderer\Shaders\VertexPosition.glsl" />
-    <None Remove="Cursor1.cur" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="2d\_2DSGLRenderer\Shaders\FragTextureSupport.glsl" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
@@ -75,18 +63,6 @@
     <PackageReference Include="Silk.NET.OpenGL" Version="2.20.0" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="2d\_2DSGLRenderer\Shaders\FragStandardSingleColor.glsl">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="2d\_2DSGLRenderer\Shaders\VertexPosition.glsl">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="2d\_2DSGLRenderer\Shaders\VertexNoPosition.glsl">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
 
 </Project>
