@@ -29,5 +29,6 @@ MainRendererSGL.OnLoad += () =>
 {
 	MainRendererSGL.renderer.objectToRender[0].objToSim.StartPhysicsSimulation();
 	MainRendererSGL.renderer.objectToRender[0].objToSim.ObjectPhysicsParams.GravityMultiplier = 0;
+	MainRendererSGL.renderer.objectToRender[0].objToSim.ObjectPhysicsParams.SpeedResistance = 0.005;
 };
 MainRendererSGL.InitRendering();

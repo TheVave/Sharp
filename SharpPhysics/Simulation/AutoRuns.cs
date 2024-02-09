@@ -11,7 +11,7 @@ namespace SharpPhysics.Simulation
 	{
 		public AutoRuns()
 		{
-			Input.Keyboard.KeyboardInput.Load();
+			
 		}
 	}
 }

@@ -4,10 +4,6 @@ namespace SharpPhysics.Input.Keyboard
 {
 	public static class KeyboardInput
 	{
-		// external import from user32.dll that handles the keyboard and left or right mouse input
-		static extern short GetAsyncKeyState(int VirtualKeyPressed);
-
-		public static bool IsWindows = true;
 
 		///// <summary>
 		///// The keys that are down
@@ -72,28 +68,18 @@ namespace SharpPhysics.Input.Keyboard
 		//		thrd.Start();
 		//	}
 		//}
-		internal static void Load()
+		internal static bool IsKeyDown(VirtualKey key)
 		{
 			try
 			{
 				[DllImport("user32.dll")]
-				static extern void GetAsyncKeyState(int VirtualKeyPressed);
-			}
-			catch
-			{
-				IsWindows = false;
-			}
-		}
-		internal static bool IsKeyDown(VirtualKey key)
-		{
-			if (IsWindows)
-			{
+				static extern short GetAsyncKeyState(int VirtualKeyPressed);
 				byte[] result = BitConverter.GetBytes(GetAsyncKeyState((int)key));
 				if (result[0] == 1) return true;
 				else if (result[0] == 0x80) return true;
 				else return false;
 			}
-			else
+			catch
 			{
 				return false;
 			}

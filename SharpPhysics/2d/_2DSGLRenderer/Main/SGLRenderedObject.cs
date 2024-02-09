@@ -8,6 +8,9 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 {
 	public class SGLRenderedObject
 	{
+		/// <summary>
+		/// The vao that contains all the VRAM data
+		/// </summary>
 		public uint BoundVao;
 
 		/// <summary>
@@ -38,7 +41,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// The object's texture
 		/// </summary>
-		public Texture objTexture;
+		public Texture objTexture = new();
 
 		/// <summary>
 		/// the object to simulate

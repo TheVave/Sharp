@@ -9,6 +9,7 @@ using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using StbImageSharp;
 using System.Numerics;
+using System.Runtime.ExceptionServices;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
 {
@@ -27,7 +28,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// The objects to render
 		/// </summary>
-		public SGLRenderedObject[] objectToRender = [new()];
+		public SGLRenderedObject[] objectToRender = [new(), new()];
 
 		/// <summary>
 		/// wnd title
@@ -255,8 +256,11 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		{
 			CLR();
 
-			SELOBJ(0);
-			DRWOBJ(0);
+			for (int i = 0; i < objectToRender.Length; i++)
+			{
+				SELOBJ(i);
+				DRWOBJ(i);
+			}
 		}
 
 		/// <summary>
@@ -323,9 +327,11 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public unsafe virtual void INITOBJS()
 		{
+			int objid = 0;
 			foreach (SGLRenderedObject obj in objectToRender)
 			{
-				objectToRender[0].objToSim.ObjectMesh.MeshTriangles = DelaunayTriangulator.DelaunayTriangulation(objectToRender[0].objToSim.ObjectMesh.MeshPoints).ToArray();
+				objectToRender[objid].objToSim.ObjectMesh.MeshTriangles = DelaunayTriangulator.DelaunayTriangulation(objectToRender[0].objToSim.ObjectMesh.MeshPoints).ToArray();
+				objid++;
 			}
 		}
 
@@ -336,7 +342,14 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		{
 			ParallelFor.ParallelForLoop((int obj) =>
 			{
-				OU[obj].Invoke(objectToRender[obj].objToSim);
+				try
+				{
+					OU[obj].Invoke(objectToRender[obj].objToSim);
+				}
+				catch
+				{
+
+				}
 			}, objectToRender.Length);
 		}
 
@@ -349,48 +362,85 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			INITOBJS();
 			// inits the OpenGL context
 			INTGLCNTXT();
-			// binds vao
-			BNDVAO();
-			// creates vbo
-			INITVBO();
-			// sets vbo data
-			STVBO();
-			// compiles shaders and shader progs
-			CMPLPROGC(objectToRender[0].VrtxShader, objectToRender[0].FragShader, 0);
 			// sets clear color
 			STCLRCOLR(ColorName.Blue);
-			// sets the texture supporting attributes
-			STSTDATTRIB();
-			// cleans up some stuff mid-way
-			CLNUP();
-			// binds texture info
-			TXINIT();
-			// sets the texture info
-			TXST();
 			// sets texture settings
 			TXRHINTS();
-			// generates mipmaps
-			GNMPMPS();
-			// sets the texture info to the shader
-			STTXTRUNI();
-			// loads user-defined info
-			OL.Invoke();
+
+			for (int i = 0; i < objectToRender.Length; i++)
+			{
+				// binds vao
+				BNDVAO(i);
+				// creates vbo
+				INITVBO(i);
+				// sets vbo data
+				STVBO(i);
+				// compiles shaders and shader progs
+				CMPLPROGC(objectToRender[i].VrtxShader, objectToRender[i].FragShader, i);
+				// sets the texture supporting attributes
+				STSTDATTRIB();
+				// sets vbo and vao
+				BFRST((uint)i);
+				// binds texture info
+				TXINIT(i);
+				// sets the texture info
+				TXST(i);
+				// generates mipmaps
+				GNMPMPS();
+				// sets the texture info to the shader
+				STTXTRUNI(i);
+				// loads user-defined info
+				OL.Invoke();
+			}
+
+			// old code:
+
+			// loads some necessary info for the objects.
+			//INITOBJS();
+			//// inits the OpenGL context
+			//INTGLCNTXT();
+			//// binds vao
+			//BNDVAO();
+			//// creates vbo
+			//INITVBO();
+			//// sets vbo data
+			//STVBO();
+			//// compiles shaders and shader progs
+			//CMPLPROGC(objectToRender[0].VrtxShader, objectToRender[0].FragShader, 0);
+			//// sets clear color
+			//STCLRCOLR(ColorName.Blue);
+			//// sets the texture supporting attributes
+			//STSTDATTRIB();
+			//// cleans up some stuff mid-way
+			//CLNUP();
+			//// binds texture info
+			//TXINIT();
+			//// sets the texture info
+			//TXST();
+			//// sets texture settings
+			//TXRHINTS();
+			//// generates mipmaps
+			//GNMPMPS();
+			//// sets the texture info to the shader
+			//STTXTRUNI();
+			//// loads user-defined info
+			//OL.Invoke();
 		}
 
 		/// <summary>
 		/// Initializes some info for the textures
 		/// </summary>
-		public virtual void TXINIT()
+		public virtual void TXINIT(int objid)
 		{
-			objectToRender[0].TexturePtr = gl.GenTexture();
+			objectToRender[objid].TexturePtr = gl.GenTexture();
 			gl.ActiveTexture(TextureUnit.Texture0);
-			gl.BindTexture(TextureTarget.Texture2D, objectToRender[0].TexturePtr);
+			gl.BindTexture(TextureTarget.Texture2D, objectToRender[objid].TexturePtr);
 		}
 
 		/// <summary>
 		/// Sets the texture info
 		/// </summary>
-		public unsafe virtual void TXST()
+		public unsafe virtual void TXST(int objid)
 		{
 			ImageResult result = ImageResult.FromMemory(File.ReadAllBytes(@$"{Environment.CurrentDirectory}\Ctnt\Txtrs\Enemy Thing.png"), ColorComponents.RedGreenBlueAlpha);
 			fixed (byte* ptr = result.Data)
@@ -422,11 +472,11 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// Sets the texture info in the shader
 		/// </summary>
-		public virtual void STTXTRUNI()
+		public virtual void STTXTRUNI(int objid)
 		{
-			gl.BindTexture(TextureTarget.Texture2D, 0);
+			gl.BindTexture(TextureTarget.Texture2D, (uint)objid);
 
-			int location = gl.GetUniformLocation(objectToRender[0].Program.ProgramPtr, "uTexture");
+			int location = gl.GetUniformLocation(objectToRender[objid].Program.ProgramPtr, "uTexture");
 			gl.Uniform1(location, 0);
 		}
 
@@ -440,13 +490,13 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		}
 
 		/// <summary>
-		/// Does a bit of clean up with the buffers
+		/// Selects buffers
 		/// </summary>
-		public virtual void CLNUP()
+		public virtual void BFRST(uint objid)
 		{
-			gl.BindVertexArray(0);
-			gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
-			gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, 0);
+			gl.BindVertexArray(objid);
+			gl.BindBuffer(BufferTargetARB.ArrayBuffer, objid);
+			gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, objid);
 		}
 
 		/// <summary>
@@ -467,10 +517,10 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// Binds a VAO object
 		/// </summary>
-		public virtual void BNDVAO()
+		public virtual void BNDVAO(int objid)
 		{
-			objectToRender[0].BoundVao = gl.GenVertexArray();
-			gl.BindVertexArray(objectToRender[0].BoundVao);
+			objectToRender[objid].BoundVao = gl.GenVertexArray();
+			gl.BindVertexArray(objectToRender[objid].BoundVao);
 		}
 
 		/// <summary>
@@ -499,9 +549,9 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// Sets the inside of the vbo to objectToRender[0].triangles
 		/// </summary>
-		public virtual unsafe void STVBO()
+		public virtual unsafe void STVBO(int objid)
 		{
-			float[] data = MSHTXCRDS(GVFPS(objectToRender[0].objToSim.ObjectMesh), objectToRender[0].objToSim.ObjectMesh);
+			float[] data = MSHTXCRDS(GVFPS(objectToRender[objid].objToSim.ObjectMesh), objectToRender[objid].objToSim.ObjectMesh);
 			fixed (float* buf = data)
 				gl.BufferData(BufferTargetARB.ArrayBuffer, (nuint)(sizeof(float) * data.Length), buf, BufferUsageARB.StaticDraw);
 		}
@@ -509,10 +559,10 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// Creates a vbo
 		/// </summary>
-		public virtual void INITVBO()
+		public virtual void INITVBO(int objid)
 		{
-			objectToRender[0].vbo = gl.GenBuffer();
-			gl.BindBuffer(BufferTargetARB.ArrayBuffer, objectToRender[0].vbo);
+			objectToRender[objid].vbo = gl.GenBuffer();
+			gl.BindBuffer(BufferTargetARB.ArrayBuffer, objectToRender[objid].vbo);
 		}
 
 		/// <summary>

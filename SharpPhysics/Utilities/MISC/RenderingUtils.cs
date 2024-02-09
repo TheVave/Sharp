@@ -1,8 +1,7 @@
-﻿using SharpPhysics._2d.ObjectRepresentation;
+﻿using SharpPhysics._2d._2DSGLRenderer.Main;
+using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 using static SharpPhysics.Utilities.MathUtils.GenericMathUtils;
 
 namespace SharpPhysics.Utilities.MISC
@@ -42,6 +41,11 @@ namespace SharpPhysics.Utilities.MISC
 
 
 			return vertices;
+		}
+
+		public static void SetTX(ref SGLRenderedObject obj)
+		{
+
 		}
 
 		/// <summary>
