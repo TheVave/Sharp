@@ -44,27 +44,6 @@ namespace SharpPhysics.Utilities.MISC
 			return vertices;
 		}
 
-		//Code from: https://stackoverflow.com/questions/18407349/systemdrawingbitmap-to-unsigned-char
-		/// <summary>
-		/// Converts a bitmap image to a byte[]
-		/// </summary>
-		/// <param name="bitmap"></param>
-		/// <returns></returns>
-		public static unsafe byte[] GetImageBytes(System.Drawing.Bitmap bitmap)
-		{
-			System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
-			BitmapData bmpData = bitmap.LockBits(rect, ImageLockMode.ReadOnly,
-				bitmap.PixelFormat);
-
-			IntPtr ptr = bmpData.Scan0;
-			int bytes = Math.Abs(bmpData.Stride) * bitmap.Height;
-			byte[] rgbValues = new byte[bytes];
-			Marshal.Copy(ptr, rgbValues, 0, bytes);
-			bitmap.UnlockBits(bmpData);
-			return rgbValues;
-			//do whatever with data
-		}
-
 		/// <summary>
 		/// Gets a float[] containing the texture cords
 		/// </summary>

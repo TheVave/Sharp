@@ -1,7 +1,7 @@
 ﻿namespace SharpPhysics.Renderer
 {
 	/// <summary>
-	/// HTML / CSS Color declerations.
+	/// HTML / CSS Color declarations.
 	/// Defined with RGB with ints. Example: White = 255255255
 	/// </summary>
 	// I don't remember how I found this list.

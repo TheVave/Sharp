@@ -1,17 +1,19 @@
-﻿using System.Runtime.InteropServices;
+﻿using Silk.NET.Input;
+using System.Runtime.InteropServices;
 namespace SharpPhysics.Input.Keyboard
 {
 	public static class KeyboardInput
 	{
 		// external import from user32.dll that handles the keyboard and left or right mouse input
-		[DllImport("user32.dll")]
 		static extern short GetAsyncKeyState(int VirtualKeyPressed);
 
-		/// <summary>
-		/// The keys that are down
-		/// WARNING!!! RUN InitKybrdThreads BEFORE ATTEMPTING TO USE
-		/// </summary>
-		public static VirtualKey[] KeysDwn = Array.Empty<VirtualKey>();
+		public static bool IsWindows = true;
+
+		///// <summary>
+		///// The keys that are down
+		///// WARNING!!! RUN InitKybrdThreads BEFORE ATTEMPTING TO USE
+		///// </summary>
+		//public static VirtualKey[] KeysDwn = Array.Empty<VirtualKey>();
 
 		/// <summary>
 		/// Loads the threads that manage KeysDwn, must be run for any keyboard input
@@ -70,12 +72,31 @@ namespace SharpPhysics.Input.Keyboard
 		//		thrd.Start();
 		//	}
 		//}
+		internal static void Load()
+		{
+			try
+			{
+				[DllImport("user32.dll")]
+				static extern void GetAsyncKeyState(int VirtualKeyPressed);
+			}
+			catch
+			{
+				IsWindows = false;
+			}
+		}
 		internal static bool IsKeyDown(VirtualKey key)
 		{
-			byte[] result = BitConverter.GetBytes(GetAsyncKeyState((int)key));
-			if (result[0] == 1) return true;
-			else if (result[0] == 0x80) return true;
-			else return false;
+			if (IsWindows)
+			{
+				byte[] result = BitConverter.GetBytes(GetAsyncKeyState((int)key));
+				if (result[0] == 1) return true;
+				else if (result[0] == 0x80) return true;
+				else return false;
+			}
+			else
+			{
+				return false;
+			}
 		}
 	}
 }

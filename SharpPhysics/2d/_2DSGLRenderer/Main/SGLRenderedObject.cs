@@ -18,12 +18,12 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// The fragment shader to use. Don't mess with this unless you know what you're doing.
 		/// </summary>
-		public string FragShader = ShaderCollector.GetShader("FragTxtr");
+		public string FragShader = ShaderCollector.GetShader("FragTextureSupport");
 
 		/// <summary>
 		/// The vertex shader to use. Don't mess with this unless you know what you're doing.
 		/// </summary>
-		public string VrtxShader = ShaderCollector.GetShader("VrtxTxtrSprt");
+		public string VrtxShader = ShaderCollector.GetShader("VertexPositionTexture");
 
 		/// <summary>
 		/// The pointer to the object texture

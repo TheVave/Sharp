@@ -35,7 +35,7 @@ namespace SharpPhysics._2d.Physics
 		/// <summary>
 		/// WARNING: this has a maximum of 1000
 		/// </summary>
-		public int TickSpeed = 60;
+		public int TickSpeed = 200;
 		public _2dMovementRepresenter CurrentMovement { get; private set; } = new(new _2dPosition(0, 0));
 		public int SpeedMultiplier = 1;
 		public IExecuteAtCollision? ToExecuteAtCollision;
@@ -104,11 +104,11 @@ namespace SharpPhysics._2d.Physics
 
 			// do standard calculations to find the displacement in a given direction
 			ObjectToSimulate.Translation.ObjectPosition.xPos += ((speedDirection[0]) * displacement) + ObjectToSimulate.ObjectPhysicsParams.Momentum[0];
-			ObjectToSimulate.Translation.ObjectPosition.yPos += (((speedDirection[1]) * displacement) + ObjectToSimulate.ObjectPhysicsParams.Momentum[1]) - ObjectToSimulate.ObjectPhysicsParams.GravityMultiplier * 9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass;
+			ObjectToSimulate.Translation.ObjectPosition.yPos += (((speedDirection[1]) * displacement) + ObjectToSimulate.ObjectPhysicsParams.Momentum[1]) - ((ObjectToSimulate.ObjectPhysicsParams.GravityMultiplier * 9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass) * (TimePerSimulationTick / 10));
 
 			// add momentum
 			ObjectToSimulate.ObjectPhysicsParams.Momentum[0] += (((speedDirection[0]) * displacement / sUVATEquations.T * ObjectToSimulate.ObjectPhysicsParams.Mass));
-			ObjectToSimulate.ObjectPhysicsParams.Momentum[1] += ((speedDirection[1]) * displacement / sUVATEquations.T * ObjectToSimulate.ObjectPhysicsParams.Mass) - (ObjectToSimulate.ObjectPhysicsParams.GravityMultiplier * 9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass);
+			ObjectToSimulate.ObjectPhysicsParams.Momentum[1] += ((speedDirection[1]) * displacement / sUVATEquations.T * ObjectToSimulate.ObjectPhysicsParams.Mass) - ((ObjectToSimulate.ObjectPhysicsParams.GravityMultiplier * 9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass) * (TimePerSimulationTick / 10));
 
 			// update CurrentMovement value
 			CurrentMovement.StartPosition = CurrentMovement.EndPosition;
@@ -165,7 +165,7 @@ namespace SharpPhysics._2d.Physics
 			Prerequisites();
 			Thread thread = new Thread(() =>
 			{
-				TimePerSimulationTick = ObjectToSimulate.ObjectPhysicsParams.TimeMultiplier / ObjectToSimulate.ObjectPhysicsParams.TicksPerSecond;
+				TimePerSimulationTick = ObjectToSimulate.ObjectPhysicsParams.TicksPerSecond * SpeedMultiplier;
 				DelayAmount = (int)Math.Ceiling(1000d / TickSpeed);
 				while (true)
 				{

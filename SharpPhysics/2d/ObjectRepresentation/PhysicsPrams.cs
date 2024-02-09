@@ -17,9 +17,14 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		public int GravityMultiplier = 1;
 
 		/// <summary>
-		/// Increases the accuracy of the physics simulation but decreases the porformance
+		/// Increases the accuracy of the physics simulation but decreases the performance
 		/// </summary>
 		public int TicksPerSecond = 20;
+
+		/// <summary>
+		/// The resistance for moving
+		/// </summary>
+		public double SpeedResistance = 0.02;
 
 		/// <summary>
 		/// The objects that the object to simulate can collide with
@@ -40,11 +45,6 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// Mass of the object
 		/// </summary>
 		public double Mass = 1f;
-
-		/// <summary>
-		/// WARNING: unused
-		/// </summary>
-		public double SpeedResistance = 0.1;
 
 		/// <summary>
 		/// The acceleration of the object in SpeedDirection. 

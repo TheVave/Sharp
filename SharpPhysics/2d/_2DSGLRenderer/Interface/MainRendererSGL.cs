@@ -1,4 +1,5 @@
 ﻿using SharpPhysics._2d._2DSGLRenderer.Main;
+using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Renderer;
 
 namespace SharpPhysics
@@ -32,6 +33,50 @@ namespace SharpPhysics
 			set
 			{
 				renderer.title = value;
+			}
+		}
+
+		/// <summary>
+		/// Called once per frame
+		/// </summary>
+		public static Action<_2dSimulatedObject>[] OnRender { 
+			get
+			{
+				return renderer.OR;
+			}
+			set
+			{
+				renderer.OR = value;
+			}
+		}
+
+		/// <summary>
+		/// Called once per frame. You can't use SGL here.
+		/// </summary>
+		public static Action<_2dSimulatedObject>[] OnUpdate
+		{
+			get
+			{
+				return renderer.OU;
+			}
+			set
+			{
+				renderer.OU = value;
+			}
+		}
+
+		/// <summary>
+		/// Called once.
+		/// </summary>
+		public static Action OnLoad
+		{
+			get
+			{
+				return renderer.OL;
+			}
+			set
+			{
+				renderer.OL = value;
 			}
 		}
 

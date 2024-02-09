@@ -1,6 +1,7 @@
 ﻿using SharpPhysics._2d._2DSGLRenderer.Shaders;
 using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Renderer;
+using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using SharpPhysics.Utilities.MISC;
 using SharpPhysics.Utilities.MISC.Errors;
@@ -52,6 +53,21 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// The color to clear to
 		/// </summary>
 		public Color clearBufferBit = new(ColorName.Black);
+
+		/// <summary>
+		/// OnRender
+		/// </summary>
+		public Action<_2dSimulatedObject>[] OR = [];
+
+		/// <summary>
+		/// OnUpdate
+		/// </summary>
+		public Action<_2dSimulatedObject>[] OU = [];
+
+		/// <summary>
+		/// OnLoad
+		/// </summary>
+		public Action OL;
 
 		/// <summary>
 		/// Initializes SGL (Silk.net openGL) and the Wnd object
@@ -239,16 +255,72 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		{
 			CLR();
 
-			gl.BindVertexArray(objectToRender[0].BoundVao);
-			gl.UseProgram(objectToRender[0].Program.ProgramPtr);
+			SELOBJ(0);
+			DRWOBJ(0);
+		}
+
+		/// <summary>
+		/// Invokes user draw code
+		/// </summary>
+		public unsafe virtual void IVKUSRRNDRS()
+		{
+			for (int obj = 0; obj < objectToRender.Length; obj++)
+			{
+				OR[obj].Invoke(objectToRender[obj].objToSim);
+			}
+		}
+
+		/// <summary>
+		/// Selects an object to draw
+		/// </summary>
+		/// <param name="objectID"></param>
+		public unsafe virtual void SELOBJ(int objectID)
+		{
+			// select vao
+			gl.BindVertexArray(objectToRender[objectID].BoundVao);
+			gl.UseProgram(objectToRender[objectID].Program.ProgramPtr);
 
 			// use texture
 			gl.ActiveTexture(TextureUnit.Texture0);
-			gl.BindTexture(TextureTarget.Texture2D, objectToRender[0].TexturePtr);
-
-			gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)objectToRender[0].objToSim.ObjectMesh.MeshTriangles.Length * 3);
+			gl.BindTexture(TextureTarget.Texture2D, objectToRender[objectID].TexturePtr);
 		}
 
+		/// <summary>
+		/// Draws the object at objectID
+		/// </summary>
+		/// <param name="objectID"></param>
+		public unsafe virtual void DRWOBJ(int objectID)
+		{
+			STTRNSFRMM4(objectID, "mod");
+			gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)objectToRender[objectID].objToSim.ObjectMesh.MeshTriangles.Length * 3);
+		}
+
+		/// <summary>
+		/// Gets a transform matrix
+		/// </summary>
+		/// <param name="objectID"></param>
+		/// <returns></returns>
+		public unsafe virtual Matrix4x4 GTTRNSFRMMTRX(int objectID)
+		{
+			Vector3 vctr3 = new Vector3((float)objectToRender[objectID].objToSim.Translation.ObjectPosition.xPos, (float)objectToRender[objectID].objToSim.Translation.ObjectPosition.yPos, 0);
+			Matrix4x4 model = Matrix4x4.CreateRotationZ((float)GenericMathUtils.DegreesToRadians(objectToRender[objectID].objToSim.Translation.ObjectRotation.xRot)) * Matrix4x4.CreateTranslation(vctr3);
+			return model;
+		}
+
+		/// <summary>
+		/// Sets transform matrix
+		/// </summary>
+		/// <param name="objectID"></param>
+		/// <param name="name"></param>
+		public unsafe virtual void STTRNSFRMM4(int objectID, string name)
+		{
+			int pos = gl.GetUniformLocation(objectToRender[objectID].Program.ProgramPtr, name);
+			gl.UniformMatrix4(pos, false, GetMatrix4x4Values(GTTRNSFRMMTRX(objectID)));
+		}
+
+		/// <summary>
+		/// Initializes some info for objects
+		/// </summary>
 		public unsafe virtual void INITOBJS()
 		{
 			foreach (SGLRenderedObject obj in objectToRender)
@@ -262,7 +334,10 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public virtual void UDT(double deltaTime)
 		{
-
+			ParallelFor.ParallelForLoop((int obj) =>
+			{
+				OU[obj].Invoke(objectToRender[obj].objToSim);
+			}, objectToRender.Length);
 		}
 
 		/// <summary>
@@ -298,6 +373,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			GNMPMPS();
 			// sets the texture info to the shader
 			STTXTRUNI();
+			// loads user-defined info
+			OL.Invoke();
 		}
 
 		/// <summary>
