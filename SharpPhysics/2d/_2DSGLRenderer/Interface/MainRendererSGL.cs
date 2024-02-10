@@ -9,6 +9,21 @@ namespace SharpPhysics
 		public static Internal2dRenderer renderer = new();
 
 		/// <summary>
+		/// The objects to render
+		/// </summary>
+		public static SGLRenderedObject[] ObjectsToRender
+		{
+			get
+			{
+				return renderer.objectToRender;
+			}
+			set
+			{
+				renderer.objectToRender = value;
+			}
+		}
+
+		/// <summary>
 		/// The background color
 		/// </summary>
 		public static Color BackgroundColor

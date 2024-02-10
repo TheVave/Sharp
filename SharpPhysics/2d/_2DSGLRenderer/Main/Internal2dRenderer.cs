@@ -442,7 +442,15 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public unsafe virtual void TXST(int objid)
 		{
-			ImageResult result = ImageResult.FromMemory(File.ReadAllBytes(@$"{Environment.CurrentDirectory}\Ctnt\Txtrs\Enemy Thing.png"), ColorComponents.RedGreenBlueAlpha);
+			ImageResult result = new();
+			try
+			{
+				result = ImageResult.FromMemory(File.ReadAllBytes($"{Environment.CurrentDirectory}\\Ctnt\\Txtrs\\{objectToRender[objid].objTextureLoc}"), ColorComponents.RedGreenBlueAlpha);
+			}
+			catch
+			{
+				ErrorHandler.ThrowError("Missing resource or incorrectly formatted file", true);
+			}
 			fixed (byte* ptr = result.Data)
 			{
 				gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba, (uint)result.Width,

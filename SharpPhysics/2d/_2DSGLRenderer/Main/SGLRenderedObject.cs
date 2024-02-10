@@ -41,7 +41,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// The object's texture
 		/// </summary>
-		public Texture objTexture = new();
+		public string objTextureLoc = "Enemy Thing.png";
 
 		/// <summary>
 		/// the object to simulate
