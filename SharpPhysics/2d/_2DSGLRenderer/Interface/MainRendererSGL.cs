@@ -9,17 +9,47 @@ namespace SharpPhysics
 		public static Internal2dRenderer renderer = new();
 
 		/// <summary>
+		/// If the program should instruct OpenGL to use 8-bit style textures.
+		/// </summary>
+		public static bool Use8BitStyleTextures = false;
+
+		/// <summary>
+		/// If the program should zoom the camera on the scroll wheel.
+		/// </summary>
+		public static bool UseCamZoom = true;
+
+		/// <summary>
+		/// The zoom speed multiplier
+		/// </summary>
+		public static double ZoomIntensity = 1;
+
+		/// <summary>
 		/// The objects to render
 		/// </summary>
 		public static SGLRenderedObject[] ObjectsToRender
 		{
 			get
 			{
-				return renderer.objectToRender;
+				return renderer.ObjectsToRender;
 			}
 			set
 			{
-				renderer.objectToRender = value;
+				renderer.ObjectsToRender = value;
+			}
+		}
+
+		/// <summary>
+		/// The camera to render all of the objects to.
+		/// </summary>
+		public static _2dCamera Camera
+		{
+			get
+			{
+				return renderer.Cam;
+			}
+			set
+			{
+				renderer.Cam = value;
 			}
 		}
 

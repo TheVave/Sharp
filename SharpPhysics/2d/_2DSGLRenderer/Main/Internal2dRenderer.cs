@@ -5,11 +5,11 @@ using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using SharpPhysics.Utilities.MISC;
 using SharpPhysics.Utilities.MISC.Errors;
+using Silk.NET.Input;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using StbImageSharp;
 using System.Numerics;
-using System.Runtime.ExceptionServices;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
 {
@@ -28,7 +28,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// The objects to render
 		/// </summary>
-		public SGLRenderedObject[] objectToRender = [new(), new()];
+		public SGLRenderedObject[] ObjectsToRender = [new(), new()];
 
 		/// <summary>
 		/// wnd title
@@ -69,6 +69,16 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// OnLoad
 		/// </summary>
 		public Action OL;
+
+		/// <summary>
+		/// The camera to render out of.
+		/// </summary>
+		public _2dCamera Cam = new();
+
+		/// <summary>
+		/// The input context.
+		/// </summary>
+		public IInputContext inputContext;
 
 		/// <summary>
 		/// Initializes SGL (Silk.net openGL) and the Wnd object
@@ -121,15 +131,15 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			}
 			if (type is Silk.NET.OpenGL.ShaderType.VertexShader)
 			{
-				objectToRender[objID].Program.Vrtx.ShaderCode = ShaderCollector.GetShader(name);
-				objectToRender[objID].Program.Vrtx.ShaderCompilePtr = ptr;
-				objectToRender[objID].Program.Vrtx.ShaderType = type;
+				ObjectsToRender[objID].Program.Vrtx.ShaderCode = ShaderCollector.GetShader(name);
+				ObjectsToRender[objID].Program.Vrtx.ShaderCompilePtr = ptr;
+				ObjectsToRender[objID].Program.Vrtx.ShaderType = type;
 			}
 			else if (type is Silk.NET.OpenGL.ShaderType.FragmentShader)
 			{
-				objectToRender[objID].Program.Frag.ShaderCode = ShaderCollector.GetShader(name);
-				objectToRender[objID].Program.Frag.ShaderCompilePtr = ptr;
-				objectToRender[objID].Program.Frag.ShaderType = type;
+				ObjectsToRender[objID].Program.Frag.ShaderCode = ShaderCollector.GetShader(name);
+				ObjectsToRender[objID].Program.Frag.ShaderCompilePtr = ptr;
+				ObjectsToRender[objID].Program.Frag.ShaderType = type;
 			}
 			return ptr;
 		}
@@ -146,15 +156,15 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			}
 			if (type is Silk.NET.OpenGL.ShaderType.VertexShader)
 			{
-				objectToRender[objID].Program.Vrtx.ShaderCode = code;
-				objectToRender[objID].Program.Vrtx.ShaderCompilePtr = ptr;
-				objectToRender[objID].Program.Vrtx.ShaderType = type;
+				ObjectsToRender[objID].Program.Vrtx.ShaderCode = code;
+				ObjectsToRender[objID].Program.Vrtx.ShaderCompilePtr = ptr;
+				ObjectsToRender[objID].Program.Vrtx.ShaderType = type;
 			}
 			else if (type is Silk.NET.OpenGL.ShaderType.FragmentShader)
 			{
-				objectToRender[objID].Program.Frag.ShaderCode = code;
-				objectToRender[objID].Program.Frag.ShaderCompilePtr = ptr;
-				objectToRender[objID].Program.Frag.ShaderType = type;
+				ObjectsToRender[objID].Program.Frag.ShaderCode = code;
+				ObjectsToRender[objID].Program.Frag.ShaderCompilePtr = ptr;
+				ObjectsToRender[objID].Program.Frag.ShaderType = type;
 			}
 			return ptr;
 		}
@@ -191,7 +201,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			gl.DetachShader(prog, shdr1);
 			gl.DetachShader(prog, shdr2);
 
-			objectToRender[objID].Program.ProgramPtr = prog;
+			ObjectsToRender[objID].Program.ProgramPtr = prog;
 
 			return prog;
 		}
@@ -228,7 +238,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			gl.DetachShader(prog, shdr1);
 			gl.DetachShader(prog, shdr2);
 
-			objectToRender[objID].Program.ProgramPtr = prog;
+			ObjectsToRender[objID].Program.ProgramPtr = prog;
 
 			return prog;
 		}
@@ -256,7 +266,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		{
 			CLR();
 
-			for (int i = 0; i < objectToRender.Length; i++)
+			for (int i = 0; i < ObjectsToRender.Length; i++)
 			{
 				SELOBJ(i);
 				DRWOBJ(i);
@@ -268,9 +278,9 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public unsafe virtual void IVKUSRRNDRS()
 		{
-			for (int obj = 0; obj < objectToRender.Length; obj++)
+			for (int obj = 0; obj < ObjectsToRender.Length; obj++)
 			{
-				OR[obj].Invoke(objectToRender[obj].objToSim);
+				OR[obj].Invoke(ObjectsToRender[obj].objToSim);
 			}
 		}
 
@@ -281,12 +291,12 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		public unsafe virtual void SELOBJ(int objectID)
 		{
 			// select vao
-			gl.BindVertexArray(objectToRender[objectID].BoundVao);
-			gl.UseProgram(objectToRender[objectID].Program.ProgramPtr);
+			gl.BindVertexArray(ObjectsToRender[objectID].BoundVao);
+			gl.UseProgram(ObjectsToRender[objectID].Program.ProgramPtr);
 
 			// use texture
 			gl.ActiveTexture(TextureUnit.Texture0);
-			gl.BindTexture(TextureTarget.Texture2D, objectToRender[objectID].TexturePtr);
+			gl.BindTexture(TextureTarget.Texture2D, ObjectsToRender[objectID].TexturePtr);
 		}
 
 		/// <summary>
@@ -296,7 +306,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		public unsafe virtual void DRWOBJ(int objectID)
 		{
 			STTRNSFRMM4(objectID, "mod");
-			gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)objectToRender[objectID].objToSim.ObjectMesh.MeshTriangles.Length * 3);
+			gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)ObjectsToRender[objectID].objToSim.ObjectMesh.MeshTriangles.Length * 3);
 		}
 
 		/// <summary>
@@ -306,8 +316,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <returns></returns>
 		public unsafe virtual Matrix4x4 GTTRNSFRMMTRX(int objectID)
 		{
-			Vector3 vctr3 = new Vector3((float)objectToRender[objectID].objToSim.Translation.ObjectPosition.xPos, (float)objectToRender[objectID].objToSim.Translation.ObjectPosition.yPos, 0);
-			Matrix4x4 model = Matrix4x4.CreateRotationZ((float)GenericMathUtils.DegreesToRadians(objectToRender[objectID].objToSim.Translation.ObjectRotation.xRot)) * Matrix4x4.CreateTranslation(vctr3);
+			Vector3 vctr3 = new Vector3((float)ObjectsToRender[objectID].objToSim.Translation.ObjectPosition.xPos, (float)ObjectsToRender[objectID].objToSim.Translation.ObjectPosition.yPos, 0);
+			Matrix4x4 model = Matrix4x4.CreateRotationZ((float)GenericMathUtils.DegreesToRadians(ObjectsToRender[objectID].objToSim.Translation.ObjectRotation.xRot)) * Matrix4x4.CreateTranslation(vctr3);
 			return model;
 		}
 
@@ -318,9 +328,18 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <param name="name"></param>
 		public unsafe virtual void STTRNSFRMM4(int objectID, string name)
 		{
-			int pos = gl.GetUniformLocation(objectToRender[objectID].Program.ProgramPtr, name);
-			gl.UniformMatrix4(pos, false, GetMatrix4x4Values(GTTRNSFRMMTRX(objectID)));
+			int pos = gl.GetUniformLocation(ObjectsToRender[objectID].Program.ProgramPtr, name);
+			gl.UniformMatrix4(pos, false, GetMatrix4x4Values(GTTRNSFRMMTRX(objectID) * GTCMRAMTRX()));
 		}
+
+		/// <summary>
+		/// Gets the camera transform matrix
+		/// </summary>
+		/// <returns>
+		/// Camera matrix
+		/// </returns>
+		public unsafe virtual Matrix4x4 GTCMRAMTRX() => Cam.GetProjectionMatrix(this);
+			
 
 		/// <summary>
 		/// Initializes some info for objects
@@ -328,9 +347,9 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		public unsafe virtual void INITOBJS()
 		{
 			int objid = 0;
-			foreach (SGLRenderedObject obj in objectToRender)
+			foreach (SGLRenderedObject obj in ObjectsToRender)
 			{
-				objectToRender[objid].objToSim.ObjectMesh.MeshTriangles = DelaunayTriangulator.DelaunayTriangulation(objectToRender[0].objToSim.ObjectMesh.MeshPoints).ToArray();
+				ObjectsToRender[objid].objToSim.ObjectMesh.MeshTriangles = DelaunayTriangulator.DelaunayTriangulation(ObjectsToRender[0].objToSim.ObjectMesh.MeshPoints).ToArray();
 				objid++;
 			}
 		}
@@ -344,14 +363,26 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			{
 				try
 				{
-					OU[obj].Invoke(objectToRender[obj].objToSim);
+					OU[obj].Invoke(ObjectsToRender[obj].objToSim);
 				}
 				catch
 				{
 
 				}
-			}, objectToRender.Length);
+			}, ObjectsToRender.Length);
 		}
+
+		/// <summary>
+		/// Initializes the input context
+		/// </summary>
+		public virtual void INPTINIT() =>
+			inputContext = Wnd.CreateInput();
+
+		/// <summary>
+		/// Binds the scroll event to scrlwhl
+		/// </summary>
+		public virtual void BNDSCRL() =>
+			inputContext.Mice[0].Scroll += SCRLWHL;
 
 		/// <summary>
 		/// Called before anything else (other than OpenGL.Init), only called once.
@@ -360,6 +391,10 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		{
 			// loads some necessary info for the objects.
 			INITOBJS();
+			// loads input context
+			INPTINIT();
+			// binds scroll event
+			BNDSCRL();
 			// inits the OpenGL context
 			INTGLCNTXT();
 			// sets clear color
@@ -367,7 +402,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			// sets texture settings
 			TXRHINTS();
 
-			for (int i = 0; i < objectToRender.Length; i++)
+			for (int i = 0; i < ObjectsToRender.Length; i++)
 			{
 				// binds vao
 				BNDVAO(i);
@@ -376,7 +411,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 				// sets vbo data
 				STVBO(i);
 				// compiles shaders and shader progs
-				CMPLPROGC(objectToRender[i].VrtxShader, objectToRender[i].FragShader, i);
+				CMPLPROGC(ObjectsToRender[i].VrtxShader, ObjectsToRender[i].FragShader, i);
 				// sets the texture supporting attributes
 				STSTDATTRIB();
 				// sets vbo and vao
@@ -432,9 +467,9 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public virtual void TXINIT(int objid)
 		{
-			objectToRender[objid].TexturePtr = gl.GenTexture();
+			ObjectsToRender[objid].TexturePtr = gl.GenTexture();
 			gl.ActiveTexture(TextureUnit.Texture0);
-			gl.BindTexture(TextureTarget.Texture2D, objectToRender[objid].TexturePtr);
+			gl.BindTexture(TextureTarget.Texture2D, ObjectsToRender[objid].TexturePtr);
 		}
 
 		/// <summary>
@@ -445,7 +480,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			ImageResult result = new();
 			try
 			{
-				result = ImageResult.FromMemory(File.ReadAllBytes($"{Environment.CurrentDirectory}\\Ctnt\\Txtrs\\{objectToRender[objid].objTextureLoc}"), ColorComponents.RedGreenBlueAlpha);
+				result = ImageResult.FromMemory(File.ReadAllBytes($"{Environment.CurrentDirectory}\\Ctnt\\Txtrs\\{ObjectsToRender[objid].objTextureLoc}"), ColorComponents.RedGreenBlueAlpha);
 			}
 			catch
 			{
@@ -459,14 +494,28 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		}
 
 		/// <summary>
+		/// Called on scroll wheel scroll.
+		/// Zooms camera.
+		/// </summary>
+		/// <param name="mouse"></param>
+		/// <param name="scrollwheel"></param>
+		public unsafe virtual void SCRLWHL(IMouse mouse, ScrollWheel scrollwheel)
+		{
+			if (MainRendererSGL.UseCamZoom)
+			{
+				Cam.Zoom = Math.Clamp((Cam.Zoom - scrollwheel.Y) * (float)MainRendererSGL.ZoomIntensity, 0, 512);
+			}
+		}
+
+		/// <summary>
 		/// Sets some settings for OpenGL and textures.
 		/// </summary>
 		public unsafe virtual void TXRHINTS()
 		{
-			gl.TextureParameter(objectToRender[0].TexturePtr, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-			gl.TextureParameter(objectToRender[0].TexturePtr, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
-			gl.TextureParameter(objectToRender[0].TexturePtr, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
-			gl.TextureParameter(objectToRender[0].TexturePtr, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+			gl.TextureParameter(ObjectsToRender[0].TexturePtr, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+			gl.TextureParameter(ObjectsToRender[0].TexturePtr, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+			gl.TextureParameter(ObjectsToRender[0].TexturePtr, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
+			gl.TextureParameter(ObjectsToRender[0].TexturePtr, TextureParameterName.TextureMagFilter, (int)((!MainRendererSGL.Use8BitStyleTextures) ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
 		}
 
 		/// <summary>
@@ -484,7 +533,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		{
 			gl.BindTexture(TextureTarget.Texture2D, (uint)objid);
 
-			int location = gl.GetUniformLocation(objectToRender[objid].Program.ProgramPtr, "uTexture");
+			int location = gl.GetUniformLocation(ObjectsToRender[objid].Program.ProgramPtr, "uTexture");
 			gl.Uniform1(location, 0);
 		}
 
@@ -511,7 +560,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// Gets a float[] containing the points from a mesh object
 		/// </summary>
 		public virtual float[] GVFPS(Mesh msh) =>
-			Triangle.ToFloats3D(objectToRender[0].objToSim.ObjectMesh.MeshTriangles);
+			Triangle.ToFloats3D(ObjectsToRender[0].objToSim.ObjectMesh.MeshTriangles);
 
 		/// <summary>
 		/// Connects the mesh and texture cords
@@ -527,8 +576,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public virtual void BNDVAO(int objid)
 		{
-			objectToRender[objid].BoundVao = gl.GenVertexArray();
-			gl.BindVertexArray(objectToRender[objid].BoundVao);
+			ObjectsToRender[objid].BoundVao = gl.GenVertexArray();
+			gl.BindVertexArray(ObjectsToRender[objid].BoundVao);
 		}
 
 		/// <summary>
@@ -559,7 +608,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public virtual unsafe void STVBO(int objid)
 		{
-			float[] data = MSHTXCRDS(GVFPS(objectToRender[objid].objToSim.ObjectMesh), objectToRender[objid].objToSim.ObjectMesh);
+			float[] data = MSHTXCRDS(GVFPS(ObjectsToRender[objid].objToSim.ObjectMesh), ObjectsToRender[objid].objToSim.ObjectMesh);
 			fixed (float* buf = data)
 				gl.BufferData(BufferTargetARB.ArrayBuffer, (nuint)(sizeof(float) * data.Length), buf, BufferUsageARB.StaticDraw);
 		}
@@ -569,8 +618,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public virtual void INITVBO(int objid)
 		{
-			objectToRender[objid].vbo = gl.GenBuffer();
-			gl.BindBuffer(BufferTargetARB.ArrayBuffer, objectToRender[objid].vbo);
+			ObjectsToRender[objid].vbo = gl.GenBuffer();
+			gl.BindBuffer(BufferTargetARB.ArrayBuffer, ObjectsToRender[objid].vbo);
 		}
 
 		/// <summary>

@@ -7,13 +7,15 @@ The renderer is not fully set up, but I'm working on it.
 ### BUILDING ###
 ---------------------------------------------------------
 
-To build, do all the normal things to build, and make sure to copy over all .glsl files to [output directory]\Shaders, and make them with a .shdr file extention,
+To build, do all the normal things to build, and make sure to copy over all .glsl files to [output directory]\Shaders,
 and also copy over glfw.dll to the output directory.
 
 ### PLATFORM SUPPORT ###
 ---------------------------------------------------------
 
 Currently SharpPhysics only runs on Windows, because the glfw.dll file isn't compatible with other Operating Systems.
+#### UPDATE ####
+Soon it may be compatible with MacOS and Linux at some point.
 
 ### PERFORMANCE ###
 ---------------------------------------------------------
@@ -25,8 +27,7 @@ CPU, Depends entirely on how many objects there are, Normal with one object is v
 ### RECENT UPDATES ###
 ---------------------------------------------------------
 
-I've recently made the(singular) square move, and made the app no longer crash running in a non-windows OS,
-it just... Still needs the glfw.=>DLL<=, so I can't make that run correctly on Android, which is the OS I was going for right now.
+Multiple squares. Next I'm working on a camera.
 
 ### DOCS ###
 ---------------------------------------------------------

@@ -2,61 +2,79 @@
 using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Input;
 double speed = .05;
+double camSpeed = 0.05;
 MainRendererSGL.ObjectsToRender[1].objTextureLoc = "test.bmp";
 MainRendererSGL.ObjectsToRender[0].objTextureLoc = "Enemy Thing.png";
-MainRendererSGL.OnRender = MainRendererSGL.OnRender.Append((_2dSimulatedObject obj) =>
-{
-
-}).ToArray();
-MainRendererSGL.OnUpdate = MainRendererSGL.OnUpdate.Append((_2dSimulatedObject obj) =>
-{
-	if (InputManager.IsKeyDown(VirtualKey.W))
-	{
-		obj.ObjectPhysicsParams.Momentum[1] = speed;
-	}
-	if (InputManager.IsKeyDown(VirtualKey.S)) 
-	{
-		obj.ObjectPhysicsParams.Momentum[1] = -speed;
-	}
-	if (InputManager.IsKeyDown(VirtualKey.A))
-	{
-		obj.ObjectPhysicsParams.Momentum[0] = -speed;
-	}
-	if (InputManager.IsKeyDown(VirtualKey.D))
-	{
-		obj.ObjectPhysicsParams.Momentum[0] = speed;
-	}
-}).ToArray();
-MainRendererSGL.OnRender = MainRendererSGL.OnRender.Append((_2dSimulatedObject obj) =>
-{
-
-}).ToArray();
-MainRendererSGL.OnUpdate = MainRendererSGL.OnUpdate.Append((_2dSimulatedObject obj) =>
-{
-	if (InputManager.IsKeyDown(VirtualKey.T))
-	{
-		obj.ObjectPhysicsParams.Momentum[1] = speed;
-	}
-	if (InputManager.IsKeyDown(VirtualKey.G))
-	{
-		obj.ObjectPhysicsParams.Momentum[1] = -speed;
-	}
-	if (InputManager.IsKeyDown(VirtualKey.F))
-	{
-		obj.ObjectPhysicsParams.Momentum[0] = -speed;
-	}
-	if (InputManager.IsKeyDown(VirtualKey.H))
-	{
-		obj.ObjectPhysicsParams.Momentum[0] = speed;
-	}
-}).ToArray();
+MainRendererSGL.Use8BitStyleTextures = true;
 MainRendererSGL.OnLoad += () =>
 {
-	MainRendererSGL.renderer.objectToRender[0].objToSim.StartPhysicsSimulation();
-	MainRendererSGL.renderer.objectToRender[0].objToSim.ObjectPhysicsParams.GravityMultiplier = 0;
-	MainRendererSGL.renderer.objectToRender[0].objToSim.ObjectPhysicsParams.SpeedResistance = 0.005;
-	MainRendererSGL.renderer.objectToRender[1].objToSim.StartPhysicsSimulation();
-	MainRendererSGL.renderer.objectToRender[1].objToSim.ObjectPhysicsParams.GravityMultiplier = 0;
-	MainRendererSGL.renderer.objectToRender[1].objToSim.ObjectPhysicsParams.SpeedResistance = 0.005;
+	MainRendererSGL.ObjectsToRender[0].objToSim.StartPhysicsSimulation();
+	MainRendererSGL.ObjectsToRender[0].objToSim.ObjectPhysicsParams.GravityMultiplier = 0;
+	MainRendererSGL.ObjectsToRender[0].objToSim.ObjectPhysicsParams.SpeedResistance = 0.005;
+	MainRendererSGL.ObjectsToRender[0].objToSim.ObjectPhysicsParams.RotationalMomentum = 0.25;
+	MainRendererSGL.ObjectsToRender[0].objToSim.ObjectPhysicsParams.RotResistance = 0;
+	MainRendererSGL.ObjectsToRender[1].objToSim.StartPhysicsSimulation();
+	MainRendererSGL.ObjectsToRender[1].objToSim.ObjectPhysicsParams.GravityMultiplier = 0;
+	MainRendererSGL.ObjectsToRender[1].objToSim.ObjectPhysicsParams.SpeedResistance = 0.005;
+	MainRendererSGL.Camera.obj = new();
+	MainRendererSGL.Camera.obj.StartPhysicsSimulation();
+	MainRendererSGL.Camera.obj.ObjectPhysicsParams.GravityMultiplier = 0;
+	Thread thread = new Thread(() =>
+	{
+		while (true)
+		{
+			if (InputManager.IsKeyDown(VirtualKey.T))
+			{
+				MainRendererSGL.ObjectsToRender[0].objToSim.ObjectPhysicsParams.Momentum[1] = speed;
+			}
+			if (InputManager.IsKeyDown(VirtualKey.G))
+			{
+				MainRendererSGL.renderer.ObjectsToRender[0].objToSim.ObjectPhysicsParams.Momentum[1] = -speed;
+			}
+			if (InputManager.IsKeyDown(VirtualKey.F))
+			{
+				MainRendererSGL.renderer.ObjectsToRender[0].objToSim.ObjectPhysicsParams.Momentum[0] = -speed;
+			}
+			if (InputManager.IsKeyDown(VirtualKey.H))
+			{
+				MainRendererSGL.renderer.ObjectsToRender[0].objToSim.ObjectPhysicsParams.Momentum[0] = speed;
+			}
+
+			if (InputManager.IsKeyDown(VirtualKey.W))
+			{
+				MainRendererSGL.renderer.ObjectsToRender[1].objToSim.ObjectPhysicsParams.Momentum[1] = speed;
+			}
+			if (InputManager.IsKeyDown(VirtualKey.S))
+			{
+				MainRendererSGL.renderer.ObjectsToRender[1].objToSim.ObjectPhysicsParams.Momentum[1] = -speed;
+			}
+			if (InputManager.IsKeyDown(VirtualKey.A))
+			{
+				MainRendererSGL.renderer.ObjectsToRender[1].objToSim.ObjectPhysicsParams.Momentum[0] = -speed;
+			}
+			if (InputManager.IsKeyDown(VirtualKey.D))
+			{
+				MainRendererSGL.renderer.ObjectsToRender[1].objToSim.ObjectPhysicsParams.Momentum[0] = speed;
+			}
+
+			if (InputManager.IsKeyDown(VirtualKey.UP_ARROW))
+			{
+				MainRendererSGL.Camera.obj.ObjectPhysicsParams.Momentum[1] = camSpeed;
+			}
+			if (InputManager.IsKeyDown(VirtualKey.DOWN_ARROW))
+			{
+				MainRendererSGL.Camera.obj.ObjectPhysicsParams.Momentum[1] = -camSpeed;
+			}
+			if (InputManager.IsKeyDown(VirtualKey.LEFT_ARROW))
+			{
+				MainRendererSGL.Camera.obj.ObjectPhysicsParams.Momentum[0] = -camSpeed;
+			}
+			if (InputManager.IsKeyDown(VirtualKey.RIGHT_ARROW))
+			{
+				MainRendererSGL.Camera.obj.ObjectPhysicsParams.Momentum[0] = camSpeed;
+			}
+		}
+	});
+	thread.Start();
 };
 MainRendererSGL.InitRendering();
