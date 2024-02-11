@@ -1,8 +1,8 @@
-﻿
-using SharpPhysics._2d.ObjectRepresentation;
+﻿using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics._2d.ObjectRepresentation.Translation;
 using SharpPhysics._2d.Physics.CollisionManagement;
 using SharpPhysics.Utilities.MathUtils;
+using System.Diagnostics;
 
 namespace SharpPhysics._2d.Physics
 {
@@ -36,28 +36,75 @@ namespace SharpPhysics._2d.Physics
 		/// WARNING: this has a maximum of 1000
 		/// </summary>
 		public int TickSpeed = 200;
+		
+		/// <summary>
+		/// The most recent movement the object has taken.
+		/// </summary>
 		public _2dMovementRepresenter CurrentMovement { get; private set; } = new(new _2dPosition(0, 0));
+
+		/// <summary>
+		/// Momentum multiplier
+		/// </summary>
 		public int SpeedMultiplier = 1;
+
+		/// <summary>
+		/// What to execute at a collision
+		/// </summary>
 		public IExecuteAtCollision? ToExecuteAtCollision;
+
+		/// <summary>
+		/// The delay per physics engine tick
+		/// </summary>
 		public int DelayAmount;
-		public double TimePerSimulationTick = 0.001;
+
+		/// <summary>
+		/// The amount of time that passes per simulation tick
+		/// </summary>
+		public double TimePerSimulationTick;
+
+		/// <summary>
+		/// The time the code takes to run per tick
+		/// </summary>
+		public static double TickActualTime;
+
+		/// <summary>
+		/// If the physics engine should see if a collision has happened.
+		/// Used if a collision is detected to, when a collision happens to
+		/// not accel the objects to the speed of light (very fast).
+		/// </summary>
+		public bool DetectCollision = true;
 
 		/// <summary>
 		/// The perceived radius of the circle from the object mesh
-		/// see 108 - 110
 		/// </summary>
 		private double r;
 
+		/// <summary>
+		/// If the program should do manual ticking pulses
+		/// </summary>
 		private readonly bool DoManualTicking = false;
+
+		/// <summary>
+		/// The latest collision info
+		/// </summary>
 		private CollisionData[]? resultFromCheckCollision;
 
+		/// <summary>
+		/// The suvatequasions instance
+		/// </summary>
 		readonly SUVATEquations sUVATEquations = new SUVATEquations();
 
+		/// <summary>
+		/// The latest displacement
+		/// </summary>
 		double displacement;
 
 		//calculating the position based on the moving position
 		private double[] speedDirection = new double[2];
 
+		/// <summary>
+		/// The object's rotation
+		/// </summary>
 		private double rotationalAmount = 0;
 
 		public _2dPhysicsSimulator(_2dSimulatedObject objectToSimulate) => ObjectToSimulate = objectToSimulate;
@@ -78,15 +125,17 @@ namespace SharpPhysics._2d.Physics
 
 		internal void Tick()
 		{
-			resultFromCheckCollision = _2dCollisionManager.CheckIfCollidedWithObject(ObjectToSimulate.ObjectPhysicsParams.CollidableObjects, ObjectToSimulate);
-			if (resultFromCheckCollision != null)
+			if (DetectCollision)
+				resultFromCheckCollision = _2dCollisionManager.CheckIfCollidedWithObject(ObjectToSimulate.ObjectPhysicsParams.CollidableObjects, ObjectToSimulate);
+			if (resultFromCheckCollision.Length is not 0)
 			{
 				_2dSimulatedObject collidedObject;
 				for (int i = 0; i < resultFromCheckCollision.Length; i++)
 				{
 					collidedObject = resultFromCheckCollision[i].CollidedObject;
-					ToExecuteAtCollision.Execute(collidedObject, ObjectToSimulate);
-					SimulateCollision(ref ObjectToSimulate, resultFromCheckCollision[i].ObjectToCheckIfCollidedMeshIndex, resultFromCheckCollision[i].ObjectToCheckMeshIndex, ref collidedObject);
+					if (ToExecuteAtCollision is not null)
+						ToExecuteAtCollision.Execute(collidedObject, ObjectToSimulate);
+					_2dCollisionManager.SimulateCollision(ref ObjectToSimulate, resultFromCheckCollision[i].CollidedTriangle, resultFromCheckCollision[i].CollidedPoint, ref collidedObject);
 				}
 
 			}
@@ -135,20 +184,7 @@ namespace SharpPhysics._2d.Physics
 			}
 		}
 
-		/// <summary>
-		/// Applies a force on a specific point on a mesh line.
-		/// </summary>
-		/// <param name="obj"></param>
-		/// <param name="meshLineIndex"></param>
-		/// <param name="linePoint"></param>
-		// Mostly (only) used for collisions
-		internal void SimulateCollision(ref _2dSimulatedObject obj, int MeshLineIndexCollided, int MeshLineIndexCollider, ref _2dSimulatedObject collidedObject)
-		{
-			//_2dLine line =
-			//	new(obj.ObjectMesh.MeshPoints[meshLineIndex], obj.ObjectMesh.MeshPoints[meshLineIndex + 1]);
-			//obj.ObjectPhysicsParams.Momentum[0] -= 1;
-			//obj.ApplyVectorMomentum(new _2dVector(new Angle(0), 1));
-		}
+		
 
 		/// <summary>
 		/// Things that need to happen before any 2dPhysicsSimulator.Tick calls
@@ -160,13 +196,22 @@ namespace SharpPhysics._2d.Physics
 			r = Math.PI / Math.Sqrt(MeshUtilities.PolygonArea(ObjectToSimulate.ObjectMesh.MeshPoints));
 		}
 
+		internal void RunTestTick()
+		{
+			Stopwatch stp = Stopwatch.StartNew();
+			Tick();
+			stp.Reset();
+			TickActualTime = stp.ElapsedMilliseconds;
+		}
+
 		internal void StartPhysicsSimulator()
 		{
 			Prerequisites();
 			Thread thread = new Thread(() =>
 			{
-				TimePerSimulationTick = ObjectToSimulate.ObjectPhysicsParams.TicksPerSecond * SpeedMultiplier;
-				DelayAmount = (int)Math.Ceiling(1000d / TickSpeed);
+				TimePerSimulationTick = (ObjectToSimulate.ObjectPhysicsParams.TicksPerSecond * SpeedMultiplier) + (int)TickActualTime;
+				RunTestTick();
+				DelayAmount = (int)Math.Ceiling(1000d / TickSpeed) - (int)TickActualTime;
 				while (true)
 				{
 					if (StopSignal) break;
@@ -186,6 +231,7 @@ namespace SharpPhysics._2d.Physics
 					Task.Delay(DelayAmount).Wait();
 				}
 			});
+			thread.Name = $"Physics thread";
 			thread.IsBackground = true;
 			thread.Start();
 		}

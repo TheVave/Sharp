@@ -24,7 +24,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// <summary>
 		/// The resistance for moving
 		/// </summary>
-		public double SpeedResistance = 0.02;
+		public double SpeedResistance = 0.002;
 
 		/// <summary>
 		/// The objects that the object to simulate can collide with

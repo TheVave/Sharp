@@ -1,45 +1,15 @@
 ﻿
 using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Utilities.MathUtils;
+using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using SharpPhysics.Utilities.MISC;
 using SharpPhysics.Utilities.MISC.Errors;
+using System.ComponentModel;
 
 namespace SharpPhysics._2d.Physics.CollisionManagement
 {
 	public static class _2dCollisionManager
 	{
-		/// <summary>
-		/// the point to find if this is inside the triangle
-		/// </summary>
-		private static Point a;
-
-		/// <summary>
-		/// The result from MeshUtils.IsInside
-		/// </summary>
-		private static bool result;
-
-		/// <summary>
-		/// point 1 forming the triangle for MeshUtils.IsInside
-		/// </summary>
-		private static Point b;
-
-		/// <summary>
-		/// point 2 forming the triangle for MeshUtils.IsInside
-		/// </summary>
-		private static Point c;
-
-		/// <summary>
-		/// point 3 forming the triangle for MeshUtils.IsInside
-		/// </summary>
-		private static Point d;
-
-		/// <summary>
-		/// The value to return from CheckIfCollidedWithObject
-		/// </summary>
-
-		private static bool hasBeenCollision;
-
-		private static int index;
 
 
 		/// <summary>
@@ -51,129 +21,75 @@ namespace SharpPhysics._2d.Physics.CollisionManagement
 		/// <returns></returns>
 		public static CollisionData[] CheckIfCollidedWithObject(_2dSimulatedObject[] hitables, _2dSimulatedObject objectToCheck)
 		{
-			hasBeenCollision = false;
 			Span<_2dSimulatedObject> collidedObjects = Array.Empty<_2dSimulatedObject>();
-			Span<int> objectToCheckMeshIndexes = Array.Empty<int>();
-			Span<int> objectToCheckIfCollidedMeshIndices = Array.Empty<int>();
-			Span<bool> isInsides;
-			Span<CollisionData> ToReturn = Array.Empty<CollisionData>();
+			Span<Point> Points = Array.Empty<Point>();
+			Span<Triangle> CollidedTriangles = Array.Empty<Triangle>();
+			Span<bool> isInsides = [];
+			Point pnt;
+			Triangle tri;
+			bool result;
+			List<CollisionData> ToReturn = [];
 			foreach (_2dSimulatedObject objectToCheckIfCollided in hitables)
 			{
 				// resets the IsInside array for a new object
-				isInsides = new bool[objectToCheckIfCollided.ObjectMesh.MeshPointsX.Length * objectToCheck.ObjectMesh.MeshPointsX.Length];
-				index = 0;
-				for (int i = 0; i < objectToCheckIfCollided.ObjectMesh.MeshPointsX.Length /* -2 for index errors because mesh points x.length + 2 is outside of the array */ - 2; i++)
+				isInsides = new bool[objectToCheck.ObjectMesh.MeshTriangles.Length];
+
+				try
 				{
-					for (int j = 0; j < objectToCheck.ObjectMesh.MeshPointsX.Length; j++)
+					for (int i = 0; i < objectToCheck.ObjectMesh.MeshTriangles.Length; i++)
 					{
-						try
+						tri = objectToCheck.ObjectMesh.MeshTriangles[i];
+						tri = tri.RotateByRadians(GenericMathUtils.DegreesToRadians(objectToCheck.Translation.ObjectRotation.xRot));
+						tri = tri.ShiftTriangle(new(objectToCheck.Translation.ObjectPosition.xPos, objectToCheck.Translation.ObjectPosition.yPos));
+						for (int j = 0; j < objectToCheckIfCollided.ObjectMesh.MeshPoints.Length; j++)
 						{
-							// the point
-							a = new Point(objectToCheck.ObjectMesh.MeshPointsX[j], objectToCheck.ObjectMesh.MeshPointsY[j]);
-						}
-						catch (NullReferenceException e)
-						{
-							ErrorHandler.ThrowError("Warning, Uninitialized values. Attempting auto-correct", false);
-							try
+							pnt = objectToCheckIfCollided.ObjectMesh.MeshPoints[j];
+							pnt += new Point(objectToCheckIfCollided.Translation.ObjectPosition.xPos, objectToCheckIfCollided.Translation.ObjectPosition.yPos);
+							result = MeshUtilities.IsInside(tri.Vertex1.X, tri.Vertex1.Y, tri.Vertex2.X, tri.Vertex2.Y, tri.Vertex3.X, tri.Vertex3.Y, pnt.X, pnt.Y);
+							if (result)
 							{
-								objectToCheck.ObjectMesh.MeshPoints = new Point[objectToCheck.ObjectMesh.MeshPointsX.Length];
-								for (int l = 0; l < objectToCheck.ObjectMesh.MeshPoints.Length; l++)
-								{
-									objectToCheck.ObjectMesh.MeshPoints[l] =
-										new Point(objectToCheck.ObjectMesh.MeshPointsX[l], objectToCheck.ObjectMesh.MeshPointsY[l]);
-								}
+								// there has been a collision
+								isInsides = ArrayUtils.AddSpanObject(isInsides, true);
+
+								Points = ArrayUtils.AddSpanObject(Points, pnt);
+
+								CollidedTriangles = ArrayUtils.AddSpanObject(CollidedTriangles, tri);
+
+								collidedObjects = ArrayUtils.AddSpanObject(collidedObjects, objectToCheckIfCollided);
 							}
-							catch
-							{
-								ErrorHandler.ThrowError("Unable to correct. The program will close after you close this.", true);
-							}
-							finally
-							{
-								a = objectToCheck.ObjectMesh.MeshPoints[j];
-							}
-						}
-
-						try
-						{
-							// triangle section a
-							b = objectToCheckIfCollided.ObjectMesh.MeshPoints[i];
-
-							// triangle section b
-							c = objectToCheckIfCollided.ObjectMesh.MeshPoints[i + 1];
-
-							// triangle section c
-							d = objectToCheckIfCollided.ObjectMesh.MeshPoints[i + 2];
-						}
-						catch (NullReferenceException e)
-						{
-							ErrorHandler.ThrowError("Warning, Uninitialized values. Attempting auto-correct", false);
-							try
-							{
-								objectToCheckIfCollided.ObjectMesh.MeshPoints = new Point[objectToCheckIfCollided.ObjectMesh.MeshPointsX.Length];
-								for (int l = 0; l < objectToCheckIfCollided.ObjectMesh.MeshPoints.Length; l++)
-								{
-									objectToCheckIfCollided.ObjectMesh.MeshPoints[l] = 
-										new Point(objectToCheckIfCollided.ObjectMesh.MeshPointsX[l], objectToCheckIfCollided.ObjectMesh.MeshPointsY[l]);
-								}
-							}
-							catch
-							{
-								ErrorHandler.ThrowError("The error could not be corrected. The program will exit after you close this window.", true);
-							}
-							finally
-							{
-
-							}
-						}
-
-						try
-						{
-							// updating the result value so the physics sim will not be calculating the MeshUtils.IsInside twice.
-							result = MeshUtilities.IsInside(b.X, b.Y, c.X, c.Y, d.X, d.Y, a.X, a.Y);
-						}
-						catch
-						{
-							ErrorHandler.ThrowError("Error, Unknown error, mesh points may be incorrect. Retrying.", false);
-							try
-							{
-								result = MeshUtilities.IsInside(b.X, b.Y, c.X, c.Y, d.X, d.Y, a.X, a.Y);
-							}
-							catch
-							{
-								ErrorHandler.ThrowError($"Error, Unknown error, mesh points may be incorrect. Checking point {a} with triangle {b},{c},{d}", false);
-								ErrorHandler.ThrowError($"If these values are unexpected, please look over meshes.", true);
-							}
-						}
-
-						// if there has been a collision then updates objectToCheckIfCollidedMeshIndex and objectToCheckMeshIndex + optimizes the IsInsides setting some
-						if (result)
-						{
-							isInsides = ArrayUtils.AddSpanObject(isInsides, result);
-
-							objectToCheckIfCollidedMeshIndices = ArrayUtils.AddSpanObject(objectToCheckIfCollidedMeshIndices, i);
-
-							objectToCheckMeshIndexes = ArrayUtils.AddSpanObject(objectToCheckMeshIndexes, j);
-
-							collidedObjects = ArrayUtils.AddSpanObject(collidedObjects, objectToCheckIfCollided);
 						}
 					}
 				}
-
-				foreach (bool calcCollision in isInsides)
+				catch (NullReferenceException e)
 				{
-
-					// there has been a collision.
-					if (calcCollision)
+					ErrorHandler.ThrowError("Internal Error, objects triangles or points not initialized, attempting auto-correct.", false);
+					try
 					{
-						ToReturn = ArrayUtils.AddSpanObject(ToReturn, new CollisionData(objectToCheckIfCollidedMeshIndices[index], objectToCheckMeshIndexes[index], collidedObjects[index]));
-						index++;
-						hasBeenCollision = true;
+						objectToCheck.ObjectMesh.MeshTriangles = DelaunayTriangulator.DelaunayTriangulation(objectToCheck.ObjectMesh.MeshPoints).ToArray();
 					}
-
+					catch
+					{
+						ErrorHandler.ThrowError("Internal Error, objectToCheck points not initialized, mesh missing.", true);
+					}
 				}
 			}
-			if (hasBeenCollision) return ToReturn.ToArray();
-			else return null;
+			ToReturn = [];
+			for (int i = 0; i < collidedObjects.Length; i++)
+			{
+				ToReturn.Add(new(CollidedTriangles[i], Points[i], collidedObjects[i]));
+			}
+			return ToReturn.ToArray();
+		}
+
+		/// <summary>
+		/// Simulates a collision
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <param name="meshLineIndex"></param>
+		/// <param name="linePoint"></param>
+		internal static void SimulateCollision(ref _2dSimulatedObject obj, Triangle triCollided, Point pnt, ref _2dSimulatedObject collidedObject)
+		{
+			
 		}
 	}
 }

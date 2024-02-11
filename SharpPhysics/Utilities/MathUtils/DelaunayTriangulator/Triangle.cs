@@ -1,4 +1,5 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics._2d.ObjectRepresentation.Translation;
 using SharpPhysics.Utilities.MISC;
 using System.Runtime.CompilerServices;
 
@@ -7,12 +8,12 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 
 	public class Triangle
 	{
-		public Point Vertex1 { get; }
-		public Point Vertex2 { get; }
-		public Point Vertex3 { get; }
+		public Point Vertex1 { get; private set; }
+		public Point Vertex2 { get; private set; }
+		public Point Vertex3 { get; private set; }
 		internal bool IsToBeRemoved = false;
 
-		public Edge[] Edges { get; }
+		public Edge[] Edges { get; private set; }
 
 		public Triangle(Point vertex1, Point vertex2, Point vertex3)
 		{
@@ -36,6 +37,12 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 
 		private static Edge[] GetEdges(Triangle tri) =>
 			[new Edge(tri.Vertex1, tri.Vertex2), new Edge(tri.Vertex2, tri.Vertex3), new Edge(tri.Vertex3, tri.Vertex1)];
+
+		public Triangle ShiftTriangle(Point pos) =>
+			new Triangle(Vertex1 + pos, Vertex2 + pos, Vertex3 + pos);
+
+		public Triangle RotateByRadians(double rad) =>
+			new Triangle(GenericMathUtils.RotatePointAroundCenter(Vertex1, rad, true), GenericMathUtils.RotatePointAroundCenter(Vertex2, rad, true), GenericMathUtils.RotatePointAroundCenter(Vertex3, rad, true));
 
 		public bool IsPointInsideCircumcircle(Point point)
 		{

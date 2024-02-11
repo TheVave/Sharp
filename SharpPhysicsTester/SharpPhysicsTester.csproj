@@ -17,10 +17,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="logo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SharpPhysics\SharpPhysics.csproj" />
   </ItemGroup>
 

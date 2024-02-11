@@ -1,18 +1,19 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 
 namespace SharpPhysics._2d.Physics.CollisionManagement
 {
 	public class CollisionData
 	{
-		public CollisionData(int collidedObjectMeshIndex, int collided2ObjectMeshIndex, _2dSimulatedObject collidedObject)
+		public CollisionData(Triangle collidedTriangle, Point collidedPoint, _2dSimulatedObject collidedObject)
 		{
-			ObjectToCheckIfCollidedMeshIndex = collidedObjectMeshIndex;
-			ObjectToCheckMeshIndex = collided2ObjectMeshIndex;
+			CollidedTriangle = collidedTriangle;
+			CollidedPoint = collidedPoint;
 			CollidedObject = collidedObject;
 		}
 
-		public int ObjectToCheckIfCollidedMeshIndex { get; set; } = 0;
-		public int ObjectToCheckMeshIndex { get; set; } = 0;
-		public _2dSimulatedObject CollidedObject { get; set; } = new();
+		public Triangle CollidedTriangle;
+		public Point CollidedPoint;
+		public _2dSimulatedObject CollidedObject;
 	}
 }

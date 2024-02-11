@@ -1,23 +1,23 @@
 ﻿using SharpPhysics;
-using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Input;
-double speed = .05;
-double camSpeed = 0.05;
+double speed = 5;
+double camSpeed = 10;
 MainRendererSGL.ObjectsToRender[1].objTextureLoc = "test.bmp";
 MainRendererSGL.ObjectsToRender[0].objTextureLoc = "Enemy Thing.png";
-MainRendererSGL.Use8BitStyleTextures = true;
 MainRendererSGL.OnLoad += () =>
 {
 	MainRendererSGL.ObjectsToRender[0].objToSim.StartPhysicsSimulation();
 	MainRendererSGL.ObjectsToRender[0].objToSim.ObjectPhysicsParams.GravityMultiplier = 0;
-	MainRendererSGL.ObjectsToRender[0].objToSim.ObjectPhysicsParams.SpeedResistance = 0.005;
-	MainRendererSGL.ObjectsToRender[0].objToSim.ObjectPhysicsParams.RotationalMomentum = 0.25;
-	MainRendererSGL.ObjectsToRender[0].objToSim.ObjectPhysicsParams.RotResistance = 0;
-	MainRendererSGL.ObjectsToRender[1].objToSim.StartPhysicsSimulation();
+	MainRendererSGL.ObjectsToRender[0].objToSim.ObjectPhysicsParams.SpeedResistance = 0.5;
+	//MainRendererSGL.ObjectsToRender[1].objToSim.StartPhysicsSimulation();
 	MainRendererSGL.ObjectsToRender[1].objToSim.ObjectPhysicsParams.GravityMultiplier = 0;
-	MainRendererSGL.ObjectsToRender[1].objToSim.ObjectPhysicsParams.SpeedResistance = 0.005;
+	MainRendererSGL.ObjectsToRender[1].objToSim.ObjectPhysicsParams.SpeedResistance = 0.5;
+	MainRendererSGL.ObjectsToRender[1].objToSim.RegisterToScene();
+	MainRendererSGL.ObjectsToRender[0].objToSim.RegisterToScene();
+	MainRendererSGL.ObjectsToRender[0].objToSim.ObjectPhysicsParams.CollidableObjects = MainRendererSGL.ObjectsToRender[0].objToSim.ObjectPhysicsParams.CollidableObjects.Append(MainRendererSGL.ObjectsToRender[1].objToSim).ToArray();
+	MainRendererSGL.ObjectsToRender[1].objToSim.ObjectPhysicsParams.CollidableObjects = MainRendererSGL.ObjectsToRender[1].objToSim.ObjectPhysicsParams.CollidableObjects.Append(MainRendererSGL.ObjectsToRender[0].objToSim).ToArray();
 	MainRendererSGL.Camera.obj = new();
-	MainRendererSGL.Camera.obj.StartPhysicsSimulation();
+	//MainRendererSGL.Camera.obj.StartPhysicsSimulation();
 	MainRendererSGL.Camera.obj.ObjectPhysicsParams.GravityMultiplier = 0;
 	Thread thread = new Thread(() =>
 	{

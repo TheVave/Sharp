@@ -1,4 +1,5 @@
-﻿using SharpPhysics._2d.ObjectRepresentation.Translation;
+﻿using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics._2d.ObjectRepresentation.Translation;
 using System;
 using System.Linq;
 using System.Numerics;
@@ -165,9 +166,27 @@ namespace SharpPhysics.Utilities.MathUtils
 			return int.Parse(toReturn.ToString().Reverse().ToArray());
 		}
 
+		/// <summary>
+		/// Converts degrees to radians
+		/// </summary>
+		/// <param name="degrees"></param>
+		/// <returns></returns>
 		public static double DegreesToRadians(double degrees) => degrees / 57.2957795;
+
+
+		/// <summary>
+		/// Converts radians to degrees
+		/// </summary>
+		/// <param name="radians"></param>
+		/// <returns></returns>
 		public static double RadiansToDegrees(double radians) => radians * 57.2957795;
 
+		/// <summary>
+		/// Gets an angle to point a from point b
+		/// </summary>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
+		/// <returns></returns>
 		public static double GetAngleFromPoints(_2dPosition a, _2dPosition b)
 		{
 			double strangeDegrees = RadiansToDegrees(Math.Atan((a.xPos - b.xPos) / (a.yPos - b.yPos)));
@@ -180,6 +199,30 @@ namespace SharpPhysics.Utilities.MathUtils
 			else if (b.xPos < a.xPos && b.yPos < a.yPos) newDegrees = strangeDegrees + 180;
 			else if (b.xPos < a.xPos && b.yPos > a.yPos) newDegrees = Math.Abs(strangeDegrees) + 180;
 			return newDegrees;
+		}
+
+		public static double GetDistanceFromCenter(Point pnt)
+		{
+			return Math.Sqrt((pnt.X * pnt.X) + (pnt.Y * pnt.Y));
+		}
+
+		/// <summary>
+		/// Rotates 
+		/// </summary>
+		/// <param name="current"></param>
+		/// <param name="toRotate"></param>
+		/// <param name="useRadians"></param>
+		/// <returns></returns>
+		public static Point RotatePointAroundCenter(Point current, double toRotate, bool useRadians)
+		{
+			double length = GetDistanceFromCenter(current);
+
+
+
+			double rot = (useRadians) ? toRotate : RadiansToDegrees(toRotate);
+			rot += GetAngleFromPoints(new(), new(current.X,current.Y));
+
+			return new Point((-length) * Math.Sin(rot), length * Math.Cos(rot));
 		}
 	}
 }

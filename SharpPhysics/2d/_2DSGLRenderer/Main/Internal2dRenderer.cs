@@ -5,11 +5,16 @@ using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using SharpPhysics.Utilities.MISC;
 using SharpPhysics.Utilities.MISC.Errors;
+using Silk.NET.Core;
 using Silk.NET.Input;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using StbImageSharp;
+using System.Diagnostics;
 using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
+using System.Transactions;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
 {
@@ -20,6 +25,27 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 	/// </summary>
 	public class Internal2dRenderer
 	{
+		/// <summary>
+		/// The time since the program started
+		/// </summary>
+		Stopwatch PlayTime = new();
+
+		/// <summary>
+		/// how many frames it should take to collect FPS
+		/// </summary>
+		public double collectFPSEveryFrames = 60;
+
+		/// <summary>
+		/// The current fps
+		/// -1 is not counting FPS
+		/// </summary>
+		public double curFPS = -1;
+
+		/// <summary>
+		/// If the program should get the FPS 
+		/// </summary>
+		public bool GetFPS = false;
+
 		/// <summary>
 		/// Window ref
 		/// </summary>
@@ -39,6 +65,11 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// The size of the window
 		/// </summary>
 		public Size wndSize;
+
+		/// <summary>
+		/// If the program should print FPS to debug console.
+		/// </summary>
+		public bool PrintFPS;
 
 		/// <summary>
 		/// The window options to create Wnd with
@@ -84,7 +115,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// Initializes SGL (Silk.net openGL) and the Wnd object
 		/// 
 		/// </summary>
-		public virtual void ISGL() 
+		public virtual void ISGL()
 		{
 			// window init
 			SWCNFG();
@@ -112,6 +143,10 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			Wnd.Update += UDT;
 			Wnd.Render += RNDR;
 			Wnd.Load += LD;
+			Wnd.Closing += () =>
+			{
+				Environment.Exit(3);
+			};
 		}
 
 		/// <summary>
@@ -177,7 +212,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <returns></returns>
 		public virtual uint CMPLPROGN(string name, string name2, int objID)
 		{
-			uint shdr1 = CMPLSHDRN(name,Silk.NET.OpenGL.ShaderType.VertexShader, objID);
+			uint shdr1 = CMPLSHDRN(name, Silk.NET.OpenGL.ShaderType.VertexShader, objID);
 			uint shdr2 = CMPLSHDRN(name2, Silk.NET.OpenGL.ShaderType.FragmentShader, objID);
 
 			uint prog;
@@ -244,6 +279,15 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		}
 
 		/// <summary>
+		/// Sets logo to logo.png
+		/// </summary>
+		public virtual void STLOGO()
+		{
+			RawImage img = RenderingUtils.GetRawImageFromImageResult(ImageResult.FromMemory(File.ReadAllBytes($"{Environment.CurrentDirectory}\\logo.png"), ColorComponents.RedGreenBlueAlpha));
+			Wnd.SetWindowIcon(ref img);
+		}
+
+		/// <summary>
 		/// Initializes the window
 		/// </summary>
 		public virtual void INITWND()
@@ -260,6 +304,11 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		}
 
 		/// <summary>
+		/// the amount of passed frames
+		/// </summary>
+		double frames = 0;
+
+		/// <summary>
 		/// Called every frame to render the object(s)
 		/// </summary>
 		public unsafe virtual void RNDR(double deltaTime)
@@ -271,6 +320,25 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 				SELOBJ(i);
 				DRWOBJ(i);
 			}
+
+			if (GetFPS)
+			{
+				COLFPS(deltaTime);
+			}
+		}
+
+		/// <summary>
+		/// Collects FPS
+		/// </summary>
+		public unsafe virtual void COLFPS(double delta)
+		{
+			curFPS = frames++ / (PlayTime.ElapsedMilliseconds / 1000);
+			if (Math.Floor(frames/collectFPSEveryFrames) == frames/ collectFPSEveryFrames)
+			{
+				frames = 0;
+				PlayTime.Restart();
+				Debug.WriteLine(curFPS);
+			}
 		}
 
 		/// <summary>
@@ -280,7 +348,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		{
 			for (int obj = 0; obj < ObjectsToRender.Length; obj++)
 			{
-				OR[obj].Invoke(ObjectsToRender[obj].objToSim);
+				if (OR is not null && OR.Length <= obj)
+					OR[obj].Invoke(ObjectsToRender[obj].objToSim);
 			}
 		}
 
@@ -317,7 +386,11 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		public unsafe virtual Matrix4x4 GTTRNSFRMMTRX(int objectID)
 		{
 			Vector3 vctr3 = new Vector3((float)ObjectsToRender[objectID].objToSim.Translation.ObjectPosition.xPos, (float)ObjectsToRender[objectID].objToSim.Translation.ObjectPosition.yPos, 0);
-			Matrix4x4 model = Matrix4x4.CreateRotationZ((float)GenericMathUtils.DegreesToRadians(ObjectsToRender[objectID].objToSim.Translation.ObjectRotation.xRot)) * Matrix4x4.CreateTranslation(vctr3);
+			Matrix4x4 model = Matrix4x4.CreateScale(			ObjectsToRender[objectID].objToSim.Translation.ObjectScale.xSca,
+																ObjectsToRender[objectID].objToSim.Translation.ObjectScale.ySca,
+																0f) * 
+																Matrix4x4.CreateRotationZ((float)GenericMathUtils.DegreesToRadians(ObjectsToRender[objectID].objToSim.Translation.ObjectRotation.xRot)) *
+																Matrix4x4.CreateTranslation(vctr3);
 			return model;
 		}
 
@@ -339,7 +412,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// Camera matrix
 		/// </returns>
 		public unsafe virtual Matrix4x4 GTCMRAMTRX() => Cam.GetProjectionMatrix(this);
-			
+
 
 		/// <summary>
 		/// Initializes some info for objects
@@ -361,13 +434,9 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		{
 			ParallelFor.ParallelForLoop((int obj) =>
 			{
-				try
+				if (OU is not null && OU.Length > obj)
 				{
 					OU[obj].Invoke(ObjectsToRender[obj].objToSim);
-				}
-				catch
-				{
-
 				}
 			}, ObjectsToRender.Length);
 		}
@@ -424,9 +493,14 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 				GNMPMPS();
 				// sets the texture info to the shader
 				STTXTRUNI(i);
-				// loads user-defined info
-				OL.Invoke();
 			}
+
+			// loads user-defined info
+			OL.Invoke();
+			//initializes fps counter
+			FPSCNTRINIT();
+			// sets logo
+			STLOGO();
 
 			// old code:
 
@@ -460,6 +534,14 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			//STTXTRUNI();
 			//// loads user-defined info
 			//OL.Invoke();
+		}
+
+		/// <summary>
+		/// Initializes the fps counter
+		/// </summary>
+		public virtual void FPSCNTRINIT()
+		{
+			PlayTime.Start();
 		}
 
 		/// <summary>
@@ -670,10 +752,22 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <returns></returns>
 		private float[] GetMatrix4x4Values(Matrix4x4 m) =>
 			[
-				m.M11, m.M12, m.M13, m.M14,
-				m.M21, m.M22, m.M23, m.M24,
-				m.M31, m.M32, m.M33, m.M34,
-				m.M41, m.M42, m.M43, m.M44
+				m.M11,
+				m.M12,
+				m.M13,
+				m.M14,
+				m.M21,
+				m.M22,
+				m.M23,
+				m.M24,
+				m.M31,
+				m.M32,
+				m.M33,
+				m.M34,
+				m.M41,
+				m.M42,
+				m.M43,
+				m.M44
 			];
 	}
 }

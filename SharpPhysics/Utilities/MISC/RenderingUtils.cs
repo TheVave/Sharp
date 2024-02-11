@@ -2,6 +2,8 @@
 using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
+using Silk.NET.Core;
+using StbImageSharp;
 using static SharpPhysics.Utilities.MathUtils.GenericMathUtils;
 
 namespace SharpPhysics.Utilities.MISC
@@ -47,6 +49,9 @@ namespace SharpPhysics.Utilities.MISC
 		{
 
 		}
+
+		public static RawImage GetRawImageFromImageResult(ImageResult reslt) =>
+			new RawImage(reslt.Width, reslt.Height, new Memory<byte>(reslt.Data));
 
 		/// <summary>
 		/// Gets a float[] containing the texture cords

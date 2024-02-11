@@ -20,7 +20,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// Camera zoom.
 		/// 1 would be one unit is one pixel.
 		/// </summary>
-		public float Zoom = 128;
+		public float Zoom = 1;
 
 		/// <summary>
 		/// The Field Of View.
