@@ -123,7 +123,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			float[] toReturn = [];
 			ParallelFor.ParallelForLoop((int loopIdx) =>
 			{
-				toReturn = toReturn.Concat((float[])points[loopIdx]).ToArray();
+				toReturn = toReturn.Concat((float[])(points[loopIdx])).ToArray();
 			}, points.Length);
 			return toReturn;
 		}
