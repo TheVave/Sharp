@@ -1,4 +1,4 @@
-![SharpPhysics logo](./logo.png)
+![SharpPhysics logo](./logo.svg)
 
 ### SUMMARY ###
 ---------------------------------------------------------
