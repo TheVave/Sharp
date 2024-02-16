@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Window SP</title>
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+    <script>
+        function relGetHow() {
+            document.getElementById("how-to-get").style.visibility = "visible";
+        }
+        function Close() {
+            document.getElementById("how-to-get").style.visibility = "collapse";
+        }
+    </script>
+</head>
+<body>
+    <h2>Hello Window</h2>
+    <div class="container">
+        <h3>Getting SharpPhysics</h3>
+        <a href="https://thevave.github.io/SharpPhysics/how-to-get"><small>Full info on how to get SP</small></a>
+        <p>There are many ways to get SharpPhysics, but I'm going to be downloading a compiled release from <a href="github.com\thevave\sharpphysics">the code</a>.</p>
+        <button class="BlackButton RoundCorners" onclick="relGetHow();">How?</button>
+        <div class="container" id="how-to-get" style="visibility: collapse;">
+            <p>After you get to <a href="github.com\thevave\sharpphysics">the code</a>, you can select Releases/tags and click on the most recent version.
+            <br>
+            <p>After that click on {the name of the release}.zip, and it should automatically download the compiled code.</p>
+            </p>
+            <button class="RoundCorners BlackButton" onclick="Close();">Close</button>
+        </div>
+        <p>After you </p>
+    </div>
+</body>
+</html>

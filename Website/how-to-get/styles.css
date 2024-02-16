@@ -1,0 +1,27 @@
+body {
+    background-color: #323232;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.overrideCenter {
+    display: flex;
+    justify-content: left;
+    text-align: left;
+}
+
+.recommendedStyle {
+    color: greenyellow;
+}
+
+li {
+    border-color: #323232;
+    border: 25px;
+    padding: 25px;
+    width: 33.33%;
+}
