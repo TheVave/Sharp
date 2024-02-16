@@ -3,7 +3,7 @@
 ### SUMMARY ###
 ---------------------------------------------------------
 
-SharpPhysics is a (somewhat small) (2d) physics library that is set up with Silk.net with OpenGL.
+SharpPhysics is a (somewhat small) (2d) physics library set up with Silk.net with OpenGL.
 
 ### BUILDING ###
 ---------------------------------------------------------
@@ -14,13 +14,27 @@ and also copy over glfw.dll to the output directory.
 ### PLATFORM SUPPORT ###
 ---------------------------------------------------------
 
-Currently SharpPhysics only runs on Windows, because the glfw.dll file isn't compatible with other Operating Systems.
+SharpPhysics only runs on Windows because the glfw.dll file isn't compatible with other Operating Systems.
 #### UPDATE ####
 Soon it may be compatible with MacOS and Linux.
 
 ### RECENT UPDATES ###
 ---------------------------------------------------------
 
-Camera is done. 
+The camera is done. 
 I'm going to start work on collision. 
-See you 'round.
+See you around.
+
+### PACKAGES ###
+--------------------------------------------------------
+
+This program makes use of [Silk.NET](https://github.com/dotnet/Silk.NET), and this program 
+also makes use of [StbImageSharp](https://github.com/StbSharp/StbImageSharp), for texture info.
+
+### THINGS YOU CAN DO TO HELP ###
+--------------------------------------------------------
+
+The main thing I haven't gotten around to yet is Platform Support stuff.
+If someone builds glfw for Mac and Linux, then I'll put it into SP.
+Also, If someone could make a PR for an Input folder that uses Silk input,
+that would be useful too!
