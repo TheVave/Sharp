@@ -11,6 +11,11 @@ namespace SharpPhysics._2d.ObjectRepresentation
 	public class _2dSimulatedObject
 	{
 		/// <summary>
+		/// The object name
+		/// </summary>
+		public string Name = "Object";
+
+		/// <summary>
 		/// The object's mesh
 		/// </summary>
 		public Mesh ObjectMesh { get; set; }

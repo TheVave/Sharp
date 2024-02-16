@@ -385,7 +385,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <returns></returns>
 		public unsafe virtual Matrix4x4 GTTRNSFRMMTRX(int objectID)
 		{
-			Vector3 vctr3 = new Vector3((float)ObjectsToRender[objectID].objToSim.Translation.ObjectPosition.xPos, (float)ObjectsToRender[objectID].objToSim.Translation.ObjectPosition.yPos, 0);
+			Vector3 vctr3 = new Vector3((float)ObjectsToRender[objectID].objToSim.Translation.ObjectPosition.X, (float)ObjectsToRender[objectID].objToSim.Translation.ObjectPosition.Y, 0);
 			Matrix4x4 model = Matrix4x4.CreateScale(			ObjectsToRender[objectID].objToSim.Translation.ObjectScale.xSca,
 																ObjectsToRender[objectID].objToSim.Translation.ObjectScale.ySca,
 																0f) * 

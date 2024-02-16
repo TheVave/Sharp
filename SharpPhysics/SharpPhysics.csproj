@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageId>TheVaveSharpPhysics.0.1.0.1</PackageId>
+    <PackageId>SharpPhysics</PackageId>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Title>SharpPhysics 2d Physics Simulator and Renderer</Title>
     <Company>None</Company>
-    <Authors />
-    <Version>1.0.1</Version>
+    <Authors>TheVave</Authors>
+    <Version>0.1.2</Version>
     <RepositoryUrl>https://github.com/TheVave/SharpPhysics</RepositoryUrl>
     <AnalysisLevel>6.0-all</AnalysisLevel>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <AssemblyName>SharpPhysics</AssemblyName>
-    <NoWarn>CA1707;CA1051;CA1062;CA1805;</NoWarn>
+    <NoWarn>CA1707;CA1051;CA1062;CA1805;CS8618;</NoWarn>
     <Description>A 2d renderer &amp; physics simulator made entirely with C#</Description>
     <PackageIcon>logo.png</PackageIcon>
   </PropertyGroup>
@@ -23,14 +23,14 @@
     <WarningLevel>1</WarningLevel>
     <DebugType>embedded</DebugType>
     <FileAlignment>1024</FileAlignment>
-    <IsTrimmable>False</IsTrimmable>
+    <IsTrimmable>True</IsTrimmable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <WarningLevel>0</WarningLevel>
     <DebugType>embedded</DebugType>
     <FileAlignment>1024</FileAlignment>
-    <IsTrimmable>False</IsTrimmable>
+    <IsTrimmable>True</IsTrimmable>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,6 +1,8 @@
-﻿using SharpPhysics.Utilities.MathUtils;
+﻿using SharpPhysics._2d.ObjectRepresentation.Translation;
+using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MISC;
 using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography.X509Certificates;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
@@ -25,6 +27,13 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// 
 		/// </summary>
 		internal bool Is3d = false;
+
+		/// <summary>
+		/// A point located at 0,0
+		/// Used to speed up some operations.
+		/// </summary>
+		public static readonly Point BlankPoint2d = new Point(0, 0);
+
 		public override string ToString() => (Is3d) ? $"({X},{Y},{Z})" : $"({X},{Y})";
 
 		internal Point(double xPos, double yPos, double zPos, bool is3d)
@@ -75,6 +84,37 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			(p1.Is3d || p2.Is3d) ? new(p1.X + p2.X, p1.Y + p2.Y, p1.Z + p2.Z) : new(p1.X + p2.X, p1.Y + p2.Y);
 		public static Point operator -(Point p1, Point p2) =>
 			(p1.Is3d || p2.Is3d) ? new(p1.X - p2.X, p1.Y - p2.Y, p1.Z - p2.Z) : new(p1.X - p2.X, p1.Y - p2.Y);
+
+		/// <summary>
+		/// internal no check add
+		/// </summary>
+		/// <param name="p"></param>
+		internal void AddNoCheck(Point p)
+		{
+			X += p.X;
+			Y += p.Y;
+		}
+		internal void AddNoCheck(_2dPosition p)
+		{
+			X += p.X;
+			Y += p.Y;
+		}
+
+		/// <summary>
+		/// Adds two Points.
+		/// X = X + p.x
+		/// Y = Y + p.y
+		/// </summary>
+		/// <param name="p"></param>
+		// this includes some checkes
+		public void Add(Point p)
+		{
+			if (p == null) throw new InvalidOperationException("Cannot add point to null");
+			if (p.ContainsValue(double.NaN)) throw new InvalidOperationException("Point had a value of NaN");
+			if (p.Is3d != this.Is3d) throw new InvalidOperationException("Unable to add points with non-similar dimensions");
+			X += p.X;
+			Y += p.Y;
+		}
 
 		/// <summary>
 		/// Checks if a point contains a value

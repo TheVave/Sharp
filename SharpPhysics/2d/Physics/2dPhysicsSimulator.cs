@@ -2,7 +2,10 @@
 using SharpPhysics._2d.ObjectRepresentation.Translation;
 using SharpPhysics._2d.Physics.CollisionManagement;
 using SharpPhysics.Utilities.MathUtils;
+using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 
 namespace SharpPhysics._2d.Physics
 {
@@ -36,7 +39,14 @@ namespace SharpPhysics._2d.Physics
 		/// WARNING: this has a maximum of 1000
 		/// </summary>
 		public int TickSpeed = 200;
-		
+
+		/// <summary>
+		/// Delay for checking ticks.
+		/// Recommended to be high for background objects.
+		/// If above DelayAmount then may yeild strange results.
+		/// </summary>
+		public int WaitTime = 6;
+
 		/// <summary>
 		/// The most recent movement the object has taken.
 		/// </summary>
@@ -97,7 +107,12 @@ namespace SharpPhysics._2d.Physics
 		/// <summary>
 		/// The latest displacement
 		/// </summary>
-		double displacement;
+		double displacement = 0;
+
+		/// <summary>
+		/// If the physics is beging run on the object
+		/// </summary>
+		public bool IsRunning;
 
 		//calculating the position based on the moving position
 		private double[] speedDirection = new double[2];
@@ -123,7 +138,66 @@ namespace SharpPhysics._2d.Physics
 			ShocksMultiplier = shocksMultiplier;
 		}
 
+		string svtName;
+		string posName;
+		string rotName;
+		string momName;
+		string colName;
+		string triName;
+
 		internal void Tick()
+		{
+			// thread stuff
+			// suvat thrd
+			new Thread(SvtCalc)
+			{
+				Name = svtName,
+				IsBackground = true,
+			}.Start();
+			// position calc thread
+			new Thread(PosCalc)
+			{
+				Name = posName,
+				IsBackground = true,
+			}.Start();
+			// rotation thread
+			new Thread(RotCalc)
+			{
+				Name = rotName,
+				IsBackground = true,
+			}.Start();
+			// momentum thread
+			new Thread(MomCalc)
+			{
+				Name = momName,
+				IsBackground = true,
+			}.Start();
+			// collision thread
+			new Thread(ColCalc)
+			{
+				Name = colName,
+				IsBackground = true,
+			}.Start();
+			// updating triangle position
+			new Thread(TriCalc)
+			{
+				Name = triName,
+				IsBackground = true,
+			}.Start();
+		}
+
+		private void TriCalc()
+		{
+			for (int i = 0; i < ObjectToSimulate.ObjectMesh.ActualTriangles.Length; i++)
+			{
+				Triangle tri = Triangle.Duplicate(ObjectToSimulate.ObjectMesh.ActualTriangles[i]);
+				ObjectToSimulate.ObjectMesh.MeshTriangles[i++] = tri.ScaleTriangle(ObjectToSimulate.Translation.ObjectScale.xSca, ObjectToSimulate.Translation.ObjectScale.ySca).
+																 RotateByRadians(GenericMathUtils.DegreesToRadians(ObjectToSimulate.Translation.ObjectRotation.xRot)).
+																 ShiftTriangle(new(ObjectToSimulate.Translation.ObjectPosition.X, ObjectToSimulate.Translation.ObjectPosition.Y));
+			}
+		}
+
+		private void ColCalc()
 		{
 			if (DetectCollision)
 				resultFromCheckCollision = _2dCollisionManager.CheckIfCollidedWithObject(ObjectToSimulate.ObjectPhysicsParams.CollidableObjects, ObjectToSimulate);
@@ -139,26 +213,24 @@ namespace SharpPhysics._2d.Physics
 				}
 
 			}
+		}
 
-			//Starting math for moving 1d
+		private void MomCalc()
+		{
+			ObjectToSimulate.ObjectPhysicsParams.Momentum[0] = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.Momentum[0], ObjectToSimulate.ObjectPhysicsParams.SpeedResistance);
 
-			sUVATEquations.T = TimePerSimulationTick;
-			sUVATEquations.VS = ObjectToSimulate.ObjectPhysicsParams.Speed;
-			sUVATEquations.A = ObjectToSimulate.ObjectPhysicsParams.SpeedAcceleration;
+			ObjectToSimulate.ObjectPhysicsParams.Momentum[1] = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.Momentum[1], ObjectToSimulate.ObjectPhysicsParams.SpeedResistance);
 
-			displacement = sUVATEquations.NSWVSTA();
+			// set mesh points for collision
+			for (int i = 0; i < ObjectToSimulate.ObjectMesh.MeshPointsX.Length; i++)
+			{
+				ObjectToSimulate.ObjectMesh.MeshPointsX[i] = ObjectToSimulate.ObjectMesh.MeshPointsActualX[i] + ObjectToSimulate.Translation.ObjectPosition.X;
+				ObjectToSimulate.ObjectMesh.MeshPointsY[i] = ObjectToSimulate.ObjectMesh.MeshPointsActualY[i] + ObjectToSimulate.Translation.ObjectPosition.Y;
+			}
+		}
 
-			//calculating the position based on the moving position
-			speedDirection = ObjectToSimulate.ObjectPhysicsParams.Acceleration;
-
-			// do standard calculations to find the displacement in a given direction
-			ObjectToSimulate.Translation.ObjectPosition.xPos += ((speedDirection[0]) * displacement) + ObjectToSimulate.ObjectPhysicsParams.Momentum[0];
-			ObjectToSimulate.Translation.ObjectPosition.yPos += (((speedDirection[1]) * displacement) + ObjectToSimulate.ObjectPhysicsParams.Momentum[1]) - ((ObjectToSimulate.ObjectPhysicsParams.GravityMultiplier * 9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass) * (TimePerSimulationTick / 10));
-
-			// add momentum
-			ObjectToSimulate.ObjectPhysicsParams.Momentum[0] += (((speedDirection[0]) * displacement / sUVATEquations.T * ObjectToSimulate.ObjectPhysicsParams.Mass));
-			ObjectToSimulate.ObjectPhysicsParams.Momentum[1] += ((speedDirection[1]) * displacement / sUVATEquations.T * ObjectToSimulate.ObjectPhysicsParams.Mass) - ((ObjectToSimulate.ObjectPhysicsParams.GravityMultiplier * 9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass) * (TimePerSimulationTick / 10));
-
+		private void RotCalc()
+		{
 			// update CurrentMovement value
 			CurrentMovement.StartPosition = CurrentMovement.EndPosition;
 			CurrentMovement.EndPosition = ObjectToSimulate.Translation.ObjectPosition;
@@ -169,22 +241,39 @@ namespace SharpPhysics._2d.Physics
 			rotationalAmount = ((ObjectToSimulate.ObjectPhysicsParams.RotationalAcceleration + ObjectToSimulate.ObjectPhysicsParams.RotationalMomentum) * TimePerSimulationTick);
 			ObjectToSimulate.Translation.ObjectRotation.xRot += (float)(rotationalAmount);
 			ObjectToSimulate.ObjectPhysicsParams.RotationalMomentum = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.RotationalAcceleration + ObjectToSimulate.ObjectPhysicsParams.RotationalMomentum, ObjectToSimulate.ObjectPhysicsParams.RotResistance);
-
-
-
-			ObjectToSimulate.ObjectPhysicsParams.Momentum[0] = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.Momentum[0], ObjectToSimulate.ObjectPhysicsParams.SpeedResistance);
-
-			ObjectToSimulate.ObjectPhysicsParams.Momentum[1] = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.Momentum[1], ObjectToSimulate.ObjectPhysicsParams.SpeedResistance);
-
-			// set mesh points for collision
-			for (int i = 0; i < ObjectToSimulate.ObjectMesh.MeshPointsX.Length; i++)
-			{
-				ObjectToSimulate.ObjectMesh.MeshPointsX[i] = ObjectToSimulate.ObjectMesh.MeshPointsActualX[i] + ObjectToSimulate.Translation.ObjectPosition.xPos;
-				ObjectToSimulate.ObjectMesh.MeshPointsY[i] = ObjectToSimulate.ObjectMesh.MeshPointsActualY[i] + ObjectToSimulate.Translation.ObjectPosition.yPos;
-			}
 		}
 
-		
+		private void PosCalc()
+		{
+			speedDirection = ObjectToSimulate.ObjectPhysicsParams.Acceleration;
+
+			// do standard calculations to find the displacement in a given direction
+			ObjectToSimulate.Translation.ObjectPosition.X += ((speedDirection[0]) * displacement) + ObjectToSimulate.ObjectPhysicsParams.Momentum[0];
+			ObjectToSimulate.Translation.ObjectPosition.Y += (((speedDirection[1]) * displacement) + ObjectToSimulate.ObjectPhysicsParams.Momentum[1]) - ((ObjectToSimulate.ObjectPhysicsParams.GravityMultiplier * 9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass) * (TimePerSimulationTick / 10));
+
+			// add momentum
+			ObjectToSimulate.ObjectPhysicsParams.Momentum[0] += (((speedDirection[0]) * displacement / sUVATEquations.T * ObjectToSimulate.ObjectPhysicsParams.Mass));
+			ObjectToSimulate.ObjectPhysicsParams.Momentum[1] += ((speedDirection[1]) * displacement / sUVATEquations.T * ObjectToSimulate.ObjectPhysicsParams.Mass) - ((ObjectToSimulate.ObjectPhysicsParams.GravityMultiplier * 9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass) * (TimePerSimulationTick / 10));
+		}
+
+		private void SvtCalc()
+		{
+			sUVATEquations.T = TimePerSimulationTick;
+			sUVATEquations.VS = ObjectToSimulate.ObjectPhysicsParams.Speed;
+			sUVATEquations.A = ObjectToSimulate.ObjectPhysicsParams.SpeedAcceleration;
+
+			displacement = sUVATEquations.NSWVSTA();
+		}
+
+		internal void ThreadNameInit()
+		{
+			svtName = $"Svt {ObjectToSimulate.Name}";
+			posName = $"Pos {ObjectToSimulate.Name}";
+			rotName = $"Rot {ObjectToSimulate.Name}";
+			momName = $"Mom {ObjectToSimulate.Name}";
+			colName = $"Col {ObjectToSimulate.Name}";
+			triName = $"Tri {ObjectToSimulate.Name}";
+		}
 
 		/// <summary>
 		/// Things that need to happen before any 2dPhysicsSimulator.Tick calls
@@ -194,14 +283,8 @@ namespace SharpPhysics._2d.Physics
 			// solving for mesh stuff
 			// finding a value for rotation.
 			r = Math.PI / Math.Sqrt(MeshUtilities.PolygonArea(ObjectToSimulate.ObjectMesh.MeshPoints));
-		}
 
-		internal void RunTestTick()
-		{
-			Stopwatch stp = Stopwatch.StartNew();
-			Tick();
-			stp.Reset();
-			TickActualTime = stp.ElapsedMilliseconds;
+			ThreadNameInit();
 		}
 
 		internal void StartPhysicsSimulator()
@@ -209,9 +292,9 @@ namespace SharpPhysics._2d.Physics
 			Prerequisites();
 			Thread thread = new Thread(() =>
 			{
-				TimePerSimulationTick = (ObjectToSimulate.ObjectPhysicsParams.TicksPerSecond * SpeedMultiplier) + (int)TickActualTime;
-				RunTestTick();
-				DelayAmount = (int)Math.Ceiling(1000d / TickSpeed) - (int)TickActualTime;
+				TimePerSimulationTick = (ObjectToSimulate.ObjectPhysicsParams.TicksPerSecond * SpeedMultiplier);
+				DelayAmount = (int)Math.Ceiling(1000d / TickSpeed);
+				WaitTime = 2;
 				while (true)
 				{
 					if (StopSignal) break;
@@ -227,7 +310,6 @@ namespace SharpPhysics._2d.Physics
 							TickSignal = false;
 						}
 					}
-
 					Task.Delay(DelayAmount).Wait();
 				}
 			});

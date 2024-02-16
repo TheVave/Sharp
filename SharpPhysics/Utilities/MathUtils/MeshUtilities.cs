@@ -1,5 +1,7 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics._2d.ObjectRepresentation.Translation;
+using SharpPhysics.StrangeDataTypes;
+using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 
 namespace SharpPhysics.Utilities.MathUtils
 {
@@ -7,16 +9,16 @@ namespace SharpPhysics.Utilities.MathUtils
 	{
 		public static double CalculateDistFromPoint(_2dPosition position)
 		{
-			return Math.Abs(position.xPos) + Math.Abs(position.yPos) + Math.Abs(position.zPos);
+			return Math.Abs(position.X) + Math.Abs(position.Y) + Math.Abs(position.Z);
 		}
 		public static double CalculateMaxDistFromCenter(Mesh mesh, _2dPosition placeholderPositionObject)
 		{
 			double maxDist = 0;
 			for (int i = 0; i < mesh.MeshPointsX.Length; i++)
 			{
-				placeholderPositionObject.xPos = mesh.MeshPointsActualX[i];
-				placeholderPositionObject.yPos = mesh.MeshPointsActualY[i];
-				placeholderPositionObject.zPos = 0;
+				placeholderPositionObject.X = mesh.MeshPointsActualX[i];
+				placeholderPositionObject.Y = mesh.MeshPointsActualY[i];
+				placeholderPositionObject.Z = 0;
 				if (CalculateDistFromPoint(placeholderPositionObject) > maxDist)
 					maxDist = CalculateDistFromPoint(placeholderPositionObject);
 			}
@@ -81,6 +83,23 @@ namespace SharpPhysics.Utilities.MathUtils
 			return (A == A1 + A2 + A3);
 		}
 
+		public static double GetArea(Point a, Point b, Point c)
+		{
+			return Math.Abs((a.X * (b.Y - c.Y) +
+							 b.X * (c.Y - a.Y) +
+							 c.X * (a.Y - b.Y)) / 2);
+		}
+
+		public static bool IsInside(Point vrtx1, Point vrtx2, Point vrtx3, Point pnt)
+		{
+			double a1 = GetArea(vrtx1, vrtx2, vrtx3);
+			double b = GetArea(pnt, vrtx2, vrtx3);
+			double c = GetArea(pnt, vrtx1, vrtx3);
+			double d = GetArea(pnt, vrtx1, vrtx2);
+
+			return (a1 == b + c + d);
+		}
+
 
 		/// <summary>
 		/// Calculate the area of a polygon from a sequence of points.
@@ -103,6 +122,47 @@ namespace SharpPhysics.Utilities.MathUtils
 
 			area /= 2;
 			return (area < 0 ? -area : area);
+		}
+
+		/// <summary>
+		/// Finds the closest triangle edge with a line
+		/// </summary>
+		/// <param name="tri"></param>
+		/// <param name="pnt"></param>
+		/// <returns>
+		/// </returns>
+		public static GetClosestTriangleLineReturn GetClosestTriangleLine(Triangle tri, Point pnt)
+		{
+			// possible triangles: (1,2,p),(2,3,p),(1,3,p) 
+
+			List<Triangle> triangles = [new(tri.Vertex1, tri.Vertex2, pnt), new(tri.Vertex2, tri.Vertex3, pnt), new(tri.Vertex1,tri.Vertex3,pnt)];
+			double leastArea = 0;
+			double checkingArea;
+			Triangle leastTri = new();
+			int least = 0;
+			foreach (Triangle triangle in triangles)
+			{
+				checkingArea = triangle.GetArea();
+				if (leastArea > checkingArea)
+				{
+					leastArea = checkingArea;
+					leastTri = triangle;
+				}
+				least++;
+			}
+
+			if (least == 1)
+			{
+				return new(1,2,leastTri);
+			}
+			else if (least == 2)
+			{
+				return new(2, 3, leastTri);
+			}
+			else
+			{
+				return new(3, 1, leastTri);
+			}
 		}
 	}
 }

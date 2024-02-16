@@ -3,28 +3,33 @@ namespace SharpPhysics._2d.ObjectRepresentation.Translation
 {
 	public class _2dPosition
 	{
+		/// <summary>
+		/// Point located at the origin.
+		/// </summary>
+		public static readonly _2dPosition Blank00Pos = new _2dPosition();
+
 		public override string ToString()
 		{
-			return $"Pos:{xPos},{yPos},{zPos}";
+			return $"Pos:{X},{Y},{Z}";
 		}
 		public _2dPosition(double x, double y, double z)
 		{
-			xPos = x;
-			yPos = y;
-			zPos = z;
+			X = x;
+			Y = y;
+			Z = z;
 		}
 		public _2dPosition(double x, double y)
 		{
-			xPos = x;
-			yPos = y;
+			X = x;
+			Y = y;
 		}
 		public _2dPosition()
 		{
-			xPos = 0;
-			yPos = 0;
+			X = 0;
+			Y = 0;
 		}
-		public double xPos = 0;
-		public double yPos = 0;
-		public double zPos = 0;
+		public double X = 0;
+		public double Y = 0;
+		public double Z = 0;
 	}
 }

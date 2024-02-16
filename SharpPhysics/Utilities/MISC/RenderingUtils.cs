@@ -147,5 +147,15 @@ namespace SharpPhysics.Utilities.MISC
 			}
 			return toRet;
 		}
+
+		/// <summary>
+		/// Collects ebo data
+		/// </summary>
+		/// <param name="vbo"></param>
+		/// <returns></returns>
+		public static uint[] GetEbo(uint[] vbo)
+		{
+
+		}
 	}
 }

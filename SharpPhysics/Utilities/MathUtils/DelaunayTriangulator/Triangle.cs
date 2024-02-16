@@ -1,6 +1,7 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics._2d.ObjectRepresentation.Translation;
 using SharpPhysics.Utilities.MISC;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
@@ -38,11 +39,24 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 		private static Edge[] GetEdges(Triangle tri) =>
 			[new Edge(tri.Vertex1, tri.Vertex2), new Edge(tri.Vertex2, tri.Vertex3), new Edge(tri.Vertex3, tri.Vertex1)];
 
-		public Triangle ShiftTriangle(Point pos) =>
-			new Triangle(Vertex1 + pos, Vertex2 + pos, Vertex3 + pos);
+		public Triangle ShiftTriangle(Point pos)
+		{
+			Vertex1 = Vertex1 + pos;
+			Vertex2 = Vertex2 + pos;
+			Vertex3 = Vertex3 + pos;
 
-		public Triangle RotateByRadians(double rad) =>
-			new Triangle(GenericMathUtils.RotatePointAroundCenter(Vertex1, rad, true), GenericMathUtils.RotatePointAroundCenter(Vertex2, rad, true), GenericMathUtils.RotatePointAroundCenter(Vertex3, rad, true));
+			return this;
+		}
+
+		public Triangle RotateByRadians(double rad)
+		{
+			if (rad == 0) return this;
+			Vertex1 = GenericMathUtils.RotatePointAroundCenter(Vertex1, rad);
+			Vertex2 = GenericMathUtils.RotatePointAroundCenter(Vertex2, rad);
+			Vertex3 = GenericMathUtils.RotatePointAroundCenter(Vertex3, rad);
+
+			return this;
+		}
 
 		public bool IsPointInsideCircumcircle(Point point)
 		{
@@ -69,6 +83,30 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 
 		public static explicit operator Point[](Triangle tri) =>
 			[tri.Vertex1, tri.Vertex2, tri.Vertex3];
+
+		public static Triangle operator +(Triangle left, Triangle right) =>
+			new(left.Vertex1 + right.Vertex1, left.Vertex2 + right.Vertex2, left.Vertex3 + right.Vertex3);
+
+		/// <summary>
+		/// Scales a triangle
+		/// </summary>
+		/// <param name="xSca"></param>
+		/// <param name="ySca"></param>
+		public Triangle ScaleTriangle(double xSca, double ySca)
+		{
+			Vertex1.X = Vertex1.X * xSca;
+			Vertex2.X = Vertex2.X * xSca;
+			Vertex3.X = Vertex3.X * xSca;
+
+			Vertex1.Y = Vertex1.Y * ySca;
+			Vertex2.Y = Vertex2.Y * ySca;
+			Vertex3.Y = Vertex3.Y * ySca;
+
+			return this;
+		}
+
+		public double GetArea() =>
+			MeshUtilities.GetArea(Vertex1, Vertex2, Vertex3);
 
 		public override bool Equals(object obj)
 		{

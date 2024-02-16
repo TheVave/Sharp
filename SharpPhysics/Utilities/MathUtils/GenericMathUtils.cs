@@ -8,6 +8,8 @@ namespace SharpPhysics.Utilities.MathUtils
 {
 	public static class GenericMathUtils
 	{
+
+
 		/// <summary>
 		/// Returns true if the input value is positive. False otherwise.
 		/// </summary>
@@ -187,17 +189,17 @@ namespace SharpPhysics.Utilities.MathUtils
 		/// <param name="a"></param>
 		/// <param name="b"></param>
 		/// <returns></returns>
-		public static double GetAngleFromPoints(_2dPosition a, _2dPosition b)
+		public static double GetAngleFromPoints(Point a, Point b)
 		{
-			double strangeDegrees = RadiansToDegrees(Math.Atan((a.xPos - b.xPos) / (a.yPos - b.yPos)));
+			double strangeDegrees = RadiansToDegrees(Math.Atan((a.X - b.X) / (a.Y - b.Y)));
 			double newDegrees = 0;
 			// very hacky ||
 			//            ||
 			//            \/
-			if      (b.xPos > a.xPos && b.yPos > a.yPos) newDegrees = strangeDegrees;
-			else if (b.xPos > a.xPos && b.yPos < a.yPos) newDegrees = Math.Abs(strangeDegrees) + 90;
-			else if (b.xPos < a.xPos && b.yPos < a.yPos) newDegrees = strangeDegrees + 180;
-			else if (b.xPos < a.xPos && b.yPos > a.yPos) newDegrees = Math.Abs(strangeDegrees) + 180;
+			if      (b.X > a.X && b.Y > a.Y) newDegrees = strangeDegrees;
+			else if (b.X > a.X && b.Y < a.Y) newDegrees = Math.Abs(strangeDegrees) + 90;
+			else if (b.X < a.X && b.Y < a.Y) newDegrees = strangeDegrees + 180;
+			else if (b.X < a.X && b.Y > a.Y) newDegrees = Math.Abs(strangeDegrees) + 180;
 			return newDegrees;
 		}
 
@@ -207,22 +209,13 @@ namespace SharpPhysics.Utilities.MathUtils
 		}
 
 		/// <summary>
-		/// Rotates 
+		/// Rotates a point around the origin
 		/// </summary>
 		/// <param name="current"></param>
 		/// <param name="toRotate"></param>
 		/// <param name="useRadians"></param>
 		/// <returns></returns>
-		public static Point RotatePointAroundCenter(Point current, double toRotate, bool useRadians)
-		{
-			double length = GetDistanceFromCenter(current);
-
-
-
-			double rot = (useRadians) ? toRotate : RadiansToDegrees(toRotate);
-			rot += GetAngleFromPoints(new(), new(current.X,current.Y));
-
-			return new Point((-length) * Math.Sin(rot), length * Math.Cos(rot));
-		}
+		public static Point RotatePointAroundCenter(Point current, double toRotate) =>
+			new((current.X * Math.Cos(toRotate)) - (current.Y * Math.Sin(toRotate)), (current.Y * Math.Cos(toRotate)) + (current.X * Math.Sin(toRotate)));
 	}
 }

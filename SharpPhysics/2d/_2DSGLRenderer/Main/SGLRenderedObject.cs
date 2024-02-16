@@ -1,8 +1,5 @@
 ﻿using SharpPhysics._2d._2DSGLRenderer.Shaders;
 using SharpPhysics._2d.ObjectRepresentation;
-using SharpPhysics._2d.Objects;
-using SharpPhysics.Renderer.Textures;
-using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
 {
@@ -17,6 +14,16 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// The vbo containing the buffer data
 		/// </summary>
 		public uint vbo;
+
+		/// <summary>
+		/// The contents of the ebo
+		/// </summary>
+		public uint[] eboContent;
+
+		/// <summary>
+		/// Pointer to the ebo in graphics mem
+		/// </summary>
+		public uint eboPtr;
 
 		/// <summary>
 		/// The fragment shader to use. Don't mess with this unless you know what you're doing.

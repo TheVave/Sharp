@@ -45,6 +45,12 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// </summary>
 		public Triangle[] MeshTriangles;
 
+		/// <summary>
+		/// The triangles that make up the mesh. Used for collision and rendering.
+		/// Not changed for movement
+		/// </summary>
+		public readonly Triangle[] ActualTriangles;
+
 		public Mesh()
 		{
 			Mesh mesh = _2dBaseObjects.LoadSquareMesh();
@@ -57,6 +63,10 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			MeshPointsActualX = mesh.MeshPointsX;
 			MeshPointsActualY = mesh.MeshPointsY;
 			MeshPointsActualZ = mesh.MeshPointsZ;
+
+			ActualTriangles = DelaunayTriangulator.DelaunayTriangulation(MeshPoints).ToArray();
+			// if I don't recalc the triangles it'll just make a pointer to ActualTriangles
+			MeshTriangles = DelaunayTriangulator.DelaunayTriangulation(MeshPoints).ToArray();
 		}
 
 		public Mesh(double[] MeshPointsX, double[] MeshPointsY, double[] MeshPointsZ)
@@ -80,6 +90,10 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			MeshPoints = new Point[MeshPointsActualX.Length];
 			for (int i = 0; i < MeshPointsActualX.Length; i++)
 				MeshPoints[i] = new Point(MeshPointsActualX[i], MeshPointsActualY[i]);
+
+			ActualTriangles = DelaunayTriangulator.DelaunayTriangulation(MeshPoints).ToArray();
+			// if I don't recalc the triangles it'll just make a pointer to ActualTriangles
+			MeshTriangles = DelaunayTriangulator.DelaunayTriangulation(MeshPoints).ToArray();
 		}
 		public Mesh(double[] MeshPointsX, double[] MeshPointsY)
 		{
@@ -106,6 +120,10 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			{
 				MeshPoints[i] = new Point(MeshPointsX[i], MeshPointsY[i]);
 			}
+
+			ActualTriangles = DelaunayTriangulator.DelaunayTriangulation(MeshPoints).ToArray();
+			// if I don't recalc the triangles it'll just make a pointer to ActualTriangles
+			MeshTriangles = DelaunayTriangulator.DelaunayTriangulation(MeshPoints).ToArray();
 		}
 	}
 }
