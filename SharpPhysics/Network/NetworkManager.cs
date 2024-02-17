@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace SharpPhysics.Network
 {
-	internal class NetworkManager
+	public class NetworkManager
 	{
 		// client vars
 		public static Socket CSocket;

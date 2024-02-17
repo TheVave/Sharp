@@ -1,4 +1,5 @@
-﻿using SharpPhysics._2d.ObjectRepresentation;
+﻿using Force.DeepCloner;
+using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics._2d.ObjectRepresentation.Translation;
 using SharpPhysics._2d.Physics.CollisionManagement;
 using SharpPhysics.Utilities.MathUtils;
@@ -190,7 +191,7 @@ namespace SharpPhysics._2d.Physics
 		{
 			for (int i = 0; i < ObjectToSimulate.ObjectMesh.ActualTriangles.Length; i++)
 			{
-				Triangle tri = Triangle.Duplicate(ObjectToSimulate.ObjectMesh.ActualTriangles[i]);
+				Triangle tri = ObjectToSimulate.ObjectMesh.ActualTriangles[i].DeepClone();
 				ObjectToSimulate.ObjectMesh.MeshTriangles[i++] = tri.ScaleTriangle(ObjectToSimulate.Translation.ObjectScale.xSca, ObjectToSimulate.Translation.ObjectScale.ySca).
 																 RotateByRadians(GenericMathUtils.DegreesToRadians(ObjectToSimulate.Translation.ObjectRotation.xRot)).
 																 ShiftTriangle(new(ObjectToSimulate.Translation.ObjectPosition.X, ObjectToSimulate.Translation.ObjectPosition.Y));

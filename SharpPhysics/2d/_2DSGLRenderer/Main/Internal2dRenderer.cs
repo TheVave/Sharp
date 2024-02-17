@@ -99,7 +99,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// OnLoad
 		/// </summary>
-		public Action OL;
+		public Action OL = new Action(() => { });
 
 		/// <summary>
 		/// The camera to render out of.
