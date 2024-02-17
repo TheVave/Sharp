@@ -8,9 +8,11 @@
     <script>
         function relGetHow() {
             document.getElementById("how-to-get").style.visibility = "visible";
+            document.getElementById("how-to-get").style.display = "none";
         }
         function Close() {
             document.getElementById("how-to-get").style.visibility = "collapse";
+            document.getElementById("how-to-get").style.display = "block";
         }
     </script>
 </head>
@@ -28,7 +30,10 @@
             </p>
             <button class="RoundCorners BlackButton" onclick="Close();">Close</button>
         </div>
-        <p>After you </p>
+        <p>After you download the zip, you need to make sure you have <a href="https://visualstudio.microsoft.com/">Visual Studio</a>.</p>
+        <p>If you do not have Visual Studio knowledge, then go to <a href="https://learn.microsoft.com/en-us/visualstudio/get-started/csharp/?view=vs-2022">here</a>.</p>
+        <p>And, one more, if you do not know C# I'd recommend starting from either the above link, or <a href="https://www.w3schools.com/cs/index.php">where I started (W3schools)</a>.</p>
+
     </div>
 </body>
 </html>
