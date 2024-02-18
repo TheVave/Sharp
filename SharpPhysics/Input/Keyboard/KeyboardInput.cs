@@ -4,6 +4,8 @@ namespace SharpPhysics.Input.Keyboard
 {
 	public static class KeyboardInput
 	{
+		public static IInputContext context;
+
 
 		///// <summary>
 		///// The keys that are down
@@ -83,6 +85,14 @@ namespace SharpPhysics.Input.Keyboard
 			{
 				return false;
 			}
+		}
+		internal static void AddKeyDown(Action<IKeyboard, Key, int> action)
+		{
+			context.Keyboards[0].KeyDown += action;
+		}
+		internal static void AddKeyUp(Action<IKeyboard, Key, int> action)
+		{
+			context.Keyboards[0].KeyUp += action;
 		}
 	}
 }

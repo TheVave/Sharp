@@ -36,3 +36,33 @@ a {
 p {
     color: #aaa;
 }
+
+codebox {
+    width: 100%;
+    height: max-content;
+
+    background-color: #434343;
+    border-radius: 20px;
+}
+
+green {
+    color: darkgreen;
+}
+
+blue {
+    color: blue;
+}
+
+gray {
+    color: darkgray;
+}
+
+yellow {
+    color: darkgoldenrod;
+}
+
+.helpbox {
+    background-color: #15d415;
+    color: #323232;
+    padding: 25px;
+}
