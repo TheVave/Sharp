@@ -5,10 +5,12 @@ using SharpPhysics._2d.Physics;
 using SharpPhysics._2d.Raycasting;
 using SharpPhysics.Simulation.ObjectHierarchy;
 using SharpPhysics.Utilities.MISC.Errors;
+using System.Text.Json.Serialization;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
-	public class _2dSimulatedObject
+	[Serializable]
+	public class SimulatedObject2d
 	{
 		/// <summary>
 		/// The object name
@@ -21,14 +23,19 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		public Mesh ObjectMesh { get; set; }
 
 		/// <summary>
+		/// Simulate physics, you can still include this object in collidable arrays
+		/// </summary>
+		public bool SimulatePhysics = true;
+
+		/// <summary>
 		/// The parameters that tell the physics engine how to behave.
 		/// </summary>
-		public _2dPhysicsParams ObjectPhysicsParams;
+		public PhysicsParams2d ObjectPhysicsParams;
 
 		/// <summary>
 		/// The translation of the object, with the position, rotation, and scale of the object.
 		/// </summary>
-		public _2dTranslation Translation;
+		public Translation2d Translation;
 
 		/// <summary>
 		/// Creates a new _2dSimulatedObject and registers it to the simulation hierarchy in scene 1.
@@ -36,7 +43,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// <param name="objectMesh"></param>
 		/// <param name="objectPhysicsParams"></param>
 		/// <param name="translation"></param>
-		public _2dSimulatedObject(Mesh objectMesh, _2dPhysicsParams objectPhysicsParams, _2dTranslation translation)
+		public SimulatedObject2d(Mesh objectMesh, PhysicsParams2d objectPhysicsParams, Translation2d translation)
 		{
 			ObjectMesh = objectMesh;
 			ObjectPhysicsParams = objectPhysicsParams;
@@ -57,11 +64,11 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// <param name="objectMesh"></param>
 		/// <param name="objectPhysicsParams"></param>
 		/// <param name="translation"></param>
-		public _2dSimulatedObject()
+		public SimulatedObject2d()
 		{
 			ObjectMesh = _2dBaseObjects.LoadSquareMesh();
-			ObjectPhysicsParams = new _2dPhysicsParams();
-			Translation = new _2dTranslation();
+			ObjectPhysicsParams = new PhysicsParams2d();
+			Translation = new Translation2d();
 			//SimulationHierarchy.Hierarchies[0].Objects = SimulationHierarchy.Hierarchies[0].Objects.Append(this).ToArray();
 		}
 
@@ -82,13 +89,13 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			SimulationHierarchy.Hierarchies[0].Objects = [.. SimulationHierarchy.Hierarchies[0].Objects, this];
 		}
 
-		public void ApplyVectorMomentum(_2dVector force)
+		public void ApplyVectorVelocity(_2dVector force)
 		{
 			_2dLine forceLine = force.ToLine();
-			if (ObjectPhysicsParams.Momentum[0] < forceLine.XEnd) ObjectPhysicsParams.Momentum[0] = 0;
-			else ObjectPhysicsParams.Momentum[0] = forceLine.XEnd;
-			if (ObjectPhysicsParams.Momentum[1] < forceLine.YEnd) ObjectPhysicsParams.Momentum[1] = 0;
-			else ObjectPhysicsParams.Momentum[1] = forceLine.YEnd;
+			if (ObjectPhysicsParams.Velocity.VelocityX < forceLine.XEnd) ObjectPhysicsParams.Velocity.VelocityX = 0;
+			else ObjectPhysicsParams.Velocity.VelocityX = forceLine.XEnd;
+			if (ObjectPhysicsParams.Velocity.VelocityY < forceLine.YEnd) ObjectPhysicsParams.Velocity.VelocityY = 0;
+			else ObjectPhysicsParams.Velocity.VelocityY = forceLine.YEnd;
 		}
 
 		/// <summary>

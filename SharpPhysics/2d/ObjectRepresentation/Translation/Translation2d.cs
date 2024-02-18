@@ -1,15 +1,16 @@
 ﻿namespace SharpPhysics._2d.ObjectRepresentation.Translation
 {
-	public class _2dTranslation
+	[Serializable]
+	public class Translation2d
 	{
-		public _2dTranslation(double xPos, double yPos, double zPos)
+		public Translation2d(double xPos, double yPos, double zPos)
 		{
 			ObjectPosition = new _2dPosition(xPos, yPos, zPos);
 			ObjectRotation = new _2dRotation(0);
 			ObjectScale = new _2dScale(128, 128);
 		}
 
-		public _2dTranslation()
+		public Translation2d()
 		{
 			ObjectPosition = new _2dPosition(0, 0, 0);
 			ObjectRotation = new _2dRotation(0);

@@ -17,13 +17,13 @@ namespace SharpPhysics._2d.Physics.CollisionManagement
 		/// <param name="objectToCheck"></param>
 		/// <param name="objectsPhysicsMeshStorage"></param>
 		/// <returns></returns>
-		public static CollisionData[] CheckIfCollidedWithObject(_2dSimulatedObject[] hitables, _2dSimulatedObject objectToCheck)
+		public static CollisionData[] CheckIfCollidedWithObject(SimulatedObject2d[] hitables, SimulatedObject2d objectToCheck)
 		{
 			Point pnt;
 			Triangle tri;
 			bool result;
 			List<CollisionData> ToReturn = [];
-			foreach (_2dSimulatedObject objectToCheckIfCollided in hitables)
+			foreach (SimulatedObject2d objectToCheckIfCollided in hitables)
 			{
 				try
 				{
@@ -64,7 +64,7 @@ namespace SharpPhysics._2d.Physics.CollisionManagement
 		/// <param name="obj"></param>
 		/// <param name="meshLineIndex"></param>
 		/// <param name="linePoint"></param>
-		internal static void SimulateCollision(ref _2dSimulatedObject obj, Triangle triCollided, Point pnt, ref _2dSimulatedObject collidedObject)
+		internal static void SimulateCollision(ref SimulatedObject2d obj, Triangle triCollided, Point pnt, ref SimulatedObject2d collidedObject)
 		{
 			
 		}

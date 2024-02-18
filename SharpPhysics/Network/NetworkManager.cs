@@ -53,10 +53,12 @@ namespace SharpPhysics.Network
 
 		internal static void SendPacket(PacketType type, object? data, Socket skt)
 		{
-			Packet pkt = new();
-			pkt.extraData = extraData;
-			pkt.PacketType = (int)PacketType.Join;
-			pkt.packetData = true;
+			Packet pkt = new()
+			{
+				extraData = extraData,
+				PacketType = (int)PacketType.Join,
+				packetData = true
+			};
 			byte[] pktData;
 			unsafe
 			{

@@ -12,6 +12,6 @@ namespace SharpPhysics._2d.Physics
 	{
 		public virtual void Execute(CollisionData data) { }
 		public virtual void Execute() { }
-		public virtual void Execute(_2dSimulatedObject obj1, _2dSimulatedObject obj2) { }
+		public virtual void Execute(SimulatedObject2d obj1, SimulatedObject2d obj2) { }
 	}
 }

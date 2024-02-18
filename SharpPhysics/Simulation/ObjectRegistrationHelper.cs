@@ -4,7 +4,7 @@ namespace SharpPhysics.Simulation
 {
 	public static class ObjectRegistrationHelper
 	{
-		public static void Register2dObject(_2dSimulatedObject obj, int sceneId)
+		public static void Register2dObject(SimulatedObject2d obj, int sceneId)
 		{
 			if (!_2dWorld.ids.Contains(sceneId))
 			{

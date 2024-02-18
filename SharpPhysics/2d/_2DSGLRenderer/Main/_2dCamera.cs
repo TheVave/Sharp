@@ -14,7 +14,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// The object that the camera will follow.
 		/// If this value is null it will follow CenterPoint
 		/// </summary>
-		public _2dSimulatedObject? obj;
+		public SimulatedObject2d? obj;
 
 		/// <summary>
 		/// Camera zoom.

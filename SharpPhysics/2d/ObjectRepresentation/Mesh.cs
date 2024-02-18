@@ -3,6 +3,7 @@ using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
+	[Serializable]
 	public class Mesh
 	{
 		/// <summary>

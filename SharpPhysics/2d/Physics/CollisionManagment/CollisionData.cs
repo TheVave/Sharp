@@ -5,7 +5,7 @@ namespace SharpPhysics._2d.Physics.CollisionManagement
 {
 	public class CollisionData
 	{
-		public CollisionData(Triangle collidedTriangle, Point collidedPoint, _2dSimulatedObject collidedObject)
+		public CollisionData(Triangle collidedTriangle, Point collidedPoint, SimulatedObject2d collidedObject)
 		{
 			CollidedTriangle = collidedTriangle;
 			CollidedPoint = collidedPoint;
@@ -14,6 +14,6 @@ namespace SharpPhysics._2d.Physics.CollisionManagement
 
 		public Triangle CollidedTriangle;
 		public Point CollidedPoint;
-		public _2dSimulatedObject CollidedObject;
+		public SimulatedObject2d CollidedObject;
 	}
 }

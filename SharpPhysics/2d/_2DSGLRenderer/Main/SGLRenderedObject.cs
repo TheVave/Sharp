@@ -53,6 +53,6 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// the object to simulate
 		/// </summary>
-		public _2dSimulatedObject objToSim = new();
+		public SimulatedObject2d objToSim = new();
 	}
 }

@@ -84,7 +84,7 @@ namespace SharpPhysics
 		/// <summary>
 		/// Called once per frame
 		/// </summary>
-		public static Action<_2dSimulatedObject>[] OnRender { 
+		public static Action<SimulatedObject2d>[] OnRender { 
 			get
 			{
 				return renderer.OR;
@@ -98,7 +98,7 @@ namespace SharpPhysics
 		/// <summary>
 		/// Called once per frame. You can't use SGL here.
 		/// </summary>
-		public static Action<_2dSimulatedObject>[] OnUpdate
+		public static Action<SimulatedObject2d>[] OnUpdate
 		{
 			get
 			{

@@ -8,6 +8,8 @@ namespace SharpPhysics._2d.ObjectRepresentation.Translation
 		/// </summary>
 		public static readonly _2dPosition Blank00Pos = new _2dPosition();
 
+		public static _2dPosition operator -(_2dPosition left, _2dPosition right) => new(left.X - right.X, left.Y - right.Y);
+
 		public override string ToString()
 		{
 			return $"Pos:{X},{Y},{Z}";

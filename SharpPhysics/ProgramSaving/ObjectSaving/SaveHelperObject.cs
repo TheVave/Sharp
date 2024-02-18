@@ -61,7 +61,7 @@ namespace SharpPhysics
 		{
 			return;
 			string[] data = new string[0];
-			foreach (_2dSimulatedObject obj in hierarchy.Objects)
+			foreach (SimulatedObject2d obj in hierarchy.Objects)
 			{
 
 			}

@@ -4,9 +4,6 @@ using SharpPhysics._2d.ObjectRepresentation.Translation;
 using SharpPhysics._2d.Physics.CollisionManagement;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Xml.Linq;
 
 namespace SharpPhysics._2d.Physics
 {
@@ -19,12 +16,7 @@ namespace SharpPhysics._2d.Physics
 		/// <summary>
 		/// The object to simulate
 		/// </summary>
-		public _2dSimulatedObject ObjectToSimulate;
-
-		/// <summary>
-		/// bouncy multiplier
-		/// </summary>
-		public int ShocksMultiplier = 0;
+		public SimulatedObject2d ObjectToSimulate;
 
 		/// <summary>
 		/// Stops calculation
@@ -44,7 +36,7 @@ namespace SharpPhysics._2d.Physics
 		/// <summary>
 		/// Delay for checking ticks.
 		/// Recommended to be high for background objects.
-		/// If above DelayAmount then may yeild strange results.
+		/// If above DelayAmount then may yield strange results.
 		/// </summary>
 		public int WaitTime = 6;
 
@@ -61,7 +53,7 @@ namespace SharpPhysics._2d.Physics
 		/// <summary>
 		/// What to execute at a collision
 		/// </summary>
-		public IExecuteAtCollision? ToExecuteAtCollision;
+		public Action<SimulatedObject2d> ToExecuteAtCollision;
 
 		/// <summary>
 		/// The delay per physics engine tick
@@ -72,18 +64,6 @@ namespace SharpPhysics._2d.Physics
 		/// The amount of time that passes per simulation tick
 		/// </summary>
 		public double TimePerSimulationTick;
-
-		/// <summary>
-		/// The time the code takes to run per tick
-		/// </summary>
-		public static double TickActualTime;
-
-		/// <summary>
-		/// If the physics engine should see if a collision has happened.
-		/// Used if a collision is detected to, when a collision happens to
-		/// not accel the objects to the speed of light (very fast).
-		/// </summary>
-		public bool DetectCollision = true;
 
 		/// <summary>
 		/// The perceived radius of the circle from the object mesh
@@ -101,16 +81,6 @@ namespace SharpPhysics._2d.Physics
 		private CollisionData[]? resultFromCheckCollision;
 
 		/// <summary>
-		/// The suvatequasions instance
-		/// </summary>
-		readonly SUVATEquations sUVATEquations = new SUVATEquations();
-
-		/// <summary>
-		/// The latest displacement
-		/// </summary>
-		double displacement = 0;
-
-		/// <summary>
 		/// If the physics is beging run on the object
 		/// </summary>
 		public bool IsRunning;
@@ -123,23 +93,14 @@ namespace SharpPhysics._2d.Physics
 		/// </summary>
 		private double rotationalAmount = 0;
 
-		public _2dPhysicsSimulator(_2dSimulatedObject objectToSimulate) => ObjectToSimulate = objectToSimulate;
+		public _2dPhysicsSimulator(SimulatedObject2d objectToSimulate) => ObjectToSimulate = objectToSimulate;
 
-
-		public _2dPhysicsSimulator(_2dSimulatedObject objectToSimulate, int shocksMultiplier)
-		{
-			ShocksMultiplier = shocksMultiplier;
-			ObjectToSimulate = objectToSimulate;
-		}
-
-		public _2dPhysicsSimulator(_2dSimulatedObject objectToSimulate, int shocksMultiplier, bool doManualTicking)
+		public _2dPhysicsSimulator(SimulatedObject2d objectToSimulate, bool doManualTicking)
 		{
 			DoManualTicking = doManualTicking;
 			ObjectToSimulate = objectToSimulate;
-			ShocksMultiplier = shocksMultiplier;
 		}
 
-		string svtName;
 		string posName;
 		string rotName;
 		string momName;
@@ -149,12 +110,6 @@ namespace SharpPhysics._2d.Physics
 		internal void Tick()
 		{
 			// thread stuff
-			// suvat thrd
-			new Thread(SvtCalc)
-			{
-				Name = svtName,
-				IsBackground = true,
-			}.Start();
 			// position calc thread
 			new Thread(PosCalc)
 			{
@@ -200,16 +155,14 @@ namespace SharpPhysics._2d.Physics
 
 		private void ColCalc()
 		{
-			if (DetectCollision)
-				resultFromCheckCollision = _2dCollisionManager.CheckIfCollidedWithObject(ObjectToSimulate.ObjectPhysicsParams.CollidableObjects, ObjectToSimulate);
+			resultFromCheckCollision = _2dCollisionManager.CheckIfCollidedWithObject(_2dWorld.SceneHierarchies[ObjectToSimulate.ObjectPhysicsParams.sceneID].Objects, ObjectToSimulate);
 			if (resultFromCheckCollision.Length is not 0)
 			{
-				_2dSimulatedObject collidedObject;
+				SimulatedObject2d collidedObject;
 				for (int i = 0; i < resultFromCheckCollision.Length; i++)
 				{
 					collidedObject = resultFromCheckCollision[i].CollidedObject;
-					if (ToExecuteAtCollision is not null)
-						ToExecuteAtCollision.Execute(collidedObject, ObjectToSimulate);
+					ToExecuteAtCollision?.Invoke(collidedObject);
 					_2dCollisionManager.SimulateCollision(ref ObjectToSimulate, resultFromCheckCollision[i].CollidedTriangle, resultFromCheckCollision[i].CollidedPoint, ref collidedObject);
 				}
 
@@ -218,9 +171,9 @@ namespace SharpPhysics._2d.Physics
 
 		private void MomCalc()
 		{
-			ObjectToSimulate.ObjectPhysicsParams.Momentum[0] = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.Momentum[0], ObjectToSimulate.ObjectPhysicsParams.SpeedResistance);
+			ObjectToSimulate.ObjectPhysicsParams.Velocity.VelocityX = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.Velocity.VelocityX, ObjectToSimulate.ObjectPhysicsParams.SpeedResistance);
 
-			ObjectToSimulate.ObjectPhysicsParams.Momentum[1] = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.Momentum[1], ObjectToSimulate.ObjectPhysicsParams.SpeedResistance);
+			ObjectToSimulate.ObjectPhysicsParams.Velocity.VelocityY = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.Velocity.VelocityY, ObjectToSimulate.ObjectPhysicsParams.SpeedResistance);
 
 			// set mesh points for collision
 			for (int i = 0; i < ObjectToSimulate.ObjectMesh.MeshPointsX.Length; i++)
@@ -235,43 +188,30 @@ namespace SharpPhysics._2d.Physics
 			// update CurrentMovement value
 			CurrentMovement.StartPosition = CurrentMovement.EndPosition;
 			CurrentMovement.EndPosition = ObjectToSimulate.Translation.ObjectPosition;
-
 			// new code for rotation similar to momentum and position.
 			// may change. Ideas for rotational momentum impulse may be from https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/10%3A_Rotational_Motion_and_Angular_Momentum/10.03%3A_Dynamics_of_Rotational_Motion_-_Rotational_Inertia
 			// r in the upper link can be found by finding the area of the object, then working backward from the circle area equation, A = [pi]r^2, rearranged to r = r = [pi] / sqr(a).
-			rotationalAmount = ((ObjectToSimulate.ObjectPhysicsParams.RotationalAcceleration + ObjectToSimulate.ObjectPhysicsParams.RotationalMomentum) * TimePerSimulationTick);
+			rotationalAmount = ObjectToSimulate.ObjectPhysicsParams.RotationalVelocity * TimePerSimulationTick;
 			ObjectToSimulate.Translation.ObjectRotation.xRot += (float)(rotationalAmount);
-			ObjectToSimulate.ObjectPhysicsParams.RotationalMomentum = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.RotationalAcceleration + ObjectToSimulate.ObjectPhysicsParams.RotationalMomentum, ObjectToSimulate.ObjectPhysicsParams.RotResistance);
+			ObjectToSimulate.ObjectPhysicsParams.RotationalVelocity = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.RotationalVelocity, ObjectToSimulate.ObjectPhysicsParams.RotResistance);
 		}
 
 		private void PosCalc()
 		{
-			speedDirection = ObjectToSimulate.ObjectPhysicsParams.Acceleration;
-
 			// do standard calculations to find the displacement in a given direction
-			ObjectToSimulate.Translation.ObjectPosition.X += ((speedDirection[0]) * displacement) + ObjectToSimulate.ObjectPhysicsParams.Momentum[0];
-			ObjectToSimulate.Translation.ObjectPosition.Y += (((speedDirection[1]) * displacement) + ObjectToSimulate.ObjectPhysicsParams.Momentum[1]) - ((ObjectToSimulate.ObjectPhysicsParams.GravityMultiplier * 9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass) * (TimePerSimulationTick / 10));
+			ObjectToSimulate.Translation.ObjectPosition.X += ObjectToSimulate.ObjectPhysicsParams.Velocity.VelocityX;
+			ObjectToSimulate.Translation.ObjectPosition.Y += ObjectToSimulate.ObjectPhysicsParams.Velocity.VelocityY - ((9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass) * (TimePerSimulationTick / 1000));
 
-			// add momentum
-			ObjectToSimulate.ObjectPhysicsParams.Momentum[0] += (((speedDirection[0]) * displacement / sUVATEquations.T * ObjectToSimulate.ObjectPhysicsParams.Mass));
-			ObjectToSimulate.ObjectPhysicsParams.Momentum[1] += ((speedDirection[1]) * displacement / sUVATEquations.T * ObjectToSimulate.ObjectPhysicsParams.Mass) - ((ObjectToSimulate.ObjectPhysicsParams.GravityMultiplier * 9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass) * (TimePerSimulationTick / 10));
-		}
-
-		private void SvtCalc()
-		{
-			sUVATEquations.T = TimePerSimulationTick;
-			sUVATEquations.VS = ObjectToSimulate.ObjectPhysicsParams.Speed;
-			sUVATEquations.A = ObjectToSimulate.ObjectPhysicsParams.SpeedAcceleration;
-
-			displacement = sUVATEquations.NSWVSTA();
+			// add velocity
+			ObjectToSimulate.ObjectPhysicsParams.Velocity.VelocityX += (ObjectToSimulate.Translation.ObjectPosition - CurrentMovement.EndPosition).X;
+			ObjectToSimulate.ObjectPhysicsParams.Velocity.VelocityY += (ObjectToSimulate.Translation.ObjectPosition - CurrentMovement.EndPosition).Y - ((9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass) * (TimePerSimulationTick / 1000));
 		}
 
 		internal void ThreadNameInit()
 		{
-			svtName = $"Svt {ObjectToSimulate.Name}";
 			posName = $"Pos {ObjectToSimulate.Name}";
 			rotName = $"Rot {ObjectToSimulate.Name}";
-			momName = $"Mom {ObjectToSimulate.Name}";
+			momName = $"Vct {ObjectToSimulate.Name}";
 			colName = $"Col {ObjectToSimulate.Name}";
 			triName = $"Tri {ObjectToSimulate.Name}";
 		}
@@ -291,10 +231,10 @@ namespace SharpPhysics._2d.Physics
 		internal void StartPhysicsSimulator()
 		{
 			Prerequisites();
-			Thread thread = new Thread(() =>
+			Thread thread = new(() =>
 			{
-				TimePerSimulationTick = (ObjectToSimulate.ObjectPhysicsParams.TicksPerSecond * SpeedMultiplier);
 				DelayAmount = (int)Math.Ceiling(1000d / TickSpeed);
+				TimePerSimulationTick = (DelayAmount / 1000);
 				WaitTime = 2;
 				while (true)
 				{

@@ -89,12 +89,12 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// OnRender
 		/// </summary>
-		public Action<_2dSimulatedObject>[] OR = [];
+		public Action<SimulatedObject2d>[] OR = [];
 
 		/// <summary>
 		/// OnUpdate
 		/// </summary>
-		public Action<_2dSimulatedObject>[] OU = [];
+		public Action<SimulatedObject2d>[] OU = [];
 
 		/// <summary>
 		/// OnLoad
