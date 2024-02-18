@@ -6,7 +6,7 @@
 
 ---------------------------------------------------------
 
-SharpPhysics is a (somewhat small) (2d) physics library set up with Silk.net with OpenGL.
+SharpPhysics is a (somewhat small and 2d) physics/rendering library set up with Silk.net with OpenGL.
 
 ## BUILDING ##
 
@@ -30,22 +30,47 @@ Soon it may be compatible with MacOS and Linux.
 ---------------------------------------------------------
 
 The camera is done.
-I'm going to start work on collision.
-See you around.
+I'm going to start work on collision. (soon)
+I just finished a save game things, not yet loading saves though.
+Soon I may make a small game with SP.
 
 ## PACKAGES ##
 
---------------------------------------------------------;
+---------------------------------------------------------
 
-This program makes use of [Silk.NET](https://github.com/dotnet/Silk.NET).
-This program also makes use of [StbImageSharp](https://github.com/StbSharp/StbImageSharp), for texture info.
-Finally, this program uses [DeepCloner](https://github.com/force-net/DeepCloner), for deep copies in the networking library.
+This program makes use of four libaries, they are:
+Newtonsoft.Json
+Silk.Net
+StbImageSharp
+DeepCloner.
 
-## THINGS YOU CAN DO TO HELP ##
+None of these were made by me.
 
---------------------------------------------------------;
+### Newtonsoft.Json ###
 
-The main thing I haven't gotten around to yet is Platform Support stuff.
-If someone builds glfw for Mac and Linux, then I'll put it into SP.
-Also, If someone could make a PR for an Input folder that uses Silk input,
-that would be useful too!
+---------------------------------------------------------
+Newtonsoft.Json is a popular Json Serialization-Desirialization library for C#.
+[Website](https://www.newtonsoft.com/json)
+[Nuget](https://www.nuget.org/packages/Newtonsoft.Json)
+
+### Silk.Net ###
+
+---------------------------------------------------------
+Silk.Net is a graphics bindings library.
+[Website](https://dotnet.github.io/Silk.NET/)
+[Github](https://github.com/dotnet/Silk.NET)
+[Nuget](https://www.nuget.org/packages/Silk.NET)
+
+### StbImageSharp ###
+
+---------------------------------------------------------
+StbImageSharp is a popular port of the stb_image.h libary.
+[Github](https://github.com/StbSharp/StbImageSharp)
+[Nuget](https://www.nuget.org/packages/StbImageSharp/)
+
+### DeepCloner ###
+
+---------------------------------------------------------
+DeepCloner is a .net cloning libary for deep and shallow cloning.
+[Github](https://github.com/force-net/DeepCloner)
+[Nuget](https://www.nuget.org/packages/DeepCloner)
