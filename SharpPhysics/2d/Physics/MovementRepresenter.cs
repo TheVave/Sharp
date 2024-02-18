@@ -3,6 +3,7 @@ using SharpPhysics._2d.ObjectRepresentation.Translation;
 
 namespace SharpPhysics._2d.Physics
 {
+	[Serializable]
 	public sealed class _2dMovementRepresenter
 	{
 		/// <summary>

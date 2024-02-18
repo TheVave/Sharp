@@ -6,7 +6,6 @@ using System.Runtime.CompilerServices;
 
 namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 {
-
 	public class Triangle
 	{
 		public Point Vertex1 { get; private set; }

@@ -1,6 +1,5 @@
 ﻿namespace SharpPhysics._2d.ObjectRepresentation.Translation
 {
-	[Serializable]
 	public class Translation2d
 	{
 		public Translation2d(double xPos, double yPos, double zPos)

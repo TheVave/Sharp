@@ -1,9 +1,9 @@
 ﻿using SharpPhysics._2d.Objects;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
+using System.Text.Json.Serialization;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
-	[Serializable]
 	public class Mesh
 	{
 		/// <summary>

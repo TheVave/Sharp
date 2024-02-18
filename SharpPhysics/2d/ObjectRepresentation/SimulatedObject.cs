@@ -9,7 +9,6 @@ using System.Text.Json.Serialization;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
-	[Serializable]
 	public class SimulatedObject2d
 	{
 		/// <summary>
@@ -50,7 +49,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			Translation = translation;
 			try
 			{
-				SimulationHierarchy.Hierarchies[0].Objects = [.. SimulationHierarchy.Hierarchies[0].Objects, this];
+				_2dWorld.SceneHierarchies[0].Objects = [.. _2dWorld.SceneHierarchies[0].Objects, this];
 			}
 			catch (Exception e)
 			{
@@ -78,7 +77,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// <param name="scene"></param>
 		public void RegisterToScene(int scene)
 		{
-			SimulationHierarchy.Hierarchies[scene].Objects = [.. SimulationHierarchy.Hierarchies[0].Objects, this];
+			_2dWorld.SceneHierarchies[scene].Objects = [.. _2dWorld.SceneHierarchies[scene].Objects, this];
 		}
 
 		/// <summary>
@@ -86,7 +85,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// </summary>
 		public void RegisterToScene()
 		{
-			SimulationHierarchy.Hierarchies[0].Objects = [.. SimulationHierarchy.Hierarchies[0].Objects, this];
+			_2dWorld.SceneHierarchies[0].Objects = [.. _2dWorld.SceneHierarchies[0].Objects, this];
 		}
 
 		public void ApplyVectorVelocity(_2dVector force)

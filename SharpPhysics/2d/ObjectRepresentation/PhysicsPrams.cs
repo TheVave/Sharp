@@ -4,7 +4,6 @@ using System.Reflection;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
-	[Serializable]
 	public class PhysicsParams2d
 	{
 		/// <summary>
@@ -18,6 +17,11 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// TODO: research moment of inertia as an alternative
 		/// </summary>
 		public double RotResistance = 0.05;
+
+		/// <summary>
+		/// What scene the object can collide with.
+		/// </summary>
+		public short sceneCollidableId;
 
 		/// <summary>
 		/// Mass of the object

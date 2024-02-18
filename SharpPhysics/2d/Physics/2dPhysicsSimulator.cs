@@ -10,6 +10,7 @@ namespace SharpPhysics._2d.Physics
 	/// <summary>
 	/// The default 2d physics simulator. Based on the old unfinished 3d one.
 	/// </summary>
+	[Serializable]
 	public class _2dPhysicsSimulator
 	{
 
