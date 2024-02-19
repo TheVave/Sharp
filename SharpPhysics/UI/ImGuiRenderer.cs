@@ -3,15 +3,15 @@ using SharpPhysics.UI.UIHierarchy;
 using Silk.NET.OpenGL;
 using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
+using System.Numerics;
 
 namespace SharpPhysics.UI
 {
 	public class ImGuiRenderer
 	{
 		ImGuiController controller;
-		float f = 0;
-		string content = "Test";
-		byte[] buf = [];
+
+		public bool UseWindows = true;
 
 		public virtual void LD(IWindow wnd, GL gl)
 		{
@@ -30,15 +30,30 @@ namespace SharpPhysics.UI
 		{
 			controller.Update((float)deltatime);
 
+			
+			//MainRendererSGL.renderer.gl.ClearColor(MainRendererSGL.renderer.clearBufferBit.R, MainRendererSGL.renderer.clearBufferBit.G, MainRendererSGL.renderer.clearBufferBit.B, MainRendererSGL.renderer.clearBufferBit.A);
 			foreach (UIWindow wnd in UIRoot.Windows)
-			{
-				ImGui.Begin(wnd.Title);
+			{				ImGui.Begin(wnd.Title);
 				foreach (IUIElement element in wnd.Elements)
 				{
-					element.Draw(controller, false);
+					if (element.Position != Vector2.Zero)
+						ImGui.SetCursorPos(element.Position);
+					element.Draw();
 				}
 				ImGui.End();
 			}
+			ImGui.Begin("#", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoBackground);
+			//MainRendererSGL.renderer.gl.ClearColor(0, 0, 0, 0);
+			foreach (IUIElement element in UIRoot.NonWindowedObjects)
+			{
+				if (element.Visible)
+				{
+					if (element.Position != Vector2.Zero)
+						ImGui.SetCursorPos(element.Position);
+					element.Draw();
+				}
+			}
+			ImGui.End();
 
 			controller.Render();
 		}

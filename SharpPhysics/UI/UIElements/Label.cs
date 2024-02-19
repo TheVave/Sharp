@@ -1,27 +1,32 @@
 ﻿using ImGuiNET;
-using Silk.NET.OpenGL.Extensions.ImGui;
+using SharpPhysics._2d.ObjectRepresentation;
+using System.Numerics;
 
 namespace SharpPhysics.UI.UIElements
 {
 	public class Label : IUIElement
 	{
 		public string Txt;
-		public bool Visible = true;
+		public bool Visible { get; set; } = true;
 		public Action OnDraw = () => { };
+		public Vector2 Position { get; set; } = Vector2.Zero;
 
 		public Label(string txt)
 		{
 			Txt = txt;
 		}
 
-		public bool Draw(ImGuiController controller, bool useNormalImGuiWnd)
+		public Label(string txt, Vector2 position)
+		{
+			Txt = txt;
+			Position = position;
+		}
+
+		public bool Draw()
 		{
 			try
 			{
-				if (Visible)
-				{
-					ImGui.Text(Txt);
-				}
+				ImGui.Text(Txt);
 				OnDraw.Invoke();
 				return true;
 			}

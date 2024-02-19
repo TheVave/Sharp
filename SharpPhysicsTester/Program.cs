@@ -1,9 +1,23 @@
 ﻿using SharpPhysics;
 using SharpPhysics.Input;
+using SharpPhysics.UI.UIHierarchy;
+using SharpPhysics.UI.UIElements;
 double speed = 5;
 double camSpeed = 10;
 MainRendererSGL.ObjectsToRender[1].objTextureLoc = "test.bmp";
 MainRendererSGL.ObjectsToRender[0].objTextureLoc = "Enemy Thing.png";
+UIRoot.Windows = [new("Debug", [new Label("Example")])];
+UIRoot.NonWindowedObjects = [
+	new Button()
+	{
+		Label = "Example close button",
+		OnClick = () =>
+		{
+			Environment.Exit(4);
+		}
+
+	}
+];
 MainRendererSGL.OnLoad += () =>
 {
 	MainRendererSGL.ObjectsToRender[1].objToSim.RegisterToScene();

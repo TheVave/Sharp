@@ -1,17 +1,17 @@
 ﻿using ImGuiNET;
-using Silk.NET.OpenGL.Extensions.ImGui;
+using SharpPhysics._2d.ObjectRepresentation;
+using System.Numerics;
 
 namespace SharpPhysics.UI.UIElements
 {
 	public class DecimalSlider : IUIElement
 	{
-		internal float sliderVal;
 		public float SliderVal = 0;
 		public float SliderMin;
 		public float SliderMax;
-		public bool Visible = true;
+		public bool Visible { get; set; } = true;
 		public string Label = "Slider";
-		public string SliderValStr;
+		public Vector2 Position { get; set; } = Vector2.Zero;
 		public Action OnDraw = () => { };
 
 		public DecimalSlider(float sliderMin, float sliderMax, string label)
@@ -27,12 +27,10 @@ namespace SharpPhysics.UI.UIElements
 			SliderMax = sliderMax;
 		}
 
-		public bool Draw(ImGuiController controller, bool useNormalImGuiWnd)
+		public bool Draw()
 		{
-			if (Visible)
-			{
-				ImGui.SliderFloat(Label, ref SliderVal, SliderMin, SliderMax);
-			}
+			ImGui.SliderFloat(Label, ref SliderVal, SliderMin, SliderMax);
+			
 			OnDraw.Invoke();
 			return true;
 		}

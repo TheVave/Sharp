@@ -1,21 +1,21 @@
-﻿using Silk.NET.OpenGL.Extensions.ImGui;
+﻿using SharpPhysics._2d.ObjectRepresentation;
+using Silk.NET.OpenGL.Extensions.ImGui;
+using System.Numerics;
 
 namespace SharpPhysics.UI.UIElements
 {
 	public class Container : IUIElement
 	{
 		public IUIElement[] Children;
-		public bool Visible = true;
+		public bool Visible { get; set; } = true;
 		public Action OnDraw = () => { };
+		public Vector2 Position { get; set; } = Vector2.Zero;
 
-		public bool Draw(ImGuiController controller, bool useNormalImGuiWnd)
+		public bool Draw()
 		{
-			if (Visible)
+			foreach (IUIElement child in Children)
 			{
-				foreach (IUIElement child in Children)
-				{
-					child.Draw(controller, useNormalImGuiWnd);
-				}
+				child.Draw();
 			}
 			OnDraw.Invoke();
 			return true;
