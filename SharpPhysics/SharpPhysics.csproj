@@ -9,7 +9,7 @@
     <Title>SharpPhysics 2d Physics Simulator and Renderer</Title>
     <Company>None</Company>
     <Authors>TheVave</Authors>
-    <Version>0.2.0-alpha</Version>
+    <Version>0.2.1-alpha</Version>
     <RepositoryUrl>https://github.com/TheVave/SharpPhysics</RepositoryUrl>
     <AnalysisLevel>6.0-all</AnalysisLevel>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
