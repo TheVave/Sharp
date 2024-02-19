@@ -1,8 +1,4 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
-using SharpPhysics._2d.ObjectRepresentation.Translation;
-using System;
-using System.Linq;
-using System.Numerics;
 
 namespace SharpPhysics.Utilities.MathUtils
 {
@@ -196,7 +192,7 @@ namespace SharpPhysics.Utilities.MathUtils
 			// very hacky ||
 			//            ||
 			//            \/
-			if      (b.X > a.X && b.Y > a.Y) newDegrees = strangeDegrees;
+			if (b.X > a.X && b.Y > a.Y) newDegrees = strangeDegrees;
 			else if (b.X > a.X && b.Y < a.Y) newDegrees = Math.Abs(strangeDegrees) + 90;
 			else if (b.X < a.X && b.Y < a.Y) newDegrees = strangeDegrees + 180;
 			else if (b.X < a.X && b.Y > a.Y) newDegrees = Math.Abs(strangeDegrees) + 180;

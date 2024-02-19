@@ -1,6 +1,5 @@
 ﻿using ImGuiNET;
 using Silk.NET.OpenGL.Extensions.ImGui;
-using System.Reflection.Metadata.Ecma335;
 
 namespace SharpPhysics.UI.UIElements
 {

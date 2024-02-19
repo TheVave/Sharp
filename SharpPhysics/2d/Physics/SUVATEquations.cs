@@ -1,7 +1,4 @@
-﻿using SharpPhysics.Utilities.MISC.Errors;
-using System.Reflection.Metadata.Ecma335;
-
-namespace SharpPhysics._2d.Physics
+﻿namespace SharpPhysics._2d.Physics
 {
 	/// <summary>
 	/// This class is the main calculator of the ([nothing]/_2d)PhysicsSimulator class

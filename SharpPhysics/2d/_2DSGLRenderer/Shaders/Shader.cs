@@ -22,7 +22,7 @@
 			{
 				return false;
 			}
-			if (Program != shader.Program) 
+			if (Program != shader.Program)
 			{
 				return false;
 			}
@@ -39,7 +39,7 @@
 
 		public override int GetHashCode()
 		{
-			return ((Program.GetHashCode() / ShaderCode.GetHashCode())/(int)ShaderCompilePtr);
+			return ((Program.GetHashCode() / ShaderCode.GetHashCode()) / (int)ShaderCompilePtr);
 		}
 
 		public static bool operator ==(Shader left, Shader right)

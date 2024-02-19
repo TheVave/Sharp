@@ -13,9 +13,6 @@ using Silk.NET.Windowing;
 using StbImageSharp;
 using System.Diagnostics;
 using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using System.Transactions;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
 {
@@ -346,7 +343,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		public unsafe virtual void COLFPS(double delta)
 		{
 			curFPS = frames++ / (PlayTime.ElapsedMilliseconds / 1000);
-			if (Math.Floor(frames/collectFPSEveryFrames) == frames/ collectFPSEveryFrames)
+			if (Math.Floor(frames / collectFPSEveryFrames) == frames / collectFPSEveryFrames)
 			{
 				frames = 0;
 				PlayTime.Restart();
@@ -399,9 +396,9 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		public unsafe virtual Matrix4x4 GTTRNSFRMMTRX(int objectID)
 		{
 			Vector3 vctr3 = new Vector3((float)ObjectsToRender[objectID].objToSim.Translation.ObjectPosition.X, (float)ObjectsToRender[objectID].objToSim.Translation.ObjectPosition.Y, 0);
-			Matrix4x4 model = Matrix4x4.CreateScale(			ObjectsToRender[objectID].objToSim.Translation.ObjectScale.xSca,
+			Matrix4x4 model = Matrix4x4.CreateScale(ObjectsToRender[objectID].objToSim.Translation.ObjectScale.xSca,
 																ObjectsToRender[objectID].objToSim.Translation.ObjectScale.ySca,
-																0f) * 
+																0f) *
 																Matrix4x4.CreateRotationZ((float)GenericMathUtils.DegreesToRadians(ObjectsToRender[objectID].objToSim.Translation.ObjectRotation.xRot)) *
 																Matrix4x4.CreateTranslation(vctr3);
 			return model;

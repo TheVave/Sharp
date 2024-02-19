@@ -135,7 +135,7 @@ namespace SharpPhysics.Utilities.MathUtils
 		{
 			// possible triangles: (1,2,p),(2,3,p),(1,3,p) 
 
-			List<Triangle> triangles = [new(tri.Vertex1, tri.Vertex2, pnt), new(tri.Vertex2, tri.Vertex3, pnt), new(tri.Vertex1,tri.Vertex3,pnt)];
+			List<Triangle> triangles = [new(tri.Vertex1, tri.Vertex2, pnt), new(tri.Vertex2, tri.Vertex3, pnt), new(tri.Vertex1, tri.Vertex3, pnt)];
 			double leastArea = 0;
 			double checkingArea;
 			Triangle leastTri = new();
@@ -153,7 +153,7 @@ namespace SharpPhysics.Utilities.MathUtils
 
 			if (least == 1)
 			{
-				return new(1,2,leastTri);
+				return new(1, 2, leastTri);
 			}
 			else if (least == 2)
 			{

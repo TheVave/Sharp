@@ -8,7 +8,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// The point the camera will focus on.
 		/// </summary>
-		public Point CenterPoint = new(0,0);
+		public Point CenterPoint = new(0, 0);
 
 		/// <summary>
 		/// The object that the camera will follow.

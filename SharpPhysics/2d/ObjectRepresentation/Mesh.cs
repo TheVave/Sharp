@@ -1,6 +1,5 @@
 ﻿using SharpPhysics._2d.Objects;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
-using System.Text.Json.Serialization;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {

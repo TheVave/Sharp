@@ -1,7 +1,6 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
-using SharpPhysics.Utilities.MISC;
 using SharpPhysics.Utilities.MISC.Errors;
 
 namespace SharpPhysics._2d.Physics.CollisionManagement
@@ -66,7 +65,7 @@ namespace SharpPhysics._2d.Physics.CollisionManagement
 		/// <param name="linePoint"></param>
 		internal static void SimulateCollision(ref SimulatedObject2d obj, Triangle triCollided, Point pnt, ref SimulatedObject2d collidedObject)
 		{
-			
+
 		}
 	}
 }

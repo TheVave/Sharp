@@ -72,11 +72,11 @@ namespace SharpPhysics.Utilities.MISC
 				shifters[idx + 0] = new((IsNegative(tri.Vertex1.X)) ? Math.Abs(tri.Vertex1.X) : 0, (IsNegative(tri.Vertex1.Y)) ? Math.Abs(tri.Vertex1.Y) : 0);
 				shifters[idx + 1] = new((IsNegative(tri.Vertex2.X)) ? Math.Abs(tri.Vertex2.X) : 0, (IsNegative(tri.Vertex2.Y)) ? Math.Abs(tri.Vertex2.Y) : 0);
 				shifters[idx + 2] = new((IsNegative(tri.Vertex3.X)) ? Math.Abs(tri.Vertex3.X) : 0, (IsNegative(tri.Vertex3.Y)) ? Math.Abs(tri.Vertex3.Y) : 0);
-				
 
-				output[idx + 0]  = points[0] * (-1 / maxDist);
-				output[idx + 1]  = points[1] * (-1 / maxDist);
-				output[idx + 2]  = points[2] * (-1 / maxDist);
+
+				output[idx + 0] = points[0] * (-1 / maxDist);
+				output[idx + 1] = points[1] * (-1 / maxDist);
+				output[idx + 2] = points[2] * (-1 / maxDist);
 
 				idx += 3;
 			}
@@ -96,7 +96,7 @@ namespace SharpPhysics.Utilities.MISC
 		/// <returns></returns>
 		public static Point GetGreatestPointFromArray(Point[] arr)
 		{
-			Point curGreatest = new Point(0,0);
+			Point curGreatest = new Point(0, 0);
 			foreach (Point p in arr)
 			{
 				if (p.X > curGreatest.X) curGreatest.X = p.X;

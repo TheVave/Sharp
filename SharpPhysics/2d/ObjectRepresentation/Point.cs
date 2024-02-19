@@ -1,8 +1,6 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation.Translation;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MISC;
-using System.Reflection.Metadata.Ecma335;
-using System.Security.Cryptography.X509Certificates;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
@@ -137,7 +135,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 				if (p.ContainsValue(val) is true) return true;
 			}
 			return false;
- 		}
+		}
 
 		/// <summary>
 		/// The opposite of ArrayContainsValue
@@ -153,7 +151,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			}
 			return false;
 		}
-			
+
 
 		/// <summary>
 		/// Warning! Slow!

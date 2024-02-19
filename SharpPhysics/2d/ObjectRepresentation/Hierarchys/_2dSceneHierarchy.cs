@@ -1,14 +1,10 @@
-﻿
-using SharpPhysics.Utilities.MISC.Errors;
-using System.Runtime.CompilerServices;
-
-namespace SharpPhysics._2d.ObjectRepresentation.Hierarchies
+﻿namespace SharpPhysics._2d.ObjectRepresentation.Hierarchies
 {
 	[Serializable]
 	public class _2dSceneHierarchy
 	{
-        public SimulatedObject2d[] Objects = [];
-        public byte HierarchyId = 0;
+		public SimulatedObject2d[] Objects = [];
+		public byte HierarchyId = 0;
 
 		public _2dSceneHierarchy()
 		{

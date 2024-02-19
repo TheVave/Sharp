@@ -1,5 +1,4 @@
-﻿using Force.DeepCloner;
-using ImGuiNET;
+﻿using ImGuiNET;
 using Silk.NET.OpenGL.Extensions.ImGui;
 
 namespace SharpPhysics.UI.UIElements

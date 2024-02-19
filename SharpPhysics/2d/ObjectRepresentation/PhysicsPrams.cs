@@ -1,8 +1,4 @@
-﻿
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-
-namespace SharpPhysics._2d.ObjectRepresentation
+﻿namespace SharpPhysics._2d.ObjectRepresentation
 {
 	public class PhysicsParams2d
 	{

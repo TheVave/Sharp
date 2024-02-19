@@ -1,5 +1,4 @@
-﻿using ImGuiNET;
-using Silk.NET.OpenGL.Extensions.ImGui;
+﻿using Silk.NET.OpenGL.Extensions.ImGui;
 
 namespace SharpPhysics.UI.UIElements
 {

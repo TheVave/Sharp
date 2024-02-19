@@ -71,10 +71,12 @@ namespace SharpPhysics
 		/// <summary>
 		/// The window title. Cannot be changed after InitRendering is called.
 		/// </summary>
-		public static string Title { get
+		public static string Title
+		{
+			get
 			{
 				return renderer.title;
-			} 
+			}
 			set
 			{
 				renderer.title = value;
@@ -84,7 +86,8 @@ namespace SharpPhysics
 		/// <summary>
 		/// Called once per frame
 		/// </summary>
-		public static Action<SimulatedObject2d>[] OnRender { 
+		public static Action<SimulatedObject2d>[] OnRender
+		{
 			get
 			{
 				return renderer.OR;

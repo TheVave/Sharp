@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SharpPhysics.Network
@@ -49,9 +48,10 @@ namespace SharpPhysics.Network
 		}
 
 		public static void SendPacketClient(PacketType type, object? data) =>
-			new Thread(() => {
+			new Thread(() =>
+			{
 				strm = new(CSocket);
-				SendPacket(type, data, CSocket); 
+				SendPacket(type, data, CSocket);
 			})
 			{
 				Name = "Network Thread"

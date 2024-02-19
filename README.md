@@ -42,35 +42,44 @@ This program makes use of four libaries, they are:
 Newtonsoft.Json
 Silk.Net
 StbImageSharp
-DeepCloner.
+DeepCloner
+GLFW (Written in C).
 
 None of these were made by me.
 
 ### Newtonsoft.Json ###
 
 ---------------------------------------------------------
-Newtonsoft.Json is a popular Json Serialization-Desirialization library for C#.
-[Website](https://www.newtonsoft.com/json)
-[Nuget](https://www.nuget.org/packages/Newtonsoft.Json)
+Newtonsoft.Json is a popular Json Serialization-Desirialization library for C#. <br>
+[Website](https://www.newtonsoft.com/json) <br>
+[Nuget](https://www.nuget.org/packages/Newtonsoft.Json) <br> 
 
 ### Silk.Net ###
 
 ---------------------------------------------------------
-Silk.Net is a graphics bindings library.
-[Website](https://dotnet.github.io/Silk.NET/)
-[Github](https://github.com/dotnet/Silk.NET)
-[Nuget](https://www.nuget.org/packages/Silk.NET)
+Silk.Net is a graphics bindings library. <br>
+[Website](https://dotnet.github.io/Silk.NET/) <br>
+[Github](https://github.com/dotnet/Silk.NET) <br>
+[Nuget](https://www.nuget.org/packages/Silk.NET) <br>
 
 ### StbImageSharp ###
 
 ---------------------------------------------------------
-StbImageSharp is a popular port of the stb_image.h libary.
-[Github](https://github.com/StbSharp/StbImageSharp)
-[Nuget](https://www.nuget.org/packages/StbImageSharp/)
+StbImageSharp is a popular port of the stb_image.h libary. <br>
+[Github](https://github.com/StbSharp/StbImageSharp) <br>
+[Nuget](https://www.nuget.org/packages/StbImageSharp/) <br>
 
 ### DeepCloner ###
 
 ---------------------------------------------------------
-DeepCloner is a .net cloning libary for deep and shallow cloning.
-[Github](https://github.com/force-net/DeepCloner)
-[Nuget](https://www.nuget.org/packages/DeepCloner)
+DeepCloner is a .net cloning libary for deep and shallow cloning. <br>
+[Github](https://github.com/force-net/DeepCloner) <br>
+[Nuget](https://www.nuget.org/packages/DeepCloner) <br>
+
+### GLFW ###
+
+---------------------------------------------------------
+GLFW is a popular cross-platform OpenGL library written in C, and I'm <br>
+communicating with it through Silk.NET. (NOTE: This was not originally made by me!) <br>
+[Website](https://GLFW.org)
+[Github](https://github.com/glfw/glfw)

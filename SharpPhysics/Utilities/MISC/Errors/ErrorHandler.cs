@@ -36,7 +36,7 @@ namespace SharpPhysics.Utilities.MISC.Errors
 				static extern int MessageBox(System.IntPtr h, string m, string c, int type);
 			}
 		}
-			public static void ThrowNotImplementedExcepetion()
+		public static void ThrowNotImplementedExcepetion()
 		{
 			ThrowError("Not Implemented.", true);
 		}

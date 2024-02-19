@@ -13,6 +13,6 @@ namespace SharpPhysics.Renderer.Cameras
 			Zoom = zoom;
 		}
 
- 
+
 	}
 }

@@ -1,6 +1,4 @@
 ﻿using SharpPhysics.Utilities.MISC.Errors;
-using System.Reflection;
-using System.Resources;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Shaders
 {

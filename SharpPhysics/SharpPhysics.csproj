@@ -9,29 +9,30 @@
     <Title>SharpPhysics 2d Physics Simulator and Renderer</Title>
     <Company>None</Company>
     <Authors>TheVave</Authors>
-    <Version>0.1.5-alpha</Version>
+    <Version>0.2.0-alpha</Version>
     <RepositoryUrl>https://github.com/TheVave/SharpPhysics</RepositoryUrl>
     <AnalysisLevel>6.0-all</AnalysisLevel>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <AssemblyName>SharpPhysics</AssemblyName>
     <NoWarn>CA1707;CA1051;CA1062;CA1805;CS8618;CA2211;</NoWarn>
     <Description>A 2d renderer &amp; physics simulator made entirely with C#.
-    WARNING! THIS PROGRAM IS STILL UNDER DEVELOPMENT!</Description>
+WARNING! THIS PROGRAM IS STILL UNDER DEVELOPMENT!</Description>
     <PackageIcon>logo.png</PackageIcon>
     <IsPackable>true</IsPackable>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningLevel>1</WarningLevel>
     <DebugType>embedded</DebugType>
-    <FileAlignment>1024</FileAlignment>
+    <FileAlignment>512</FileAlignment>
     <IsTrimmable>True</IsTrimmable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <WarningLevel>0</WarningLevel>
     <DebugType>embedded</DebugType>
-    <FileAlignment>1024</FileAlignment>
+    <FileAlignment>512</FileAlignment>
     <IsTrimmable>True</IsTrimmable>
   </PropertyGroup>
 
@@ -60,6 +61,10 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 

@@ -3,9 +3,7 @@ using SharpPhysics._2d.ObjectRepresentation.Translation;
 using SharpPhysics._2d.Objects;
 using SharpPhysics._2d.Physics;
 using SharpPhysics._2d.Raycasting;
-using SharpPhysics.Simulation.ObjectHierarchy;
 using SharpPhysics.Utilities.MISC.Errors;
-using System.Text.Json.Serialization;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
@@ -108,7 +106,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			{
 				physicsSimulator.StartPhysicsSimulator();
 			}
-			catch (Exception e) 
+			catch (Exception e)
 			{
 				ErrorHandler.ThrowError("Error, Unknown error, _2dSimulatedObject.cs, StartPhysicsSimulation() exact error: " + e, true);
 			}

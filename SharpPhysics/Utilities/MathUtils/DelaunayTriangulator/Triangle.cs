@@ -1,8 +1,5 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
-using SharpPhysics._2d.ObjectRepresentation.Translation;
 using SharpPhysics.Utilities.MISC;
-using System.Numerics;
-using System.Runtime.CompilerServices;
 
 namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 {
@@ -77,7 +74,7 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 			// Check if point is inside the circumcircle
 			return alift * bc + blift * ca + clift * ab > Epsilon;
 		}
-		public override string ToString() => 
+		public override string ToString() =>
 			$"Triangle: ({Vertex1.X}, {Vertex1.Y}), ({Vertex2.X}, {Vertex2.Y}), ({Vertex3.X}, {Vertex3.Y})";
 
 		public static explicit operator Point[](Triangle tri) =>

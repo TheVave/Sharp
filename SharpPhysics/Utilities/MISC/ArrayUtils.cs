@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-namespace SharpPhysics.Utilities.MISC
+﻿namespace SharpPhysics.Utilities.MISC
 {
 	public static class ArrayUtils
 	{
