@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SharpPhysics.Network
 {
@@ -11,6 +12,7 @@ namespace SharpPhysics.Network
 		public static IPEndPoint EndPnt;
 		public static char[] extraData;
 		public static Packet lastPacketSent;
+		public static NetworkStream strm;
 
 		// both
 		public static string phase;
@@ -21,6 +23,7 @@ namespace SharpPhysics.Network
 		internal static byte[][] lastBytes;
 		public static IPEndPoint SrvrEndPnt;
 		public static Socket[] SSocket;
+		public static NetworkStream[] streams;
 
 		public static async void InitClient(string ipAdress, int portInt)
 		{
@@ -46,7 +49,10 @@ namespace SharpPhysics.Network
 		}
 
 		public static void SendPacketClient(PacketType type, object? data) =>
-			new Thread(() => { SendPacket(type, data, CSocket); })
+			new Thread(() => {
+				strm = new(CSocket);
+				SendPacket(type, data, CSocket); 
+			})
 			{
 				Name = "Network Thread"
 			}.Start();
@@ -59,24 +65,10 @@ namespace SharpPhysics.Network
 				PacketType = (int)PacketType.Join,
 				packetData = true
 			};
-			byte[] pktData;
-			unsafe
-			{
-				pkt.extraDataSize = (short)(sizeof(char) * extraData.Length);
-				pkt.packetDataSize = (short)Marshal.SizeOf(data);
-
-				Packet* ptr = &pkt;
-				pktData = new byte[pkt.extraDataSize + pkt.packetDataSize + (sizeof(short) * 2) + sizeof(byte)];
-				byte* curPtr = (byte*)ptr;
-				for (int i = 0; i < pktData.Length; i++)
-				{
-					pktData[i] = *curPtr;
-				}
-			}
+			BinaryFormatter frmattr = new();
+			frmattr.Serialize(strm, pkt);
 
 			lastPacketSent = pkt;
-
-			skt.SendAsync(pktData);
 		}
 
 		public static async Task<Packet> GetPacket(Socket socket, int socketIdx)
@@ -105,9 +97,11 @@ namespace SharpPhysics.Network
 
 		internal static async void InitSSocket(int port, IPEndPoint endPnt)
 		{
-			Socket[] sockets = new Socket[SSocket.Length + 1];
+			phase = "Loading sockets";
+			SSocket = SSocket.Append(new(SrvrEndPnt.AddressFamily, SocketType.Stream, ProtocolType.Tcp)).ToArray();
 
-			SSocket[SSocket.Length + 1] = new(SrvrEndPnt.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+			//phase = "Loading network streams";
+
 
 			phase = "Binding endpoints at index " + SSocket.Length + 1;
 			SSocket[SSocket.Length + 1].Bind(SrvrEndPnt);

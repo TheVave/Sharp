@@ -1,6 +1,7 @@
 ﻿using SharpPhysics._2d._2DSGLRenderer.Shaders;
 using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Renderer;
+using SharpPhysics.UI;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using SharpPhysics.Utilities.MISC;
@@ -29,6 +30,11 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// The time since the program started
 		/// </summary>
 		Stopwatch PlayTime = new();
+
+		/// <summary>
+		/// The imgui renderer
+		/// </summary>
+		public ImGuiRenderer guiRenderer = new();
 
 		/// <summary>
 		/// how many frames it should take to collect FPS
@@ -146,6 +152,10 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			Wnd.Closing += () =>
 			{
 				Environment.Exit(3);
+			};
+			Wnd.FramebufferResize += s =>
+			{
+				gl.Viewport(s);
 			};
 		}
 
@@ -325,6 +335,9 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			{
 				COLFPS(deltaTime);
 			}
+
+			// imgui
+			guiRenderer.ImGuiRndr(deltaTime);
 		}
 
 		/// <summary>
@@ -501,6 +514,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			FPSCNTRINIT();
 			// sets logo
 			STLOGO();
+			// inits ImGui
+			guiRenderer.LD(Wnd, gl);
 
 			// old code:
 

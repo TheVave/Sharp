@@ -48,7 +48,7 @@ namespace SharpPhysics.Input
 		{
 			KeyboardInput.AddKeyDown(action);
 		}
-		public static void AddKeyDownEvent(Action<IKeyboard, Key, int> action)
+		public static void AddKeyUpEvent(Action<IKeyboard, Key, int> action)
 		{
 			KeyboardInput.AddKeyUp(action);
 		}
