@@ -8,6 +8,12 @@
 
 SharpPhysics is a (somewhat small and 2d) physics/rendering library set up with Silk.net with OpenGL.
 
+## NOTICE ##
+
+---------------------------------------------------------
+SharpPhysics is under heavy development!!!
+It should not be used in any production projects!
+
 ## BUILDING ##
 
 ---------------------------------------------------------
@@ -19,20 +25,14 @@ and also copy over glfw.dll to the output directory.
 
 ---------------------------------------------------------
 
-SharpPhysics only runs on Windows because the glfw.dll file isn't compatible with other Operating Systems.
-
-### UPDATE ###
-
-Soon it may be compatible with MacOS and Linux.
+SharpPhysics runs on Windows, Mac, and Linux.
 
 ## RECENT UPDATES ##
 
 ---------------------------------------------------------
 
-The camera is done.
-I'm going to start work on collision. (soon)
-I just finished a save game things, not yet loading saves though.
-Soon I may make a small game with SP.
+I just finished most of the UI stuff, I'll come back to it though.
+What I'm doing next: Making test game
 
 ## PACKAGES ##
 
