@@ -10,30 +10,16 @@ namespace SharpPhysics.Utilities.MISC.Errors
 		public static extern int MessageBox(System.IntPtr h, string m, string c, int type);
 		public static void ThrowError(string message, bool crash)
 		{
-			if (InitCalled)
-			{
-				if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-				{
-					try
-					{
-						MessageBox(System.IntPtr.Zero, message, "Error", /* 0x01 is MB_ICONERROR (error symbol) and 0x00 is MB_OK (ok message box) */ 0x10 | 0x00);
-					}
-					catch
-					{
-						if (crash) throw new MessageBoxException(message + " (Unable to show in message box.)");
-					}
-					if (crash) throw new MessageBoxException(message + " (Shown in message box)");
-				}
-				else
-				{
-					throw new Exception(message + " non windows OS.");
-				}
-
-			}
-			else
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT)
 			{
 				[DllImport("user32.dll")]
 				static extern int MessageBox(System.IntPtr h, string m, string c, int type);
+				MessageBox(System.IntPtr.Zero, message, "Error", /* 0x01 is MB_ICONERROR (error symbol) and 0x00 is MB_OK (ok message box) */ 0x10 | 0x00);
+				if (crash) throw new MessageBoxException(message + " (Shown in message box)");
+			}
+			else
+			{
+				throw new Exception(message + ". Non Windows OS.");
 			}
 		}
 		public static void ThrowNotImplementedExcepetion()

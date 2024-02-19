@@ -57,7 +57,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// The objects to render
 		/// </summary>
-		public SGLRenderedObject[] ObjectsToRender = [new(), new()];
+		public SGLRenderedObject[] ObjectsToRender = [];
 
 		/// <summary>
 		/// wnd title
