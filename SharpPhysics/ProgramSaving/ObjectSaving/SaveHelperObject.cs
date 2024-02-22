@@ -39,6 +39,5 @@ namespace SharpPhysics
 				SaveFileStandardWrite(JsonConvert.SerializeObject(_2dWorld.SceneHierarchies[0].Objects), name);
 			}).Start();
 		}
-
 	}
 }

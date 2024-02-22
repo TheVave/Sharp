@@ -1,4 +1,5 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics._2d.ObjectRepresentation.Translation;
 using SharpPhysics.Utilities.MISC;
 
 namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
@@ -12,13 +13,16 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 
 		public Edge[] Edges { get; private set; }
 
-		public Triangle(Point vertex1, Point vertex2, Point vertex3)
+		public Triangle(Point vertex1, Point vertex2, Point vertex3, bool calculateEdges = true)
 		{
 			Vertex1 = vertex1;
 			Vertex2 = vertex2;
 			Vertex3 = vertex3;
 
-			Edges = GetEdges(this);
+			if (calculateEdges)
+			{
+				Edges = GetEdges(this);
+			}			
 		}
 
 		public Triangle()
@@ -37,11 +41,26 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 
 		public Triangle ShiftTriangle(Point pos)
 		{
-			Vertex1 = Vertex1 + pos;
-			Vertex2 = Vertex2 + pos;
-			Vertex3 = Vertex3 + pos;
+			Vertex1 += pos;
+			Vertex2 += pos;
+			Vertex3 += pos;
 
 			return this;
+		}
+		public static void ShiftTriangle(Point pos, Triangle tri)
+		{
+			tri.Vertex1 += pos;
+			tri.Vertex2 += pos;
+			tri.Vertex3 += pos;
+		}
+		public static void ShiftTriangle(_2dPosition pos, Triangle tri)
+		{
+			tri.Vertex1.X += pos.X;
+			tri.Vertex1.Y += pos.Y;
+			tri.Vertex2.X += pos.X;
+			tri.Vertex2.Y += pos.Y;
+			tri.Vertex3.X += pos.X;
+			tri.Vertex3.Y += pos.Y;
 		}
 
 		public Triangle RotateByRadians(double rad)
@@ -52,6 +71,13 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 			Vertex3 = GenericMathUtils.RotatePointAroundCenter(Vertex3, rad);
 
 			return this;
+		}
+		public static void RotateByRadians(double radians, Triangle tri)
+		{
+			if (radians == 0) return;
+			tri.Vertex1 = GenericMathUtils.RotatePointAroundCenter(tri.Vertex1, radians);
+			tri.Vertex2 = GenericMathUtils.RotatePointAroundCenter(tri.Vertex2, radians);
+			tri.Vertex3 = GenericMathUtils.RotatePointAroundCenter(tri.Vertex3, radians);
 		}
 
 		public bool IsPointInsideCircumcircle(Point point)
@@ -99,6 +125,17 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 			Vertex3.Y = Vertex3.Y * ySca;
 
 			return this;
+		}
+
+		public static void ScaleTriangle(double xSca, double ySca, Triangle triangle)
+		{
+			triangle.Vertex1.X = triangle.Vertex1.X * xSca;
+			triangle.Vertex2.X = triangle.Vertex2.X * xSca;
+			triangle.Vertex3.X = triangle.Vertex3.X * xSca;
+								 
+			triangle.Vertex1.Y = triangle.Vertex1.Y * ySca;
+			triangle.Vertex2.Y = triangle.Vertex2.Y * ySca;
+			triangle.Vertex3.Y = triangle.Vertex3.Y * ySca;
 		}
 
 		public double GetArea() =>

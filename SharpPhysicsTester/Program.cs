@@ -2,8 +2,10 @@
 using SharpPhysics.Input;
 using SharpPhysics.UI.UIHierarchy;
 using SharpPhysics.UI.UIElements;
+using SharpPhysics._2d._2DSVKRenderer.Main;
 double speed = 5;
 double camSpeed = 10;
+MainRendererSGL.ObjectsToRender = [new(), new()];
 MainRendererSGL.ObjectsToRender[1].objTextureLoc = "test.bmp";
 MainRendererSGL.ObjectsToRender[0].objTextureLoc = "Enemy Thing.png";
 UIRoot.Windows = [new("Debug", [new Label("Example")])];

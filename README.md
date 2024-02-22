@@ -42,7 +42,6 @@ This program makes use of four libaries, they are:
 Newtonsoft.Json
 Silk.Net
 StbImageSharp
-DeepCloner
 GLFW (Written in C).
 
 None of these were made by me.
@@ -51,8 +50,8 @@ None of these were made by me.
 
 ---------------------------------------------------------
 Newtonsoft.Json is a popular Json Serialization-Desirialization library for C#. <br>
-[Website](https://www.newtonsoft.com/json) <brs>
-[Nuget](https://www.nuget.org/packages/Newtonsoft.Json) <br> 
+[Website](https://www.newtonsoft.com/json) <br>
+[Nuget](https://www.nuget.org/packages/Newtonsoft.Json) <br>
 
 ### Silk.Net ###
 
@@ -68,13 +67,6 @@ Silk.Net is a graphics bindings library. <br>
 StbImageSharp is a popular port of the stb_image.h libary. <br>
 [Github](https://github.com/StbSharp/StbImageSharp) <br>
 [Nuget](https://www.nuget.org/packages/StbImageSharp/) <br>
-
-### DeepCloner ###
-
----------------------------------------------------------
-DeepCloner is a .net cloning libary for deep and shallow cloning. <br>
-[Github](https://github.com/force-net/DeepCloner) <br>
-[Nuget](https://www.nuget.org/packages/DeepCloner) <br>
 
 ### GLFW ###
 

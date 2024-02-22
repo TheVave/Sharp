@@ -1,5 +1,4 @@
-﻿using Force.DeepCloner;
-using SharpPhysics._2d.ObjectRepresentation;
+﻿using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics._2d.ObjectRepresentation.Translation;
 using SharpPhysics._2d.Physics.CollisionManagement;
 using SharpPhysics.Utilities.MathUtils;
@@ -67,11 +66,6 @@ namespace SharpPhysics._2d.Physics
 		public double TimePerSimulationTick;
 
 		/// <summary>
-		/// The perceived radius of the circle from the object mesh
-		/// </summary>
-		private double r;
-
-		/// <summary>
 		/// If the program should do manual ticking pulses
 		/// </summary>
 		private readonly bool DoManualTicking = false;
@@ -85,9 +79,6 @@ namespace SharpPhysics._2d.Physics
 		/// If the physics is beging run on the object
 		/// </summary>
 		public bool IsRunning;
-
-		//calculating the position based on the moving position
-		private double[] speedDirection = new double[2];
 
 		/// <summary>
 		/// The object's rotation
@@ -145,12 +136,20 @@ namespace SharpPhysics._2d.Physics
 
 		private void TriCalc()
 		{
+			Triangle actualTriangle;
+			Triangle tri;
 			for (int i = 0; i < ObjectToSimulate.ObjectMesh.ActualTriangles.Length; i++)
 			{
-				Triangle tri = ObjectToSimulate.ObjectMesh.ActualTriangles[i].DeepClone();
-				ObjectToSimulate.ObjectMesh.MeshTriangles[i++] = tri.ScaleTriangle(ObjectToSimulate.Translation.ObjectScale.xSca, ObjectToSimulate.Translation.ObjectScale.ySca).
-																 RotateByRadians(GenericMathUtils.DegreesToRadians(ObjectToSimulate.Translation.ObjectRotation.xRot)).
-																 ShiftTriangle(new(ObjectToSimulate.Translation.ObjectPosition.X, ObjectToSimulate.Translation.ObjectPosition.Y));
+				actualTriangle = ObjectToSimulate.ObjectMesh.ActualTriangles[i];
+				//Triangle tri = ObjectToSimulate.ObjectMesh.ActualTriangles[i]/*.ShallowClone()*/;
+				//ObjectToSimulate.ObjectMesh.MeshTriangles[i++] = tri.ScaleTriangle(ObjectToSimulate.Translation.ObjectScale.xSca, ObjectToSimulate.Translation.ObjectScale.ySca).
+				//												 RotateByRadians(GenericMathUtils.DegreesToRadians(ObjectToSimulate.Translation.ObjectRotation.xRot)).
+				//												 ShiftTriangle(new(ObjectToSimulate.Translation.ObjectPosition.X, ObjectToSimulate.Translation.ObjectPosition.Y));
+				tri = new(actualTriangle.Vertex1, actualTriangle.Vertex2, actualTriangle.Vertex3, false);
+				Triangle.ScaleTriangle(ObjectToSimulate.Translation.ObjectScale.xSca, ObjectToSimulate.Translation.ObjectScale.ySca, tri);
+				Triangle.RotateByRadians(GenericMathUtils.DegreesToRadians(ObjectToSimulate.Translation.ObjectRotation.xRot), tri);
+				Triangle.ShiftTriangle(ObjectToSimulate.Translation.ObjectPosition, tri);
+				ObjectToSimulate.ObjectMesh.MeshTriangles[i] = tri;
 			}
 		}
 
@@ -224,7 +223,7 @@ namespace SharpPhysics._2d.Physics
 		{
 			// solving for mesh stuff
 			// finding a value for rotation.
-			r = Math.PI / Math.Sqrt(MeshUtilities.PolygonArea(ObjectToSimulate.ObjectMesh.MeshPoints));
+			//r = Math.PI / Math.Sqrt(MeshUtilities.PolygonArea(ObjectToSimulate.ObjectMesh.MeshPoints));
 
 			ThreadNameInit();
 		}
