@@ -2,6 +2,7 @@
 using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
+using SharpPhysics.Utilities.MISC.Errors;
 using Silk.NET.Core;
 using StbImageSharp;
 using static SharpPhysics.Utilities.MathUtils.GenericMathUtils;
@@ -150,12 +151,49 @@ namespace SharpPhysics.Utilities.MISC
 
 		/// <summary>
 		/// Collects ebo data
+		/// WIP!
 		/// </summary>
 		/// <param name="vbo"></param>
 		/// <returns></returns>
-		public static uint[] GetEbo(uint[] vbo)
+		public static uint[] GetEbo(ref float[] vertices)
 		{
+			Span<int> skipIdxs = [];
+			Span<uint> curEbo = [];
+			Span<int> curIdxs = [];
+			for (uint i = 0; i < vertices.Length; i++) 
+			{
+				int[] rets = AllIndexesOf(vertices, vertices[i]);
+				if (rets.Length == 1) ArrayUtils.AddSpanObject(curEbo, i);
+				else if (rets.Length > 1)
+				{
+
+				}
+				else
+				{
+					ErrorHandler.ThrowError(1, true);
+				}
+			}
 			return [];
+		}
+
+		/// <summary>
+		/// has a length of one for no OTHER results, assuming that values contains valueToSearch
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="values"></param>
+		/// <param name="valueToSearch"></param>
+		/// <returns></returns>
+		public static int[] AllIndexesOf<T>(T[] values, T valueToSearch)
+		{
+			Span<int> toReturn = [];
+			int idx = 0;
+			foreach (T val in values)
+			{
+				// can't ==
+				if (val.Equals(valueToSearch)) ArrayUtils.AddSpanObject(toReturn, idx);
+				idx++;
+			}
+			return toReturn.ToArray();
 		}
 	}
 }

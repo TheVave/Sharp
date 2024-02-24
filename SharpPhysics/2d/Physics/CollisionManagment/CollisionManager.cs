@@ -43,14 +43,16 @@ namespace SharpPhysics._2d.Physics.CollisionManagement
 				}
 				catch (NullReferenceException e)
 				{
-					ErrorHandler.ThrowError("Internal Error, objects triangles or points not initialized, attempting auto-correct.", false);
+					// 6
+					ErrorHandler.ThrowError(6, false);
 					try
 					{
 						objectToCheck.ObjectMesh.MeshTriangles = DelaunayTriangulator.DelaunayTriangulation(objectToCheck.ObjectMesh.MeshPoints).ToArray();
 					}
 					catch
 					{
-						ErrorHandler.ThrowError("Internal Error, objectToCheck points not initialized, mesh missing.", true);
+						//7
+						ErrorHandler.ThrowError(7, true);
 					}
 				}
 			}

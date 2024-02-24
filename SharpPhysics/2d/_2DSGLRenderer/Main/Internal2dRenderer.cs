@@ -169,7 +169,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			gl.GetShader(ptr, ShaderParameterName.CompileStatus, out int status);
 			if (status != /* if it has failed */ 1)
 			{
-				ErrorHandler.ThrowError($"Error, Internal/External error, shader compilation failed with name {name}.", true);
+				// 3
+				ErrorHandler.ThrowError(3, true);
 			}
 			if (type is Silk.NET.OpenGL.ShaderType.VertexShader)
 			{
@@ -194,7 +195,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			gl.GetShader(ptr, ShaderParameterName.CompileStatus, out int status);
 			if (status != /* if it has failed */ 1)
 			{
-				ErrorHandler.ThrowError($"Error, Internal/External error, shader compilation failed with code\n {code}.", true);
+				// 3
+				ErrorHandler.ThrowError(3, true);
 			}
 			if (type is Silk.NET.OpenGL.ShaderType.VertexShader)
 			{
@@ -234,7 +236,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			// 1s good.
 			if (status is not 1)
 			{
-				ErrorHandler.ThrowError($"Internal Error, Compiler link failed with input names {name},{name2}.", true);
+				// 4
+				ErrorHandler.ThrowError(4, true);
 			}
 
 			gl.DeleteShader(shdr1);
@@ -271,7 +274,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			// 1s good.
 			if (status is not 1)
 			{
-				ErrorHandler.ThrowError($"Internal Error, Compiler link failed with input code\n {code}\n\n{code2}.", true);
+				//4
+				ErrorHandler.ThrowError(4, true);
 			}
 
 			gl.DeleteShader(shdr1);
@@ -578,7 +582,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			}
 			catch
 			{
-				ErrorHandler.ThrowError("Missing resource or incorrectly formatted file", true);
+				// 2
+				ErrorHandler.ThrowError(2, true);
 			}
 			fixed (byte* ptr = result.Data)
 			{

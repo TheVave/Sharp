@@ -50,7 +50,8 @@ namespace SharpPhysics.Renderer
 			catch
 			{
 				// if some error has happened, like some color not being formatted correctly.
-				ErrorHandler.ThrowError("Error, Internal Error, Color.Color(ColorName key) failed with input " + key.ToString(), true);
+				//8
+				ErrorHandler.ThrowError(8, true);
 			}
 		}
 		/// <summary>

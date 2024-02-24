@@ -17,7 +17,8 @@ namespace SharpPhysics
 			}
 			catch (System.Exception e)
 			{
-				ErrorHandler.ThrowError("Error, Unknown Error, Exact error: " + e, true);
+				//5
+				ErrorHandler.ThrowError(5, true);
 				throw;
 			}
 		}

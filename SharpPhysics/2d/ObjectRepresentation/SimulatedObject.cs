@@ -51,7 +51,8 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			}
 			catch (Exception e)
 			{
-				ErrorHandler.ThrowError("Error, Unknown error, _2dSimulatedObject.cs _2dSimulatedObject(Mesh,_2dPhysicsParams,_2dTranslation), exact error: " + e, true);
+				//5
+				ErrorHandler.ThrowError(5, true);
 			}
 		}
 
@@ -108,7 +109,8 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			}
 			catch (Exception e)
 			{
-				ErrorHandler.ThrowError("Error, Unknown error, _2dSimulatedObject.cs, StartPhysicsSimulation() exact error: " + e, true);
+				// 5
+				ErrorHandler.ThrowError(5, true);
 			}
 			return physicsSimulator;
 		}

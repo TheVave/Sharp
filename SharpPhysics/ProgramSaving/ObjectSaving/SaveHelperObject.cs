@@ -23,7 +23,8 @@ namespace SharpPhysics
 				}
 				catch
 				{
-					ErrorHandler.ThrowError("Error, Internal error, unknown cause", true);
+					//5
+					ErrorHandler.ThrowError(5, true);
 				}
 			}).Start();
 		}

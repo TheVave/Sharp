@@ -86,6 +86,9 @@ WARNING! THIS PROGRAM IS STILL UNDER DEVELOPMENT!</Description>
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Errors.tx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="glfw.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

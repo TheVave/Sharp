@@ -14,7 +14,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Shaders
 			}
 			catch
 			{
-				ErrorHandler.ThrowError("Error, External/Internal Error, Missing resource.", true);
+				//2
+				ErrorHandler.ThrowError(2, true);
 			}
 			// For C# to not get angry ||
 			//                         ||
