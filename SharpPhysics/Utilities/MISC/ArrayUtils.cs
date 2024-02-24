@@ -16,5 +16,20 @@
 			Concater.CopyTo(values, baseArr.Length);
 			return values;
 		}
+		/// <summary>
+		/// Exact same behavior as Array.IndexOf
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="val"></param>
+		/// <param name="array"></param>
+		/// <returns></returns>
+		public static int SpanIndexOf<T>(T val, T[] array)
+		{
+			for (int i = 0; i < array.Length; i++)
+			{
+				if (array[i].Equals(val)) return i;
+			}
+			return -1;
+		}
 	}
 }

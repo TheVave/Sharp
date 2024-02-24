@@ -150,29 +150,32 @@ namespace SharpPhysics.Utilities.MISC
 
 		/// <summary>
 		/// Collects ebo data
-		/// WIP!
 		/// </summary>
 		/// <param name="vbo"></param>
 		/// <returns></returns>
 		public static uint[] GetEbo(ref float[] vertices)
 		{
-			Span<int> skipIdxs = [];
-			Span<uint> curEbo = [];
-			Span<int> curIdxs = [];
-			for (uint i = 0; i < vertices.Length; i++) 
-			{
-				int[] rets = AllIndexesOf(vertices, vertices[i]);
-				if (rets.Length == 1) ArrayUtils.AddSpanObject(curEbo, i);
-				else if (rets.Length > 1)
-				{
+			Dictionary<string, uint> indexMap = [];
+			List<uint> indices = [];
 
-				}
-				else
+			for (int i = 0; i < vertices.Length; i += 3)
+			{
+				string vertexKey = $"{vertices[i]},{vertices[i + 1]},{vertices[i + 2]}";
+				if (!indexMap.ContainsKey(vertexKey))
 				{
-					ErrorHandler.ThrowError(1, true);
+					indexMap[vertexKey] = (uint)indexMap.Count;
 				}
+				indices.Add(indexMap[vertexKey]);
 			}
-			return [];
+
+			var distinctVertices = indexMap.Keys.SelectMany(v => v.Split(',').Select(float.Parse)).ToArray();
+			for (int i = 0; i < indices.Count; i++)
+			{
+				vertices[i * 3] = distinctVertices[(int)indices[i] * 3];
+				vertices[i * 3 + 1] = distinctVertices[(int)indices[i] * 3 + 1];
+				vertices[i * 3 + 2] = distinctVertices[(int)indices[i] * 3 + 2];
+			}
+			return indices.ToArray();
 		}
 
 		/// <summary>

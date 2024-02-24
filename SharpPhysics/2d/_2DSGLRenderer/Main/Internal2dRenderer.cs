@@ -23,6 +23,15 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
     public class Internal2dRenderer
 	{
 		/// <summary>
+		/// vbo data buffer
+		/// </summary>
+		public float[] vboDataBuf;
+		/// <summary>
+		/// Current loading ebo
+		/// </summary>
+		public uint[] curEbo;
+
+		/// <summary>
 		/// The time since the program started
 		/// </summary>
 		Stopwatch PlayTime = new();
@@ -490,8 +499,14 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 				BNDVAO(i);
 				// creates vbo
 				INITVBO(i);
+				// gets vbo data buffer
+				GTVBOBUF(i);
+				// gets ebo
+				GTEBO(i);
 				// sets vbo data
 				STVBO(i);
+				// sets ebo data
+				STEBO(i);
 				// compiles shaders and shader progs
 				CMPLPROGC(ObjectsToRender[i].VrtxShader, ObjectsToRender[i].FragShader, i);
 				// sets the texture supporting attributes
@@ -507,7 +522,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 				// sets the texture info to the shader
 				STTXTRUNI(i);
 			}
-
+			// cleans up a little
+			BUFCLNUP();
 			// loads user-defined info
 			OL.Invoke();
 			//initializes fps counter
@@ -549,6 +565,32 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			//STTXTRUNI();
 			//// loads user-defined info
 			//OL.Invoke();
+		}
+
+		public virtual void GTVBOBUF(int objid)
+		{
+			vboDataBuf = GVFPS(ObjectsToRender[objid].objToSim.ObjectMesh);
+		}
+
+		public virtual void BUFCLNUP()
+		{
+			Array.Clear(vboDataBuf);
+			Array.Clear(curEbo);
+		}
+		
+		public unsafe virtual void STEBO(int objid)
+		{
+			ObjectsToRender[objid].eboPtr = gl.GenBuffer();
+			gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, ObjectsToRender[objid].eboPtr);
+			fixed (void* i = &curEbo)
+			{
+				gl.BufferData(BufferTargetARB.ElementArrayBuffer, (nuint)(curEbo.Length * sizeof(uint)), i, BufferUsageARB.StaticDraw);
+			}
+		}
+
+		public virtual void GTEBO(int objid)
+		{
+			curEbo = RenderingUtils.GetEbo(ref vboDataBuf);
 		}
 
 		/// <summary>
@@ -706,7 +748,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public virtual unsafe void STVBO(int objid)
 		{
-			float[] data = MSHTXCRDS(GVFPS(ObjectsToRender[objid].objToSim.ObjectMesh), ObjectsToRender[objid].objToSim.ObjectMesh);
+			float[] data = MSHTXCRDS(vboDataBuf, ObjectsToRender[objid].objToSim.ObjectMesh);
 			fixed (float* buf = data)
 				gl.BufferData(BufferTargetARB.ArrayBuffer, (nuint)(sizeof(float) * data.Length), buf, BufferUsageARB.StaticDraw);
 		}
