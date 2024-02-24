@@ -2,14 +2,13 @@
 using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
-using SharpPhysics.Utilities.MISC.Errors;
 using Silk.NET.Core;
 using StbImageSharp;
 using static SharpPhysics.Utilities.MathUtils.GenericMathUtils;
 
 namespace SharpPhysics.Utilities.MISC
 {
-	public static class RenderingUtils
+    public static class RenderingUtils
 	{
 
 		static int i6 = 0;

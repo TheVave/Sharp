@@ -1,8 +1,8 @@
-﻿using SharpPhysics.Utilities.MISC.Errors;
+﻿using SharpPhysics.Utilities.MISC;
 
 namespace SharpPhysics.Renderer
 {
-	public class Color
+    public class Color
 	{
 		/// <summary>
 		/// The colors possible with a standard RGBA style.

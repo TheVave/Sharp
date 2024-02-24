@@ -5,7 +5,6 @@ using SharpPhysics.UI;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using SharpPhysics.Utilities.MISC;
-using SharpPhysics.Utilities.MISC.Errors;
 using Silk.NET.Core;
 using Silk.NET.Input;
 using Silk.NET.OpenGL;
@@ -16,12 +15,12 @@ using System.Numerics;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
 {
-	/// <summary>
-	/// Handled by the MainRendererSGL class.
-	/// Please do not interface directly unless you know what you're doing,
-	/// though useful if you want to make custom rendering code.
-	/// </summary>
-	public class Internal2dRenderer
+    /// <summary>
+    /// Handled by the MainRendererSGL class.
+    /// Please do not interface directly unless you know what you're doing,
+    /// though useful if you want to make custom rendering code.
+    /// </summary>
+    public class Internal2dRenderer
 	{
 		/// <summary>
 		/// The time since the program started

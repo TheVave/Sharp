@@ -3,11 +3,11 @@ using SharpPhysics._2d.ObjectRepresentation.Translation;
 using SharpPhysics._2d.Objects;
 using SharpPhysics._2d.Physics;
 using SharpPhysics._2d.Raycasting;
-using SharpPhysics.Utilities.MISC.Errors;
+using SharpPhysics.Utilities.MISC;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
-	public class SimulatedObject2d
+    public class SimulatedObject2d
 	{
 		/// <summary>
 		/// The object name
