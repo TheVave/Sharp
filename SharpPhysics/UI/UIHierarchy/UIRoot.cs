@@ -1,6 +1,4 @@
-﻿using SharpPhysics.UI.UIElements;
-
-namespace SharpPhysics.UI.UIHierarchy
+﻿namespace SharpPhysics.UI.UIHierarchy
 {
 	public static class UIRoot
 	{

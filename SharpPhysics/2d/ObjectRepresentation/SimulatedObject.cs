@@ -7,7 +7,7 @@ using SharpPhysics.Utilities.MISC;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
-    public class SimulatedObject2d
+	public class SimulatedObject2d
 	{
 		/// <summary>
 		/// The object name

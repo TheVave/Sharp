@@ -2,7 +2,7 @@
 
 namespace SharpPhysics.Renderer
 {
-    public class Color
+	public class Color
 	{
 		/// <summary>
 		/// The colors possible with a standard RGBA style.

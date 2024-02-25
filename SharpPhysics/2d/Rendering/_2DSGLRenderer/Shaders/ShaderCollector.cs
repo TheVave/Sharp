@@ -2,7 +2,7 @@
 
 namespace SharpPhysics._2d._2DSGLRenderer.Shaders
 {
-    public static class ShaderCollector
+	public static class ShaderCollector
 	{
 		public static string GetShader(string name)
 		{

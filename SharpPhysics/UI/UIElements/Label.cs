@@ -1,5 +1,4 @@
 ﻿using ImGuiNET;
-using SharpPhysics._2d.ObjectRepresentation;
 using System.Numerics;
 
 namespace SharpPhysics.UI.UIElements

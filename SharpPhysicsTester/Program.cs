@@ -1,8 +1,7 @@
 ﻿using SharpPhysics;
 using SharpPhysics.Input;
-using SharpPhysics.UI.UIHierarchy;
 using SharpPhysics.UI.UIElements;
-using SharpPhysics._2d._2DSVKRenderer.Main;
+using SharpPhysics.UI.UIHierarchy;
 double speed = 5;
 double camSpeed = 10;
 MainRendererSGL.ObjectsToRender = [new(), new()];

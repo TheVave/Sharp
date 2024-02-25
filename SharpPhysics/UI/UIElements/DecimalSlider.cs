@@ -1,5 +1,4 @@
 ﻿using ImGuiNET;
-using SharpPhysics._2d.ObjectRepresentation;
 using System.Numerics;
 
 namespace SharpPhysics.UI.UIElements
@@ -30,7 +29,7 @@ namespace SharpPhysics.UI.UIElements
 		public bool Draw()
 		{
 			ImGui.SliderFloat(Label, ref SliderVal, SliderMin, SliderMax);
-			
+
 			OnDraw.Invoke();
 			return true;
 		}

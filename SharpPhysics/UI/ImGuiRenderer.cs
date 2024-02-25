@@ -1,6 +1,8 @@
 ﻿using ImGuiNET;
 using SharpPhysics.UI.UIHierarchy;
+using Silk.NET.OpenGLES;
 using Silk.NET.OpenGL;
+using Silk.NET.OpenGLES.Extensions.ImGui;
 using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
 using System.Numerics;
@@ -9,20 +11,34 @@ namespace SharpPhysics.UI
 {
 	public class ImGuiRenderer
 	{
-		ImGuiController controller;
+		Silk.NET.OpenGL.Extensions.ImGui.ImGuiController controller;
+		Silk.NET.OpenGLES.Extensions.ImGui.ImGuiController controlleres;
 
 		public bool UseWindows = true;
 
-		public virtual void LD(IWindow wnd, GL gl)
+		public virtual void LD(IWindow wnd, Silk.NET.OpenGL.GL gl)
 		{
 			// initializes ImGui
 			InitCntxt(wnd, gl);
 		}
-		public virtual void InitCntxt(IWindow wnd, GL gl)
+		public virtual void LD(IWindow wnd, Silk.NET.OpenGLES.GL gl)
 		{
-			controller = new ImGuiController(
-				gl, // load OpenGL
-				wnd, // pass in our window
+			// initializes ImGui
+			InitCntxt(wnd, gl);
+		}
+		public virtual void InitCntxt(IWindow wnd, Silk.NET.OpenGL.GL gl)
+		{
+			controller = new Silk.NET.OpenGL.Extensions.ImGui.ImGuiController(
+				gl,
+				wnd,
+				MainRendererSGL.renderer.inputContext
+			);
+		}
+		public virtual void InitCntxt(IWindow wnd, Silk.NET.OpenGLES.GL gl)
+		{
+			controlleres = new Silk.NET.OpenGLES.Extensions.ImGui.ImGuiController(
+				gl,
+				wnd,
 				MainRendererSGL.renderer.inputContext
 			);
 		}
@@ -30,10 +46,11 @@ namespace SharpPhysics.UI
 		{
 			controller.Update((float)deltatime);
 
-			
+
 			//MainRendererSGL.renderer.gl.ClearColor(MainRendererSGL.renderer.clearBufferBit.R, MainRendererSGL.renderer.clearBufferBit.G, MainRendererSGL.renderer.clearBufferBit.B, MainRendererSGL.renderer.clearBufferBit.A);
 			foreach (UIWindow wnd in UIRoot.Windows)
-			{				ImGui.Begin(wnd.Title);
+			{
+				ImGui.Begin(wnd.Title);
 				foreach (IUIElement element in wnd.Elements)
 				{
 					if (element.Position != Vector2.Zero)

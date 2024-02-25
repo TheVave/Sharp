@@ -15,12 +15,12 @@ using System.Numerics;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
 {
-    /// <summary>
-    /// Handled by the MainRendererSGL class.
-    /// Please do not interface directly unless you know what you're doing,
-    /// though useful if you want to make custom rendering code.
-    /// </summary>
-    public class Internal2dRenderer
+	/// <summary>
+	/// Handled by the MainRendererSGL class.
+	/// Please do not interface directly unless you know what you're doing,
+	/// though useful if you want to make custom rendering code.
+	/// </summary>
+	public class Internal2dRenderer
 	{
 		/// <summary>
 		/// vbo data buffer
@@ -577,7 +577,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			Array.Clear(vboDataBuf);
 			Array.Clear(curEbo);
 		}
-		
+
 		public unsafe virtual void STEBO(int objid)
 		{
 			ObjectsToRender[objid].eboPtr = gl.GenBuffer();

@@ -22,7 +22,7 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 			if (calculateEdges)
 			{
 				Edges = GetEdges(this);
-			}			
+			}
 		}
 
 		public Triangle()
@@ -132,7 +132,7 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 			triangle.Vertex1.X = triangle.Vertex1.X * xSca;
 			triangle.Vertex2.X = triangle.Vertex2.X * xSca;
 			triangle.Vertex3.X = triangle.Vertex3.X * xSca;
-								 
+
 			triangle.Vertex1.Y = triangle.Vertex1.Y * ySca;
 			triangle.Vertex2.Y = triangle.Vertex2.Y * ySca;
 			triangle.Vertex3.Y = triangle.Vertex3.Y * ySca;

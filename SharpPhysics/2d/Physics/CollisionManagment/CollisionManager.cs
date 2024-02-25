@@ -5,7 +5,7 @@ using SharpPhysics.Utilities.MISC;
 
 namespace SharpPhysics._2d.Physics.CollisionManagement
 {
-    public static class _2dCollisionManager
+	public static class _2dCollisionManager
 	{
 
 

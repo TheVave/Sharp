@@ -1,6 +1,4 @@
-﻿using SharpPhysics._2d.ObjectRepresentation;
-using Silk.NET.OpenGL.Extensions.ImGui;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace SharpPhysics.UI.UIElements
 {

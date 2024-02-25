@@ -1,10 +1,5 @@
 ﻿using ImGuiNET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpPhysics.UI.UIElements
 {
@@ -25,7 +20,7 @@ namespace SharpPhysics.UI.UIElements
 				{
 					if (StartThreadForClick)
 					{
-						new Thread(OnClick.Invoke) { Name = "Render offshoot"}.Start();
+						new Thread(OnClick.Invoke) { Name = "Render offshoot" }.Start();
 					}
 					else
 					{

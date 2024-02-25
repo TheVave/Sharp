@@ -8,7 +8,7 @@ using static SharpPhysics.Utilities.MathUtils.GenericMathUtils;
 
 namespace SharpPhysics.Utilities.MISC
 {
-    public static class RenderingUtils
+	public static class RenderingUtils
 	{
 
 		static int i6 = 0;

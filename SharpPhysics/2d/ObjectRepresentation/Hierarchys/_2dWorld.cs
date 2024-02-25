@@ -3,7 +3,7 @@ using SharpPhysics.Utilities.MISC;
 
 namespace SharpPhysics
 {
-    [Serializable]
+	[Serializable]
 	public static class _2dWorld
 	{
 		public static _2dSceneHierarchy[] SceneHierarchies = [new()];

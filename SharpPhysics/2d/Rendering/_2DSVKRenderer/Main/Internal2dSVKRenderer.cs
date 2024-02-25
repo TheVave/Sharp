@@ -1,5 +1,4 @@
 ﻿using Silk.NET.GLFW;
-using Silk.NET.Vulkan;
 using Silk.NET.Windowing;
 
 namespace SharpPhysics._2d._2DSVKRenderer.Main
