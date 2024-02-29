@@ -171,7 +171,7 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 		// abomination of code.
 		public static float[] ToFloats3D(Triangle tri)
 		{
-			return ArrayUtils.ConcatArray(ArrayUtils.ConcatArray(tri.Vertex1.ToFloatArray3D(), tri.Vertex2.ToFloatArray3D()), tri.Vertex3.ToFloatArray3D());
+			return ArrayUtils.ConcatArray(ArrayUtils.ConcatArray(Point.ToFloatArray3D(tri.Vertex1), Point.ToFloatArray3D(tri.Vertex2)), Point.ToFloatArray3D(tri.Vertex3));
 		}
 		public static float[] ToFloats3D(Triangle[] tri)
 		{
@@ -184,7 +184,7 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 		}
 
 		public static Triangle Duplicate(Triangle triangle) =>
-			new(triangle.Vertex1.GetPointCopy(), triangle.Vertex2.GetPointCopy(), triangle.Vertex3.GetPointCopy());
+			new(Point.ShallowCopyPoint(triangle.Vertex1), Point.ShallowCopyPoint(triangle.Vertex2), Point.ShallowCopyPoint(triangle.Vertex3));
 
 		public bool HasVertex(Point vertex)
 		{

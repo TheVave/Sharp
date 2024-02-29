@@ -32,7 +32,7 @@ namespace SharpPhysics._2d.Physics.CollisionManagement
 						for (int j = 0; j < objectToCheckIfCollided.ObjectMesh.MeshPoints.Length; j++)
 						{
 							pnt = objectToCheckIfCollided.ObjectMesh.MeshPoints[j];
-							pnt.AddNoCheck(objectToCheckIfCollided.Translation.ObjectPosition);
+							Point.AddNoCheck2D(pnt, objectToCheckIfCollided.Translation.ObjectPosition);
 							result = MeshUtilities.IsInside(tri.Vertex1, tri.Vertex2, tri.Vertex3, pnt);
 							if (result)
 							{

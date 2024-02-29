@@ -1,6 +1,7 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation.Translation;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MISC;
+using System.Numerics;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
@@ -59,12 +60,13 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			Y = 0;
 		}
 
-		public Point GetPointCopy() =>
-			(this.Is3d) ? new(X, Y, Z) : new(X, Y);
 
-		public float[] ToFloatArray3D()
+		public static Point ShallowCopyPoint(Point pnt) =>
+			(pnt.Is3d) ? new(pnt.X, pnt.Y, pnt.Z) : new(pnt.X, pnt.Y);
+
+		public static float[] ToFloatArray3D(Point pnt)
 		{
-			return [(float)X, (float)Y, (float)Z];
+			return [(float)pnt.X, (float)pnt.Y, (float)pnt.Z];
 		}
 
 		public static implicit operator float[](Point p)
@@ -83,19 +85,20 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		public static Point operator -(Point p1, Point p2) =>
 			(p1.Is3d || p2.Is3d) ? new(p1.X - p2.X, p1.Y - p2.Y, p1.Z - p2.Z) : new(p1.X - p2.X, p1.Y - p2.Y);
 
+
 		/// <summary>
-		/// internal no check add
+		/// internal no check add for speed
 		/// </summary>
 		/// <param name="p"></param>
-		internal void AddNoCheck(Point p)
+		internal static void AddNoCheck2D(Point a, Point b)
 		{
-			X += p.X;
-			Y += p.Y;
+			a.X += b.X;
+			a.Y += b.Y;
 		}
-		internal void AddNoCheck(_2dPosition p)
+		internal static void AddNoCheck2D(Point a, _2dPosition b)
 		{
-			X += p.X;
-			Y += p.Y;
+			a.X += b.X;
+			a.Y += b.Y;
 		}
 
 		/// <summary>
@@ -104,11 +107,11 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// Y = Y + p.y
 		/// </summary>
 		/// <param name="p"></param>
-		// this includes some checkes
+		// this includes some checks
 		public void Add(Point p)
 		{
 			if (p == null) throw new InvalidOperationException("Cannot add point to null");
-			if (p.ContainsValue(double.NaN)) throw new InvalidOperationException("Point had a value of NaN");
+			if (ContainsValue(p, double.NaN)) throw new InvalidOperationException("Point had a value of NaN");
 			if (p.Is3d != this.Is3d) throw new InvalidOperationException("Unable to add points with non-similar dimensions");
 			X += p.X;
 			Y += p.Y;
@@ -119,8 +122,8 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// </summary>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		public bool ContainsValue(double value) =>
-			(value == X || value == Y || value == Z) ? false : true;
+		public static bool ContainsValue(Point pnt, double value) =>
+			value == pnt.X || value == pnt.Y || value == pnt.Z;
 
 		/// <summary>
 		/// Checks if a point array contains a value
@@ -132,7 +135,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		{
 			foreach (Point p in points)
 			{
-				if (p.ContainsValue(val) is true) return true;
+				if (ContainsValue(p, val) is true) return true;
 			}
 			return false;
 		}
@@ -147,9 +150,9 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		{
 			foreach (Point p in points)
 			{
-				if (!p.ContainsValue(val)) return true;
+				if (!ContainsValue(p, val)) return true;
 			}
-			return false;
+			return true;
 		}
 
 
