@@ -30,6 +30,16 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		public double FOV = 90;
 
 		/// <summary>
+		/// The original window size.
+		/// </summary>
+		public Size originalWindowSize { get; internal set; }
+
+		/// <summary>
+		/// The matrix to multiply by to handle window resizng
+		/// </summary>
+		public Matrix4x4 WindowResizeMatrix = Matrix4x4.Identity;
+
+		/// <summary>
 		/// Gets the camera projection matrix.
 		/// </summary>
 		/// <param name="rndr"></param>
@@ -58,9 +68,23 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			}
 
 			Matrix4x4 focus = Matrix4x4.CreateOrthographicOffCenter((float)left, (float)right, (float)top, (float)bottom, 0.1f, 100f);
-			Matrix4x4 zoom = Matrix4x4.CreateScale(Zoom);
+			Matrix4x4 zoom = /* WindowResizeMatrix * */ Matrix4x4.CreateScale(Zoom);
 
 			return focus * zoom;
+		}
+
+		public void HandleResize(Size newSize)
+		{
+			// using fractions because the number b small
+
+			int xMultTop = 1;
+			int xMultBottom = originalWindowSize.Width;
+			int yMultTop = 1;
+			int yMultBottom = originalWindowSize.Height;
+
+
+
+			//WindowResizeMatrix = Matrix4x4.Identity + Matrix4x4.CreateScale((float)((newSize.Width - originalWindowSize.Width) / xMultBottom), (float)((newSize.Height - originalWindowSize.Height) / yMultBottom),1);
 		}
 	}
 }

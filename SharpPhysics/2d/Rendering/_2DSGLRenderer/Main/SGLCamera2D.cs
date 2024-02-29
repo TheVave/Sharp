@@ -1,5 +1,5 @@
-﻿using System.Numerics;
-
+﻿using System.Drawing;
+using System.Numerics;
 namespace SharpPhysics.Renderer.Cameras
 {
 	public class SGLCamera2D
@@ -12,7 +12,5 @@ namespace SharpPhysics.Renderer.Cameras
 			FocusPosition = focusPosition;
 			Zoom = zoom;
 		}
-
-
 	}
 }

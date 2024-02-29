@@ -21,7 +21,7 @@ namespace SharpPhysics.UI
 			// initializes ImGui
 			InitCntxt(wnd, gl);
 		}
-		public virtual void LD(IWindow wnd, Silk.NET.OpenGLES.GL gl)
+		public virtual void LD(IView wnd, Silk.NET.OpenGLES.GL gl)
 		{
 			// initializes ImGui
 			InitCntxt(wnd, gl);
@@ -34,7 +34,7 @@ namespace SharpPhysics.UI
 				MainRendererSGL.renderer.inputContext
 			);
 		}
-		public virtual void InitCntxt(IWindow wnd, Silk.NET.OpenGLES.GL gl)
+		public virtual void InitCntxt(IView wnd, Silk.NET.OpenGLES.GL gl)
 		{
 			controlleres = new Silk.NET.OpenGLES.Extensions.ImGui.ImGuiController(
 				gl,

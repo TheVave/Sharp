@@ -1,5 +1,7 @@
-﻿using SharpPhysics._2d._2DSGLRenderer.Main;
+﻿using SharpPhysics._2d._2DSGLESRenderer.Main;
+using SharpPhysics._2d._2DSGLRenderer.Main;
 using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics._2d.Renderer._2DSGLESRenderer.Main;
 using SharpPhysics.Renderer;
 using System.Drawing;
 
@@ -7,7 +9,7 @@ namespace SharpPhysics
 {
 	public static class MainRendererSGLES
 	{
-		public static Internal2dRenderer renderer = new();
+		public static Internal2dRendererES renderer = new();
 
 		/// <summary>
 		/// If the program should instruct OpenGL to use 8-bit style textures.
@@ -29,7 +31,7 @@ namespace SharpPhysics
 		/// <summary>
 		/// The objects to render
 		/// </summary>
-		public static SGLRenderedObject[] ObjectsToRender
+		public static SGLESRenderedObject[] ObjectsToRender
 		{
 			get
 			{
@@ -44,7 +46,7 @@ namespace SharpPhysics
 		/// <summary>
 		/// The camera to render all of the objects to.
 		/// </summary>
-		public static _2dCamera Camera
+		public static _2d.Renderer._2DSGLESRenderer.Main._2dCamera Camera
 		{
 			get
 			{
@@ -137,7 +139,7 @@ namespace SharpPhysics
 		public static void InitRendering()
 		{
 			renderer.wndSize = new _2d._2DSGLRenderer.Size(1080, 1500);
-			renderer.ISGL();
+			renderer.ISGLES();
 		}
 	}
 }

@@ -12,6 +12,7 @@ using Silk.NET.Windowing;
 using StbImageSharp;
 using System.Diagnostics;
 using System.Numerics;
+using Silk.NET.Windowing.Sdl;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
 {
@@ -161,11 +162,12 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			Wnd.FramebufferResize += s =>
 			{
 				gl.Viewport(s);
+				//Cam.HandleResize(new Size(s.X, s.Y));
 			};
 		}
 
 		/// <summary>
-		/// Compiles the shader with the specified name in shaders.resx
+		/// Compiles the shader with the specified name in shaders
 		/// </summary>
 		/// <param name="name"></param>
 		public virtual uint CMPLSHDRN(string name, Silk.NET.OpenGL.ShaderType type, int objID)
@@ -492,6 +494,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			STCLRCOLR(ColorName.Blue);
 			// sets texture settings
 			TXRHINTS();
+			// loads camera info
+			Cam.originalWindowSize = wndSize;
 
 			for (int i = 0; i < ObjectsToRender.Length; i++)
 			{

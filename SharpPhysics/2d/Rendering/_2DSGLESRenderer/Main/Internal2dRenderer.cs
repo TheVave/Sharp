@@ -19,7 +19,7 @@ using SharpPhysics._2d.Renderer._2DSGLESRenderer.Main;
 namespace SharpPhysics._2d._2DSGLESRenderer.Main
 {
 	/// <summary>
-	/// Handled by the MainRendererSGL class.
+	/// Handled by the MainRendererSGLES class.
 	/// Please do not interface directly unless you know what you're doing,
 	/// though useful if you want to make custom rendering code.
 	/// </summary>
@@ -63,7 +63,7 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// <summary>
 		/// Window ref
 		/// </summary>
-		public IWindow Wnd;
+		public IView Wnd;
 
 		/// <summary>
 		/// The objects to render
@@ -129,7 +129,7 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// Initializes SGL (Silk.net openGL) and the Wnd object
 		/// 
 		/// </summary>
-		public virtual void ISGL()
+		public virtual void ISGLES()
 		{
 			// window init
 			SWCNFG();
@@ -305,8 +305,8 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// </summary>
 		public virtual void STLOGO()
 		{
-			RawImage img = RenderingUtils.GetRawImageFromImageResult(ImageResult.FromMemory(File.ReadAllBytes($"{Environment.CurrentDirectory}\\logo.png"), ColorComponents.RedGreenBlueAlpha));
-			Wnd.SetWindowIcon(ref img);
+			//RawImage img = RenderingUtils.GetRawImageFromImageResult(ImageResult.FromMemory(File.ReadAllBytes($"{Environment.CurrentDirectory}\\logo.png"), ColorComponents.RedGreenBlueAlpha));
+			//Wnd.SetWindowIcon(ref img);
 		}
 
 		/// <summary>
@@ -314,7 +314,8 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// </summary>
 		public virtual void INITWND()
 		{
-			Wnd = Silk.NET.Windowing.Window.Create(WndOptions);
+			ViewOptions? options = ViewOptions.Default with { API = new GraphicsAPI(ContextAPI.OpenGLES, ContextProfile.Core, ContextFlags.Default, new APIVersion(3, 3)), VSync = false };
+			Wnd = Window.GetView(options);
 		}
 
 		/// <summary>
