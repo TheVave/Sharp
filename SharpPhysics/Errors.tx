@@ -1,8 +1,0 @@
-Error, Internal/External error, unable to generate EBO, this is often an indication that there is mesh corruption.
-Error, External error, Missing resource or incorrectly formatted file.
-Error, Internal/External error, shader compilation failed.
-Error, Internal Error, Compiler link failed.
-Error, Internal/External error, unknown cause.
-Error, Internal Error, objects triangles or points not initialized, attempting auto-correct.
-Error, Internal Error, objectToCheck points not initialized, mesh missing.
-Error, Internal Error, Color.Color(ColorName key) failed.

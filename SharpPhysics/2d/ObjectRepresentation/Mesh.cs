@@ -51,6 +51,11 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// </summary>
 		public readonly Triangle[] ActualTriangles;
 
+		/// <summary>
+		/// The maximum distance of the origin to mesh
+		/// </summary>
+		public double MaximumDistanceFromCenter;
+
 		public Mesh()
 		{
 			Mesh mesh = _2dBaseObjects.LoadSquareMesh();

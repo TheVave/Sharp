@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.Numerics;
 using SharpPhysics._2d._2DSGLRenderer.Shaders;
 using SharpPhysics._2d.Renderer._2DSGLESRenderer.Main;
+using SharpPhysics._2d._2DSGLRenderer.Main;
 namespace SharpPhysics._2d._2DSGLESRenderer.Main
 {
 	/// <summary>
@@ -66,9 +67,34 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		public IView Wnd;
 
 		/// <summary>
-		/// The objects to render
+		/// The objects to render, auto-generated from SceneToRenderId
 		/// </summary>
-		public SGLESRenderedObject[] ObjectsToRender = [];
+		internal SGLESRenderedObject[] ObjectsToRender = [];
+
+		/// <summary>
+		/// The scene to render
+		/// </summary>
+		public short SceneToRenderId
+		{
+			get
+			{
+				return InternalSceneToRenderId;
+			}
+			set
+			{
+				ObjectsToRender = new SGLESRenderedObject[_2dWorld.SceneHierarchies[value].Objects.Length];
+				for (int i = 0; i < ObjectsToRender.Length; i++)
+				{
+					ObjectsToRender[i].objToSim = _2dWorld.SceneHierarchies[value].Objects[i];
+				}
+				InternalSceneToRenderId = value;
+			}
+		}
+
+		/// <summary>
+		/// Internal actual rendering scene id
+		/// </summary>
+		private short InternalSceneToRenderId = 0;
 
 		/// <summary>
 		/// wnd title
@@ -93,7 +119,7 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// <summary>
 		/// GL context
 		/// </summary>
-		public GL gl;
+		public GL gles;
 
 		/// <summary>
 		/// The color to clear to
@@ -118,7 +144,7 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// <summary>
 		/// The camera to render out of.
 		/// </summary>
-		public _2dCamera Cam = new();
+		public _2dESCamera Cam = new();
 
 		/// <summary>
 		/// The input context.
@@ -163,7 +189,7 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 			};
 			Wnd.FramebufferResize += s =>
 			{
-				gl.Viewport(s);
+				gles.Viewport(s);
 			};
 		}
 
@@ -173,11 +199,11 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// <param name="name"></param>
 		public virtual uint CMPLSHDRN(string name, Silk.NET.OpenGLES.ShaderType type, int objID)
 		{
-			uint ptr = gl.CreateShader(type);
-			gl.ShaderSource(ptr, ShaderCollector.GetShader(name));
+			uint ptr = gles.CreateShader(type);
+			gles.ShaderSource(ptr, ShaderCollector.GetShader(name));
 
-			gl.CompileShader(ptr);
-			gl.GetShader(ptr, ShaderParameterName.CompileStatus, out int status);
+			gles.CompileShader(ptr);
+			gles.GetShader(ptr, ShaderParameterName.CompileStatus, out int status);
 			if (status != /* if it has failed */ 1)
 			{
 				// 3
@@ -199,11 +225,11 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		}
 		public virtual uint CMPLSHDRC(string code, Silk.NET.OpenGLES.ShaderType type, int objID)
 		{
-			uint ptr = gl.CreateShader(type);
-			gl.ShaderSource(ptr, code);
+			uint ptr = gles.CreateShader(type);
+			gles.ShaderSource(ptr, code);
 
-			gl.CompileShader(ptr);
-			gl.GetShader(ptr, ShaderParameterName.CompileStatus, out int status);
+			gles.CompileShader(ptr);
+			gles.GetShader(ptr, ShaderParameterName.CompileStatus, out int status);
 			if (status != /* if it has failed */ 1)
 			{
 				// 3
@@ -236,14 +262,14 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 			uint shdr2 = CMPLSHDRN(name2, Silk.NET.OpenGLES.ShaderType.FragmentShader, objID);
 
 			uint prog;
-			prog = gl.CreateProgram();
+			prog = gles.CreateProgram();
 
-			gl.AttachShader(prog, shdr1);
-			gl.AttachShader(prog, shdr2);
+			gles.AttachShader(prog, shdr1);
+			gles.AttachShader(prog, shdr2);
 
-			gl.LinkProgram(prog);
+			gles.LinkProgram(prog);
 
-			gl.GetProgram(prog, ProgramPropertyARB.LinkStatus, out int status);
+			gles.GetProgram(prog, ProgramPropertyARB.LinkStatus, out int status);
 			// 1s good.
 			if (status is not 1)
 			{
@@ -251,11 +277,11 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 				ErrorHandler.ThrowError(4, true);
 			}
 
-			gl.DeleteShader(shdr1);
-			gl.DeleteShader(shdr2);
+			gles.DeleteShader(shdr1);
+			gles.DeleteShader(shdr2);
 
-			gl.DetachShader(prog, shdr1);
-			gl.DetachShader(prog, shdr2);
+			gles.DetachShader(prog, shdr1);
+			gles.DetachShader(prog, shdr2);
 
 			ObjectsToRender[objID].Program.ProgramPtr = prog;
 
@@ -274,14 +300,14 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 			uint shdr2 = CMPLSHDRC(code2, Silk.NET.OpenGLES.ShaderType.FragmentShader, objID);
 
 			uint prog;
-			prog = gl.CreateProgram();
+			prog = gles.CreateProgram();
 
-			gl.AttachShader(prog, shdr1);
-			gl.AttachShader(prog, shdr2);
+			gles.AttachShader(prog, shdr1);
+			gles.AttachShader(prog, shdr2);
 
-			gl.LinkProgram(prog);
+			gles.LinkProgram(prog);
 
-			gl.GetProgram(prog, ProgramPropertyARB.LinkStatus, out int status);
+			gles.GetProgram(prog, ProgramPropertyARB.LinkStatus, out int status);
 			// 1s good.
 			if (status is not 1)
 			{
@@ -289,11 +315,11 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 				ErrorHandler.ThrowError(4, true);
 			}
 
-			gl.DeleteShader(shdr1);
-			gl.DeleteShader(shdr2);
+			gles.DeleteShader(shdr1);
+			gles.DeleteShader(shdr2);
 
-			gl.DetachShader(prog, shdr1);
-			gl.DetachShader(prog, shdr2);
+			gles.DetachShader(prog, shdr1);
+			gles.DetachShader(prog, shdr2);
 
 			ObjectsToRender[objID].Program.ProgramPtr = prog;
 
@@ -386,12 +412,12 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		public unsafe virtual void SELOBJ(int objectID)
 		{
 			// select vao
-			gl.BindVertexArray(ObjectsToRender[objectID].BoundVao);
-			gl.UseProgram(ObjectsToRender[objectID].Program.ProgramPtr);
+			gles.BindVertexArray(ObjectsToRender[objectID].BoundVao);
+			gles.UseProgram(ObjectsToRender[objectID].Program.ProgramPtr);
 
 			// use texture
-			gl.ActiveTexture(TextureUnit.Texture0);
-			gl.BindTexture(TextureTarget.Texture2D, ObjectsToRender[objectID].TexturePtr);
+			gles.ActiveTexture(TextureUnit.Texture0);
+			gles.BindTexture(TextureTarget.Texture2D, ObjectsToRender[objectID].TexturePtr);
 		}
 
 		/// <summary>
@@ -401,7 +427,7 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		public unsafe virtual void DRWOBJ(int objectID)
 		{
 			STTRNSFRMM4(objectID, "mod");
-			gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)ObjectsToRender[objectID].objToSim.ObjectMesh.MeshTriangles.Length * 3);
+			gles.DrawArrays(PrimitiveType.Triangles, 0, (uint)ObjectsToRender[objectID].objToSim.ObjectMesh.MeshTriangles.Length * 3);
 		}
 
 		/// <summary>
@@ -427,8 +453,8 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// <param name="name"></param>
 		public unsafe virtual void STTRNSFRMM4(int objectID, string name)
 		{
-			int pos = gl.GetUniformLocation(ObjectsToRender[objectID].Program.ProgramPtr, name);
-			gl.UniformMatrix4(pos, false, GetMatrix4x4Values(GTTRNSFRMMTRX(objectID) * GTCMRAMTRX()));
+			int pos = gles.GetUniformLocation(ObjectsToRender[objectID].Program.ProgramPtr, name);
+			gles.UniformMatrix4(pos, false, GetMatrix4x4Values(GTTRNSFRMMTRX(objectID) * GTCMRAMTRX()));
 		}
 
 		/// <summary>
@@ -535,7 +561,7 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 			// sets logo
 			STLOGO();
 			// inits ImGui
-			guiRenderer.LD(Wnd, gl);
+			guiRenderer.LD(Wnd, gles);
 
 			// old code:
 
@@ -584,11 +610,11 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 
 		public unsafe virtual void STEBO(int objid)
 		{
-			ObjectsToRender[objid].eboPtr = gl.GenBuffer();
-			gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, ObjectsToRender[objid].eboPtr);
+			ObjectsToRender[objid].eboPtr = gles.GenBuffer();
+			gles.BindBuffer(BufferTargetARB.ElementArrayBuffer, ObjectsToRender[objid].eboPtr);
 			fixed (void* i = &curEbo)
 			{
-				gl.BufferData(BufferTargetARB.ElementArrayBuffer, (nuint)(curEbo.Length * sizeof(uint)), i, BufferUsageARB.StaticDraw);
+				gles.BufferData(BufferTargetARB.ElementArrayBuffer, (nuint)(curEbo.Length * sizeof(uint)), i, BufferUsageARB.StaticDraw);
 			}
 		}
 
@@ -610,9 +636,9 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// </summary>
 		public virtual void TXINIT(int objid)
 		{
-			ObjectsToRender[objid].TexturePtr = gl.GenTexture();
-			gl.ActiveTexture(TextureUnit.Texture0);
-			gl.BindTexture(TextureTarget.Texture2D, ObjectsToRender[objid].TexturePtr);
+			ObjectsToRender[objid].TexturePtr = gles.GenTexture();
+			gles.ActiveTexture(TextureUnit.Texture0);
+			gles.BindTexture(TextureTarget.Texture2D, ObjectsToRender[objid].TexturePtr);
 		}
 
 		/// <summary>
@@ -632,7 +658,7 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 			}
 			fixed (byte* ptr = result.Data)
 			{
-				gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba, (uint)result.Width,
+				gles.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba, (uint)result.Width,
 					(uint)result.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, ptr);
 			}
 		}
@@ -656,11 +682,11 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// </summary>
 		public unsafe virtual void TXRHINTS()
 		{
-			gl.BindTexture(TextureTarget.Texture2D, ObjectsToRender[0].TexturePtr);
-			gl.TexParameter(GLEnum.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-			gl.TexParameter(GLEnum.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
-			gl.TexParameter(GLEnum.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
-			gl.TexParameter(GLEnum.Texture2D, TextureParameterName.TextureMagFilter, (int)((!MainRendererSGL.Use8BitStyleTextures) ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
+			gles.BindTexture(TextureTarget.Texture2D, ObjectsToRender[0].TexturePtr);
+			gles.TexParameter(GLEnum.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+			gles.TexParameter(GLEnum.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+			gles.TexParameter(GLEnum.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
+			gles.TexParameter(GLEnum.Texture2D, TextureParameterName.TextureMagFilter, (int)((!MainRendererSGL.Use8BitStyleTextures) ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
 		}
 
 		/// <summary>
@@ -668,7 +694,7 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// </summary>
 		public virtual void GNMPMPS()
 		{
-			gl.GenerateMipmap(TextureTarget.Texture2D);
+			gles.GenerateMipmap(TextureTarget.Texture2D);
 		}
 
 		/// <summary>
@@ -676,10 +702,10 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// </summary>
 		public virtual void STTXTRUNI(int objid)
 		{
-			gl.BindTexture(TextureTarget.Texture2D, (uint)objid);
+			gles.BindTexture(TextureTarget.Texture2D, (uint)objid);
 
-			int location = gl.GetUniformLocation(ObjectsToRender[objid].Program.ProgramPtr, "uTexture");
-			gl.Uniform1(location, 0);
+			int location = gles.GetUniformLocation(ObjectsToRender[objid].Program.ProgramPtr, "uTexture");
+			gles.Uniform1(location, 0);
 		}
 
 		/// <summary>
@@ -687,8 +713,8 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// </summary>
 		public virtual void ENABLBLEND()
 		{
-			gl.Enable(EnableCap.Blend);
-			gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			gles.Enable(EnableCap.Blend);
+			gles.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 		}
 
 		/// <summary>
@@ -696,9 +722,9 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// </summary>
 		public virtual void BFRST(uint objid)
 		{
-			gl.BindVertexArray(objid);
-			gl.BindBuffer(BufferTargetARB.ArrayBuffer, objid);
-			gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, objid);
+			gles.BindVertexArray(objid);
+			gles.BindBuffer(BufferTargetARB.ArrayBuffer, objid);
+			gles.BindBuffer(BufferTargetARB.ElementArrayBuffer, objid);
 		}
 
 		/// <summary>
@@ -721,8 +747,8 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// </summary>
 		public virtual void BNDVAO(int objid)
 		{
-			ObjectsToRender[objid].BoundVao = gl.GenVertexArray();
-			gl.BindVertexArray(ObjectsToRender[objid].BoundVao);
+			ObjectsToRender[objid].BoundVao = gles.GenVertexArray();
+			gles.BindVertexArray(ObjectsToRender[objid].BoundVao);
 		}
 
 		/// <summary>
@@ -733,12 +759,12 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 			const uint stride = (3 * sizeof(float)) + (2 * sizeof(float));
 
 			const uint positionLoc = 0;
-			gl.EnableVertexAttribArray(positionLoc);
-			gl.VertexAttribPointer(positionLoc, 3, VertexAttribPointerType.Float, false, stride, (void*)0);
+			gles.EnableVertexAttribArray(positionLoc);
+			gles.VertexAttribPointer(positionLoc, 3, VertexAttribPointerType.Float, false, stride, (void*)0);
 
 			const uint textureLoc = 1;
-			gl.EnableVertexAttribArray(textureLoc);
-			gl.VertexAttribPointer(textureLoc, 2, VertexAttribPointerType.Float, false, stride, (void*)(3 * sizeof(float)));
+			gles.EnableVertexAttribArray(textureLoc);
+			gles.VertexAttribPointer(textureLoc, 2, VertexAttribPointerType.Float, false, stride, (void*)(3 * sizeof(float)));
 		}
 
 		/// <summary>
@@ -755,7 +781,7 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		{
 			float[] data = MSHTXCRDS(vboDataBuf, ObjectsToRender[objid].objToSim.ObjectMesh);
 			fixed (float* buf = data)
-				gl.BufferData(BufferTargetARB.ArrayBuffer, (nuint)(sizeof(float) * data.Length), buf, BufferUsageARB.StaticDraw);
+				gles.BufferData(BufferTargetARB.ArrayBuffer, (nuint)(sizeof(float) * data.Length), buf, BufferUsageARB.StaticDraw);
 		}
 
 		/// <summary>
@@ -763,8 +789,8 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// </summary>
 		public virtual void INITVBO(int objid)
 		{
-			ObjectsToRender[objid].vbo = gl.GenBuffer();
-			gl.BindBuffer(BufferTargetARB.ArrayBuffer, ObjectsToRender[objid].vbo);
+			ObjectsToRender[objid].vbo = gles.GenBuffer();
+			gles.BindBuffer(BufferTargetARB.ArrayBuffer, ObjectsToRender[objid].vbo);
 		}
 
 		/// <summary>
@@ -772,7 +798,7 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// </summary>
 		public virtual void INTGLCNTXT()
 		{
-			gl = Wnd.CreateOpenGLES();
+			gles = Wnd.CreateOpenGLES();
 		}
 		/// <summary>
 		/// sets the clear color.
@@ -783,7 +809,7 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		public virtual void STCLRCOLR(ColorName name)
 		{
 			Color clr = new Color(name);
-			gl.ClearColor(clr.R, clr.G, clr.B, clr.A);
+			gles.ClearColor(clr.R, clr.G, clr.B, clr.A);
 			clearBufferBit = clr;
 		}
 
@@ -796,7 +822,7 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// <param name="a"></param>
 		public virtual void STCLRCOLR(byte r, byte g, byte b, byte a)
 		{
-			gl.ClearColor(r, g, b, a);
+			gles.ClearColor(r, g, b, a);
 			clearBufferBit = new Color(r, g, b, a);
 		}
 
@@ -805,7 +831,7 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 		/// </summary>
 		public virtual void CLR()
 		{
-			gl.Clear(ClearBufferMask.ColorBufferBit);
+			gles.Clear(ClearBufferMask.ColorBufferBit);
 		}
 
 		/// <summary>
@@ -832,5 +858,6 @@ namespace SharpPhysics._2d._2DSGLESRenderer.Main
 				m.M43,
 				m.M44
 			];
+
 	}
 }

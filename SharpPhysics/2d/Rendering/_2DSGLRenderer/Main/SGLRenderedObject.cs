@@ -1,9 +1,10 @@
 ﻿using SharpPhysics._2d._2DSGLRenderer.Shaders;
 using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics.Utilities.MISC.Unsafe;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
 {
-	public class SGLRenderedObject
+	public unsafe class SGLRenderedObject
 	{
 		/// <summary>
 		/// The vao that contains all the VRAM data
@@ -53,6 +54,30 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// the object to simulate
 		/// </summary>
-		public SimulatedObject2d objToSim = new();
+		public SimulatedObject2d* objToSim;
+
+		/// <summary>
+		/// The rendered objects hash code.
+		/// Significantly speeds up adding and removing objects.
+		/// NOTE: DO NOT CHANGE!
+		/// </summary>
+		internal long HashCode;
+
+		/// <summary>
+		/// If the objToSim needs to be freed to prevent a mem leak once the object is disposed.
+		/// </summary>
+		internal bool NeedMemFreeSimulatedObject2d = true;
+
+		/// <summary>
+		/// If the renderer/other SP parts are loading info for the renderer.
+		/// </summary>
+		internal bool CurrentlyLoadingInfo = false;
+
+		~SGLRenderedObject()
+		{
+			// removes the UnsafeUtils.Malloc'd memory to prevent mem leak
+			if (NeedMemFreeSimulatedObject2d)
+				UnsafeUtils.Free(objToSim);
+		}
 	}
 }

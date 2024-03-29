@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace SharpPhysics._2d.Renderer._2DSGLESRenderer.Main
 {
-	public class _2dCamera
+	public class _2dESCamera
 	{
 		/// <summary>
 		/// The point the camera will focus on.

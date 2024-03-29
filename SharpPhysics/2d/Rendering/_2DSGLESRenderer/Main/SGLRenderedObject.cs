@@ -55,5 +55,10 @@ namespace SharpPhysics._2d.Renderer._2DSGLESRenderer.Main
 		/// the object to simulate
 		/// </summary>
 		public SimulatedObject2d objToSim = new();
+
+		/// <summary>
+		/// If the object should be rendered.
+		/// </summary>
+		public bool ShouldBeRendered = true;
 	}
 }

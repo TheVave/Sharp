@@ -46,7 +46,7 @@ namespace SharpPhysics
 		/// <summary>
 		/// The camera to render all of the objects to.
 		/// </summary>
-		public static _2d.Renderer._2DSGLESRenderer.Main._2dCamera Camera
+		public static _2dESCamera Camera
 		{
 			get
 			{

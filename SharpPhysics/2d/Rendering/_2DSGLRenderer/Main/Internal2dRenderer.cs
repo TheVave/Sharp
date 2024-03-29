@@ -1,7 +1,9 @@
 ﻿using SharpPhysics._2d._2DSGLRenderer.Shaders;
 using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics._2d.ObjectRepresentation.Hierarchies;
 using SharpPhysics.Renderer;
 using SharpPhysics.UI;
+using SharpPhysics.Utilities;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using SharpPhysics.Utilities.MISC;
@@ -12,7 +14,6 @@ using Silk.NET.Windowing;
 using StbImageSharp;
 using System.Diagnostics;
 using System.Numerics;
-using Silk.NET.Windowing.Sdl;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
 {
@@ -27,10 +28,27 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// vbo data buffer
 		/// </summary>
 		public float[] vboDataBuf;
+
+		/// <summary>
+		/// If the program needs to suspend rendering
+		/// </summary>
+		// Used while objects to render are being updated
+		public bool PauseRender = false;
+
 		/// <summary>
 		/// Current loading ebo
 		/// </summary>
 		public uint[] curEbo;
+
+		/// <summary>
+		/// if the rendering process should temporarily suspend rendering to load a object 
+		/// </summary>
+		public int? ExecuteLoading;
+
+		/// <summary>
+		/// What object the program should remove in the main loop.
+		/// </summary>
+		public int? ExecuteRemove;
 
 		/// <summary>
 		/// The time since the program started
@@ -64,9 +82,39 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		public IWindow Wnd;
 
 		/// <summary>
-		/// The objects to render
+		/// The objects to render, auto-generated from SceneToRenderId
 		/// </summary>
-		public SGLRenderedObject[] ObjectsToRender = [];
+		internal SGLRenderedObject[] ObjectsToRender = [];
+
+		/// <summary>
+		/// The scene to render
+		/// </summary>
+		public short SceneToRenderId
+		{
+			get
+			{
+				return InternalSceneToRenderId;
+			}
+			set
+			{
+				unsafe
+				{
+					ObjectsToRender = new SGLRenderedObject[_2dWorld.SceneHierarchies[value].Objects.Length];
+					SimulatedObject2d obj;
+					for (int i = 0; i < ObjectsToRender.Length; i++)
+					{
+						obj = _2dWorld.SceneHierarchies[value].Objects[i];
+						ObjectsToRender[i].objToSim = &obj;
+					}
+					InternalSceneToRenderId = value;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Internal actual rendering scene id
+		/// </summary>
+		private short InternalSceneToRenderId = 0;
 
 		/// <summary>
 		/// wnd title
@@ -124,6 +172,11 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		public IInputContext inputContext;
 
 		/// <summary>
+		/// the amount of passed frames
+		/// </summary>
+		double frames = 0;
+
+		/// <summary>
 		/// Initializes SGL (Silk.net openGL) and the Wnd object
 		/// 
 		/// </summary>
@@ -136,6 +189,17 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			WES();
 			// calling
 			CLWND();
+		}
+
+		/// <summary>
+		/// Upmost method of deleting objects in the GL instance
+		/// </summary>
+		/// <param name="objid"></param>
+		public virtual void MNDELOBJ() {
+			if (ExecuteRemove is not null) 
+			{
+				DELOBJ((uint)ExecuteRemove);
+			}
 		}
 
 		/// <summary>
@@ -229,32 +293,47 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <param name="name"></param>
 		/// <param name="name2"></param>
 		/// <returns></returns>
+		// NEW CHANGE: DOESN'T COMPILE UNNECESSARY SHADERS
 		public virtual uint CMPLPROGN(string name, string name2, int objID)
 		{
-			uint shdr1 = CMPLSHDRN(name, Silk.NET.OpenGL.ShaderType.VertexShader, objID);
-			uint shdr2 = CMPLSHDRN(name2, Silk.NET.OpenGL.ShaderType.FragmentShader, objID);
-
+			int? otherSames = null;
 			uint prog;
-			prog = gl.CreateProgram();
+			for (int i = 0; i < ShaderCollector.Pairs.Count - 1; i++)
+				if (ShaderCollector.Pairs[i] == ShaderCollector.Pairs[ShaderCollector.Pairs.Count - 1])
+				{
+					otherSames = i;
+				}
 
-			gl.AttachShader(prog, shdr1);
-			gl.AttachShader(prog, shdr2);
-
-			gl.LinkProgram(prog);
-
-			gl.GetProgram(prog, ProgramPropertyARB.LinkStatus, out int status);
-			// 1s good.
-			if (status is not 1)
+			if (otherSames == null)
 			{
-				// 4
-				ErrorHandler.ThrowError(4, true);
+				uint shdr1 = CMPLSHDRN(name, Silk.NET.OpenGL.ShaderType.VertexShader, objID);
+				uint shdr2 = CMPLSHDRN(name2, Silk.NET.OpenGL.ShaderType.FragmentShader, objID);
+
+				prog = gl.CreateProgram();
+
+				gl.AttachShader(prog, shdr1);
+				gl.AttachShader(prog, shdr2);
+
+				gl.LinkProgram(prog);
+
+				gl.GetProgram(prog, ProgramPropertyARB.LinkStatus, out int status);
+				// 1s good.
+				if (status is not 1)
+				{
+					// 4
+					ErrorHandler.ThrowError(4, true);
+				}
+
+				gl.DeleteShader(shdr1);
+				gl.DeleteShader(shdr2);
+
+				gl.DetachShader(prog, shdr1);
+				gl.DetachShader(prog, shdr2);
 			}
-
-			gl.DeleteShader(shdr1);
-			gl.DeleteShader(shdr2);
-
-			gl.DetachShader(prog, shdr1);
-			gl.DetachShader(prog, shdr2);
+			else
+			{
+				prog = (uint)otherSames;
+			}
 
 			ObjectsToRender[objID].Program.ProgramPtr = prog;
 
@@ -316,6 +395,14 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			Wnd = Silk.NET.Windowing.Window.Create(WndOptions);
 		}
 
+		public virtual void MNINITSNGLOBJ()
+		{
+			if (ExecuteLoading != null)
+			{
+				INITSNGLOBJ((int)ExecuteLoading);
+			}
+		}
+
 		/// <summary>
 		/// Starts the window
 		/// </summary>
@@ -325,21 +412,33 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		}
 
 		/// <summary>
-		/// the amount of passed frames
-		/// </summary>
-		double frames = 0;
-
-		/// <summary>
 		/// Called every frame to render the object(s)
 		/// </summary>
 		public unsafe virtual void RNDR(double deltaTime)
 		{
 			CLR();
 
+			MNINITSNGLOBJ();
+			MNDELOBJ();
+
+
+
 			for (int i = 0; i < ObjectsToRender.Length; i++)
 			{
-				SELOBJ(i);
-				DRWOBJ(i);
+				if (PauseRender)
+				{
+					AWTUNPAWSRNDR();
+				}
+
+				try
+				{
+					SELOBJ(i);
+					DRWOBJ(i);
+				}
+				catch
+				{
+					// object probably not initialized. Shouldn't crash.
+				}
 			}
 
 			if (GetFPS)
@@ -349,6 +448,22 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 
 			// imgui
 			guiRenderer.ImGuiRndr(deltaTime);
+		}
+
+		/// <summary>
+		/// Awaits rendering unpausing
+		/// </summary>
+		public virtual void AWTUNPAWSRNDR()
+		{
+			while (PauseRender)
+			{
+				// a little less than a frame
+				Task.Delay(3);
+				if (ExecuteLoading != null)
+				{
+					INITSNGLOBJ((int)ExecuteLoading);
+				}
+			}
 		}
 
 		/// <summary>
@@ -373,7 +488,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			for (int obj = 0; obj < ObjectsToRender.Length; obj++)
 			{
 				if (OR is not null && OR.Length <= obj)
-					OR[obj].Invoke(ObjectsToRender[obj].objToSim);
+					OR[obj].Invoke(*ObjectsToRender[obj].objToSim);
 			}
 		}
 
@@ -399,7 +514,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		public unsafe virtual void DRWOBJ(int objectID)
 		{
 			STTRNSFRMM4(objectID, "mod");
-			gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)ObjectsToRender[objectID].objToSim.ObjectMesh.MeshTriangles.Length * 3);
+			gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)ObjectsToRender[objectID].objToSim->ObjectMesh.MeshTriangles.Length * 3);
 		}
 
 		/// <summary>
@@ -409,11 +524,11 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <returns></returns>
 		public unsafe virtual Matrix4x4 GTTRNSFRMMTRX(int objectID)
 		{
-			Vector3 vctr3 = new Vector3((float)ObjectsToRender[objectID].objToSim.Translation.ObjectPosition.X, (float)ObjectsToRender[objectID].objToSim.Translation.ObjectPosition.Y, 0);
-			Matrix4x4 model = Matrix4x4.CreateScale(ObjectsToRender[objectID].objToSim.Translation.ObjectScale.xSca,
-																ObjectsToRender[objectID].objToSim.Translation.ObjectScale.ySca,
+			Vector3 vctr3 = new Vector3((float)ObjectsToRender[objectID].objToSim->Translation.ObjectPosition.X, (float)ObjectsToRender[objectID].objToSim->Translation.ObjectPosition.Y, 0);
+			Matrix4x4 model = Matrix4x4.CreateScale(ObjectsToRender[objectID].objToSim->Translation.ObjectScale.xSca,
+																ObjectsToRender[objectID].objToSim->Translation.ObjectScale.ySca,
 																0f) *
-																Matrix4x4.CreateRotationZ((float)GenericMathUtils.DegreesToRadians(ObjectsToRender[objectID].objToSim.Translation.ObjectRotation.xRot)) *
+																Matrix4x4.CreateRotationZ((float)GenericMathUtils.DegreesToRadians(ObjectsToRender[objectID].objToSim->Translation.ObjectRotation.xRot)) *
 																Matrix4x4.CreateTranslation(vctr3);
 			return model;
 		}
@@ -439,28 +554,89 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 
 
 		/// <summary>
-		/// Initializes some info for objects
+		/// Initializes some (necessary) info for objects
 		/// </summary>
-		public unsafe virtual void INITOBJS()
+		public unsafe virtual void INITOBJMSH()
+		{
+			Mesh objMesh;
+			for (int i = 0; i < ObjectsToRender.Length; i++)
+			{
+				objMesh = ObjectsToRender[i].objToSim->ObjectMesh;
+				objMesh.MeshTriangles = [.. DelaunayTriangulator.DelaunayTriangulation(objMesh.MeshPoints)];
+			}
+		}
+
+		/// <summary>
+		/// Actually loads the objects to render
+		/// </summary>
+		public unsafe virtual void STOBJSTORENDER()
 		{
 			int objid = 0;
-			foreach (SGLRenderedObject obj in ObjectsToRender)
+			_2dSceneHierarchy hierarchy = _2dWorld.SceneHierarchies[SceneToRenderId];
+			fixed (SimulatedObject2d[]* objs = &hierarchy.Objects)
 			{
-				ObjectsToRender[objid].objToSim.ObjectMesh.MeshTriangles = DelaunayTriangulator.DelaunayTriangulation(ObjectsToRender[0].objToSim.ObjectMesh.MeshPoints).ToArray();
-				objid++;
+				ObjectsToRender = new SGLRenderedObject[objs->Length];
+				for (int i = 0; i < objs->Length; i++)
+				{
+					ObjectsToRender[i] = new SGLRenderedObject();
+					fixed (SimulatedObject2d* ptrtoset = &(*objs)[i])
+					{
+						ObjectsToRender[i].objToSim = ptrtoset;
+					}
+				}
 			}
+		}
+
+		public unsafe virtual void ADDOBJSTRNDR(SGLRenderedObject*[] objs)
+		{
+			new Thread(() =>
+			{
+				PauseRender = true;
+				SGLRenderedObject[] rndrBfr = new SGLRenderedObject[ObjectsToRender.Length + objs.Length];
+				fixed (SGLRenderedObject[]* ptr = &ObjectsToRender)
+				{
+					try { 
+						ObjectsToRender.CopyTo(rndrBfr, 0);
+						objs.CopyTo(rndrBfr, ObjectsToRender.Length - 1);
+					}
+					catch
+					{
+
+						objs.CopyTo(rndrBfr, 0);
+					}
+					// renderbfr has all the objects
+
+					ObjectsToRender = rndrBfr;
+
+					// now to initalize them
+
+
+					PauseRender = false;
+					for (int i = ptr->Length - 1; i < ObjectsToRender.Length; i++)
+					{
+						SGLRenderedObject obj = *objs[i];
+						ExecuteLoading = i;
+						// a frame
+						Task.Delay(16);
+					}
+					ExecuteLoading = null;
+				}
+			})
+			{
+				Name = "Graphics Helper"
+			}.Start();
 		}
 
 		/// <summary>
 		/// Update. Called before render.
 		/// </summary>
-		public virtual void UDT(double deltaTime)
+		public unsafe virtual void UDT(double deltaTime)
 		{
-			ParallelFor.ParallelForLoop((int obj) =>
+			Utils.ParallelForLoop((int obj) =>
 			{
 				if (OU is not null && OU.Length > obj)
 				{
-					OU[obj].Invoke(ObjectsToRender[obj].objToSim);
+					OU[obj].Invoke(*ObjectsToRender[obj].objToSim);
 				}
 			}, ObjectsToRender.Length);
 		}
@@ -483,7 +659,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		public virtual void LD()
 		{
 			// loads some necessary info for the objects.
-			INITOBJS();
+			INITOBJMSH();
 			// loads input context
 			INPTINIT();
 			// binds scroll event
@@ -499,32 +675,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 
 			for (int i = 0; i < ObjectsToRender.Length; i++)
 			{
-				// binds vao
-				BNDVAO(i);
-				// creates vbo
-				INITVBO(i);
-				// gets vbo data buffer
-				GTVBOBUF(i);
-				// gets ebo
-				GTEBO(i);
-				// sets vbo data
-				STVBO(i);
-				// sets ebo data
-				STEBO(i);
-				// compiles shaders and shader progs
-				CMPLPROGC(ObjectsToRender[i].VrtxShader, ObjectsToRender[i].FragShader, i);
-				// sets the texture supporting attributes
-				STSTDATTRIB();
-				// sets vbo and vao
-				BFRST((uint)i);
-				// binds texture info
-				TXINIT(i);
-				// sets the texture info
-				TXST(i);
-				// generates mipmaps
-				GNMPMPS();
-				// sets the texture info to the shader
-				STTXTRUNI(i);
+				INITSNGLOBJ(i);
+				ObjectsToRender[i].HashCode = ObjectsToRender[i].GetHashCode();
 			}
 			// cleans up a little
 			BUFCLNUP();
@@ -571,9 +723,45 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			//OL.Invoke();
 		}
 
-		public virtual void GTVBOBUF(int objid)
+		/// <summary>
+		/// Initializes an individual object
+		/// </summary>
+		/// <param name="i"></param>
+		public unsafe virtual void INITSNGLOBJ(int i)
 		{
-			vboDataBuf = GVFPS(ObjectsToRender[objid].objToSim.ObjectMesh);
+			// binds vao
+			SELVAO(i);
+			// creates vbo
+			INITVBO(i);
+			// gets vbo data buffer
+			GTVBOBUF(i);
+			// gets ebo
+			GTEBO(i);
+			// sets vbo data
+			STVBO(i);
+			// sets ebo data
+			STEBO(i);
+			// compiles shaders and shader progs
+			CMPLPROGC(ObjectsToRender[i].VrtxShader, ObjectsToRender[i].FragShader, i);
+			// sets the texture supporting attributes
+			STSTDATTRIB();
+			// sets vbo and vao
+			BFRST((uint)i);
+			// binds texture info
+			TXINIT(i);
+			// sets the texture info
+			TXST(i);
+			// generates mipmaps
+			GNMPMPS();
+			// sets the texture info to the shader
+			STTXTRUNI(i);
+
+			ExecuteLoading = null;
+		}
+
+		public unsafe virtual void GTVBOBUF(int objid)
+		{
+			vboDataBuf = GVFPS(ObjectsToRender[objid].objToSim->ObjectMesh);
 		}
 
 		public virtual void BUFCLNUP()
@@ -656,10 +844,11 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public unsafe virtual void TXRHINTS()
 		{
-			gl.TextureParameter(ObjectsToRender[0].TexturePtr, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-			gl.TextureParameter(ObjectsToRender[0].TexturePtr, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
-			gl.TextureParameter(ObjectsToRender[0].TexturePtr, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
-			gl.TextureParameter(ObjectsToRender[0].TexturePtr, TextureParameterName.TextureMagFilter, (int)((!MainRendererSGL.Use8BitStyleTextures) ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
+			gl.BindTexture(TextureTarget.Texture2D, ObjectsToRender[0].TexturePtr);
+			gl.TexParameter(GLEnum.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+			gl.TexParameter(GLEnum.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+			gl.TexParameter(GLEnum.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
+			gl.TexParameter(GLEnum.Texture2D, TextureParameterName.TextureMagFilter, (int)((!MainRendererSGL.Use8BitStyleTextures) ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
 		}
 
 		/// <summary>
@@ -703,8 +892,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// Gets a float[] containing the points from a mesh object
 		/// </summary>
-		public virtual float[] GVFPS(Mesh msh) =>
-			Triangle.ToFloats3D(ObjectsToRender[0].objToSim.ObjectMesh.MeshTriangles);
+		public unsafe virtual float[] GVFPS(Mesh msh) =>
+			Triangle.ToFloats3D(ObjectsToRender[0].objToSim->ObjectMesh.MeshTriangles);
 
 		/// <summary>
 		/// Connects the mesh and texture cords
@@ -718,11 +907,25 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// Binds a VAO object
 		/// </summary>
-		public virtual void BNDVAO(int objid)
+		public virtual void MNGVAO(int objid)
 		{
-			ObjectsToRender[objid].BoundVao = gl.GenVertexArray();
-			gl.BindVertexArray(ObjectsToRender[objid].BoundVao);
+			CRTVAO(objid);
+			SELVAO(objid);
 		}
+
+		/// <summary>
+		/// creates a vao
+		/// </summary>
+		/// <param name="objid"></param>
+		public virtual void CRTVAO(int objid) =>
+			ObjectsToRender[objid].BoundVao = gl.GenVertexArray();
+
+		/// <summary>
+		/// binds a vao
+		/// </summary>
+		/// <param name="objid"></param>
+		public virtual void SELVAO(int objid) =>
+			gl.BindVertexArray(ObjectsToRender[objid].BoundVao);
 
 		/// <summary>
 		/// Sets standard attribs for support with textures
@@ -752,13 +955,13 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public virtual unsafe void STVBO(int objid)
 		{
-			float[] data = MSHTXCRDS(vboDataBuf, ObjectsToRender[objid].objToSim.ObjectMesh);
+			float[] data = MSHTXCRDS(vboDataBuf, ObjectsToRender[objid].objToSim->ObjectMesh);
 			fixed (float* buf = data)
 				gl.BufferData(BufferTargetARB.ArrayBuffer, (nuint)(sizeof(float) * data.Length), buf, BufferUsageARB.StaticDraw);
 		}
 
 		/// <summary>
-		/// Creates a vbo
+		/// Creates & binds a vbo
 		/// </summary>
 		public virtual void INITVBO(int objid)
 		{
@@ -831,5 +1034,34 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 				m.M43,
 				m.M44
 			];
+
+
+		/// <summary>
+		/// Deallocates a objects VRAM and makes it not rendered,
+		/// and then have the garbage collector clean the rest up.
+		/// </summary>
+		/// <param name="objid"></param>
+		// DEV NOTE: I WIL CUM BAK 2 THIS
+		public virtual void DELOBJ(uint objid)
+		{
+			// remove vbo (vertex data)
+			DLVRTXARR(ObjectsToRender[objid].vbo);
+
+			// remove ebo (removes some unnecessary vertex data)
+			DLBFR(ObjectsToRender[objid].eboPtr);
+
+			// remove texture
+			DLTXTR(ObjectsToRender[objid].TexturePtr);
+
+			// object is removed from GL. This class is not for handling SP, so removing the object from SP will be done later, but we need to signal it's gone.
+			ExecuteRemove = null;
+		}
+
+		public virtual void DLBFR(uint bfr) => 
+			gl.DeleteBuffer(bfr);
+		public virtual void DLVRTXARR(uint idx) =>
+			gl.DeleteVertexArray(idx);
+		public virtual void DLTXTR(uint txtrIdx) =>
+			gl.DeleteTexture(txtrIdx);
 	}
 }

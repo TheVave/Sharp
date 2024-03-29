@@ -63,6 +63,7 @@ namespace SharpPhysics.UI
 			//MainRendererSGL.renderer.gl.ClearColor(0, 0, 0, 0);
 			foreach (IUIElement element in UIRoot.NonWindowedObjects)
 			{
+
 				if (element.Visible)
 				{
 					if (element.Position != Vector2.Zero)

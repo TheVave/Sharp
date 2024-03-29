@@ -5,6 +5,7 @@ using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using Silk.NET.Core;
 using StbImageSharp;
 using static SharpPhysics.Utilities.MathUtils.GenericMathUtils;
+using static SharpPhysics.Utilities.MISC.Unsafe.UnsafeUtils;
 
 namespace SharpPhysics.Utilities.MISC
 {
@@ -43,11 +44,6 @@ namespace SharpPhysics.Utilities.MISC
 
 
 			return vertices;
-		}
-
-		public static void SetTX(ref SGLRenderedObject obj)
-		{
-
 		}
 
 		public static RawImage GetRawImageFromImageResult(ImageResult reslt) =>
@@ -196,6 +192,38 @@ namespace SharpPhysics.Utilities.MISC
 				idx++;
 			}
 			return toReturn.ToArray();
+		}
+
+		/// <summary>
+		/// Not recommended to be used directly, as it handles some memory stuff.
+		/// Creates a blank sglRenderedObject from a SimulatedObject2d
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		public static unsafe SGLRenderedObject GetBlankSGLRenderedObjectFromSimulatedObject2d(SimulatedObject2d obj)
+		{
+			// must be freed later because mem doesn't get collected by the GC
+			SimulatedObject2d* ptr = CopyToUnmanagedPointer(obj);
+			return new SGLRenderedObject()
+			{
+				objToSim = ptr,
+				NeedMemFreeSimulatedObject2d = true
+			};
+		}
+
+		/// <summary>
+		/// Not recommended to be used directly, as it handles some memory stuff.
+		/// Creates multiple blank sglRenderedObject's from SimulatedObject2d's
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		// may be the longest method name I've ever written
+		public static unsafe SGLRenderedObject[] GetBlankSGLRenderedObjectArrayFromSimulatedObject2dArray(SimulatedObject2d[] objs)
+		{
+			SGLRenderedObject[] valueToReturn = new SGLRenderedObject[objs.Length];
+			for (int i = 0; i < valueToReturn.Length; i++)
+				valueToReturn[i] = GetBlankSGLRenderedObjectFromSimulatedObject2d(objs[i]);
+			return valueToReturn;
 		}
 	}
 }

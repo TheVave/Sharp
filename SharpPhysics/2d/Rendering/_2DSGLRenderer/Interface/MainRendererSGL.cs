@@ -24,19 +24,9 @@ namespace SharpPhysics
 		public static double ZoomIntensity = 1;
 
 		/// <summary>
-		/// The objects to render
+		/// The objects to render scene id
 		/// </summary>
-		public static SGLRenderedObject[] ObjectsToRender
-		{
-			get
-			{
-				return renderer.ObjectsToRender;
-			}
-			set
-			{
-				renderer.ObjectsToRender = value;
-			}
-		}
+		public static short SceneIDToRender;
 
 		/// <summary>
 		/// The camera to render all of the objects to.

@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpPhysics", "SharpPhysic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpPhysicsTester", "SharpPhysicsTester\SharpPhysicsTester.csproj", "{00CF71D5-2721-4E97-87B7-9EC7A56D02A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneTester", "PhoneTester\PhoneTester.csproj", "{2C737355-9D5C-4538-81DF-2C5F133C89C3}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,36 +61,6 @@ Global
 		{00CF71D5-2721-4E97-87B7-9EC7A56D02A6}.Release|x64.Build.0 = Release|Any CPU
 		{00CF71D5-2721-4E97-87B7-9EC7A56D02A6}.Release|x86.ActiveCfg = Release|Any CPU
 		{00CF71D5-2721-4E97-87B7-9EC7A56D02A6}.Release|x86.Build.0 = Release|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Debug|ARM.Build.0 = Debug|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Debug|ARM.Deploy.0 = Debug|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Debug|ARM64.Deploy.0 = Debug|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Debug|x64.Build.0 = Debug|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Debug|x64.Deploy.0 = Debug|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Debug|x86.Build.0 = Debug|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Debug|x86.Deploy.0 = Debug|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Release|ARM.ActiveCfg = Release|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Release|ARM.Build.0 = Release|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Release|ARM.Deploy.0 = Release|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Release|ARM64.Build.0 = Release|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Release|ARM64.Deploy.0 = Release|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Release|x64.ActiveCfg = Release|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Release|x64.Build.0 = Release|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Release|x64.Deploy.0 = Release|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Release|x86.ActiveCfg = Release|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Release|x86.Build.0 = Release|Any CPU
-		{2C737355-9D5C-4538-81DF-2C5F133C89C3}.Release|x86.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

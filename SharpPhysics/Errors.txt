@@ -1,0 +1,18 @@
+Error, Internal/External Error, unable to generate EBO, this is often an indication that there is mesh corruption.
+Error, External Error, Missing resource or incorrectly formatted file.
+Error, Internal/External error, shader compilation failed.
+Error, Internal Error, Compiler link failed.
+Error, Internal/External Error, unknown cause.
+Error, Internal Error, objects triangles or points not initialized, attempting auto-correct.
+Error, Internal Error, objectToCheck points not initialized, mesh missing.
+Error, Internal Error, Color.Color(ColorName key) failed.
+Error, External Error, Font loading falure due to file not existing.
+Error, Internal/External Error, invalid shader type, or incorrect name, must start with Frag or Vertex.
+Error, Internal Error, Hierarchy initialization failure. LastSceneID was null, this is a bug with SP if you see this.
+Error, Internal/External Error, failed to initialize OpenGL or OpenGL ES. The main cause of this is if this is an unsupported platform.
+Error, Internal Error, Not Implemented.
+Error, Internal Error, You can't remove an uninialized object.
+Error, Internal Error, Fast array object removal failure. This is often a example of uninialized values.
+Error, Internal Error, mmemcpy failed. This is often an indication that an object was not initialized correctly.
+Error, Internal Error, RemoveArrayObjFast failed with IndexOutOfRangeException. The value to remove was outside the bounds of the array.
+Error, Internal Error, A double free has occurred. This happens when memory is treated in strange ways, and you attempt to free memory twice.

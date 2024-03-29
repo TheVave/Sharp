@@ -98,6 +98,7 @@ namespace SharpPhysics._2d.Physics
 		string momName;
 		string colName;
 		string triName;
+		
 
 		internal void Tick()
 		{
@@ -221,10 +222,6 @@ namespace SharpPhysics._2d.Physics
 		/// </summary>
 		internal void Prerequisites()
 		{
-			// solving for mesh stuff
-			// finding a value for rotation.
-			//r = Math.PI / Math.Sqrt(MeshUtilities.PolygonArea(ObjectToSimulate.ObjectMesh.MeshPoints));
-
 			ThreadNameInit();
 		}
 

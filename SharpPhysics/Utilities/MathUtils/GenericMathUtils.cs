@@ -4,8 +4,6 @@ namespace SharpPhysics.Utilities.MathUtils
 {
 	public static class GenericMathUtils
 	{
-
-
 		/// <summary>
 		/// Returns true if the input value is positive. False otherwise.
 		/// </summary>

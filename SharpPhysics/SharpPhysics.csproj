@@ -41,14 +41,17 @@ WARNING! THIS PROGRAM IS STILL UNDER DEVELOPMENT!</Description>
     <Compile Remove="deps\**" />
     <Compile Remove="NewFolder1\**" />
     <Compile Remove="obj\**" />
+    <Compile Remove="Website\**" />
     <EmbeddedResource Remove="bin\**" />
     <EmbeddedResource Remove="deps\**" />
     <EmbeddedResource Remove="NewFolder1\**" />
     <EmbeddedResource Remove="obj\**" />
+    <EmbeddedResource Remove="Website\**" />
     <None Remove="bin\**" />
     <None Remove="deps\**" />
     <None Remove="NewFolder1\**" />
     <None Remove="obj\**" />
+    <None Remove="Website\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -69,10 +72,8 @@ WARNING! THIS PROGRAM IS STILL UNDER DEVELOPMENT!</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Website\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="FontStash.NET" Version="1.1.2" />
+    <PackageReference Include="FontStashSharp" Version="1.3.6" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Silk.NET.Core" Version="2.20.0" />
     <PackageReference Include="Silk.NET.GLFW" Version="2.20.0" />
@@ -94,7 +95,7 @@ WARNING! THIS PROGRAM IS STILL UNDER DEVELOPMENT!</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Errors.tx">
+    <None Update="Errors.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="glfw.dll">

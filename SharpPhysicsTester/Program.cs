@@ -1,12 +1,17 @@
-﻿using SharpPhysics;
+﻿
+using SharpPhysics;
+using SharpPhysics._2d;
+using SharpPhysics._2d.ObjectRepresentation.Hierarchies;
 using SharpPhysics.Input;
 using SharpPhysics.UI.UIElements;
 using SharpPhysics.UI.UIHierarchy;
 double speed = 5;
-double camSpeed = 10;
-MainRendererSGL.ObjectsToRender = [new(), new()];
-MainRendererSGL.ObjectsToRender[1].objTextureLoc = "test.bmp";
-MainRendererSGL.ObjectsToRender[0].objTextureLoc = "Enemy Thing.png";
+double camSpeed = 0.05;
+
+_2dWorld.SceneHierarchies[0].Objects = [new(), new()];
+
+_2dWorld.SceneHierarchies[0].Objects[1].objTextureLoc = "test.bmp";
+_2dWorld.SceneHierarchies[0].Objects[0].objTextureLoc = "Enemy Thing.png";
 UIRoot.Windows = [new("Debug", [new Label("Example")])];
 UIRoot.NonWindowedObjects = [
 	new Button()
