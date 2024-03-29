@@ -25,8 +25,8 @@ and also copy over glfw.dll to the output directory.
 
 ---------------------------------------------------------
 
-SharpPhysics runs on Windows, Mac, and Linux.
-NOTE: Because of ImGuiNet, SharpPhysics is unable to run on Windows-arm64 or Linux-arm64.
+SharpPhysics runs on Windows, Mac, and Linux. <br>
+NOTE: Because of ImGuiNet, SharpPhysics is unable to run on arm64.
 
 ## RECENT UPDATES ##
 
