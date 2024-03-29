@@ -26,6 +26,7 @@ and also copy over glfw.dll to the output directory.
 ---------------------------------------------------------
 
 SharpPhysics runs on Windows, Mac, and Linux.
+NOTE: Because of ImGuiNet, SharpPhysics is unable to run on Windows-arm64 or Linux-arm64.
 
 ## RECENT UPDATES ##
 
@@ -42,36 +43,8 @@ This program makes use of four libaries, they are:
 Newtonsoft.Json
 Silk.Net
 StbImageSharp
-GLFW (Written in C).
+GLFW (Written in C)
+SDL (Writtrn in C)
+FontStashSharp.
 
 None of these were made by me.
-
-### Newtonsoft.Json ###
-
----------------------------------------------------------
-Newtonsoft.Json is a popular Json Serialization-Desirialization library for C#. <br>
-[Website](https://www.newtonsoft.com/json) <br>
-[Nuget](https://www.nuget.org/packages/Newtonsoft.Json) <br>
-
-### Silk.Net ###
-
----------------------------------------------------------
-Silk.Net is a graphics bindings library. <br>
-[Website](https://dotnet.github.io/Silk.NET/) <br>
-[Github](https://github.com/dotnet/Silk.NET) <br>
-[Nuget](https://www.nuget.org/packages/Silk.NET) <br>
-
-### StbImageSharp ###
-
----------------------------------------------------------
-StbImageSharp is a popular port of the stb_image.h libary. <br>
-[Github](https://github.com/StbSharp/StbImageSharp) <br>
-[Nuget](https://www.nuget.org/packages/StbImageSharp/) <br>
-
-### GLFW ###
-
----------------------------------------------------------
-GLFW is a popular cross-platform OpenGL library written in C, and I'm <br>
-communicating with it through Silk.NET. (NOTE: This was not originally made by me!) <br>
-[Website](https://GLFW.org)
-[Github](https://github.com/glfw/glfw)
