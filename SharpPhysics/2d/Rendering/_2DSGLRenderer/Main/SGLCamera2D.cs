@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Numerics;
+﻿using System.Numerics;
 namespace SharpPhysics.Renderer.Cameras
 {
 	public class SGLCamera2D

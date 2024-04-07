@@ -1,11 +1,11 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation.Translation;
+using SharpPhysics.Utilities;
 using SharpPhysics.Utilities.MathUtils;
-using SharpPhysics.Utilities.MISC;
-using System.Numerics;
+using SharpPhysics.Utilities.MISC.Unsafe;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
-	public class Point
+	public class Point : ISizeGettable
 	{
 		/// <summary>
 		/// The X position of the point
@@ -108,13 +108,13 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// </summary>
 		/// <param name="p"></param>
 		// this includes some checks
-		public void Add(Point p)
+		public static void Add(Point p, Point p2)
 		{
 			if (p == null) throw new InvalidOperationException("Cannot add point to null");
 			if (ContainsValue(p, double.NaN)) throw new InvalidOperationException("Point had a value of NaN");
-			if (p.Is3d != this.Is3d) throw new InvalidOperationException("Unable to add points with non-similar dimensions");
-			X += p.X;
-			Y += p.Y;
+			if (p.Is3d != p2.Is3d) throw new InvalidOperationException("Unable to add points with non-similar dimensions");
+			p2.X += p.X;
+			p2.Y += p.Y;
 		}
 
 		/// <summary>
@@ -159,10 +159,11 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// <summary>
 		/// Warning! Slow!
 		/// </summary>
+		// TODO: Make Point.ToFloatArray faster
 		public static float[] ToFloatArray(Point[] points)
 		{
 			float[] toReturn = [];
-			ParallelFor.ParallelForLoop((int loopIdx) =>
+			Utils.ParallelForLoop((int loopIdx) =>
 			{
 				toReturn = toReturn.Concat((float[])(points[loopIdx])).ToArray();
 			}, points.Length);
@@ -180,6 +181,14 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			resltpnt.X = pnt.X * Math.Cos(radians) - pnt.Y * Math.Cos(radians);
 			resltpnt.Y = pnt.X * Math.Sin(radians) + pnt.Y * Math.Cos(radians);
 			return resltpnt;
+		}
+
+		public int GetSize()
+		{
+			unsafe
+			{
+				return sizeof(Point);
+			}
 		}
 	}
 }

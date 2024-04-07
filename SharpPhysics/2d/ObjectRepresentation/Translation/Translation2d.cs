@@ -1,6 +1,8 @@
-﻿namespace SharpPhysics._2d.ObjectRepresentation.Translation
+﻿using SharpPhysics.Utilities.MISC.Unsafe;
+
+namespace SharpPhysics._2d.ObjectRepresentation.Translation
 {
-	public class Translation2d
+	public class Translation2d : ISizeGettable
 	{
 		public Translation2d(double xPos, double yPos, double zPos)
 		{
@@ -19,6 +21,15 @@
 		{
 			return $"{ObjectPosition}, {ObjectRotation}, {ObjectScale}";
 		}
+
+		public int GetSize()
+		{
+			unsafe
+			{
+				return sizeof(Translation2d);
+			}
+		}
+
 		public _2dPosition ObjectPosition;
 		public _2dRotation ObjectRotation;
 		public _2dScale ObjectScale;

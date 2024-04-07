@@ -1,9 +1,5 @@
 ﻿using SharpPhysics.Utilities.MathUtils;
-using SharpPhysics.Utilities.MISC.Unsafe;
-using System;
 using System.Diagnostics;
-using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace SharpPhysics.Utilities.MISC
 {

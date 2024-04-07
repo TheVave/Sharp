@@ -98,7 +98,7 @@ namespace SharpPhysics._2d.Physics
 		string momName;
 		string colName;
 		string triName;
-		
+
 
 		internal void Tick()
 		{
@@ -147,8 +147,8 @@ namespace SharpPhysics._2d.Physics
 				//												 RotateByRadians(GenericMathUtils.DegreesToRadians(ObjectToSimulate.Translation.ObjectRotation.xRot)).
 				//												 ShiftTriangle(new(ObjectToSimulate.Translation.ObjectPosition.X, ObjectToSimulate.Translation.ObjectPosition.Y));
 				tri = new(actualTriangle.Vertex1, actualTriangle.Vertex2, actualTriangle.Vertex3, false);
-				Triangle.ScaleTriangle(ObjectToSimulate.Translation.ObjectScale.xSca, ObjectToSimulate.Translation.ObjectScale.ySca, tri);
-				Triangle.RotateByRadians(GenericMathUtils.DegreesToRadians(ObjectToSimulate.Translation.ObjectRotation.xRot), tri);
+				Triangle.ScaleTriangle(ObjectToSimulate.Translation.ObjectScale.xSca, ObjectToSimulate.Translation.ObjectScale.ySca, ref tri);
+				Triangle.RotateByRadians(GenericMathUtils.DegreesToRadians(ObjectToSimulate.Translation.ObjectRotation.xRot), ref tri);
 				Triangle.ShiftTriangle(ObjectToSimulate.Translation.ObjectPosition, tri);
 				ObjectToSimulate.ObjectMesh.MeshTriangles[i] = tri;
 			}
@@ -191,7 +191,7 @@ namespace SharpPhysics._2d.Physics
 			CurrentMovement.EndPosition = ObjectToSimulate.Translation.ObjectPosition;
 			// new code for rotation similar to momentum and position.
 			// may change. Ideas for rotational momentum impulse may be from https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/10%3A_Rotational_Motion_and_Angular_Momentum/10.03%3A_Dynamics_of_Rotational_Motion_-_Rotational_Inertia
-			// r in the upper link can be found by finding the area of the object, then working backward from the circle area equation, A = [pi]r^2, rearranged to r = r = [pi] / sqr(a).
+			// r in the upper link can be found by finding the area of the object, then working backward from the circle area equation, A = [pi]r^2, rearranged to r = [pi] / sqr(a).
 			rotationalAmount = ObjectToSimulate.ObjectPhysicsParams.RotationalVelocity * TimePerSimulationTick;
 			ObjectToSimulate.Translation.ObjectRotation.xRot += (float)(rotationalAmount);
 			ObjectToSimulate.ObjectPhysicsParams.RotationalVelocity = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.RotationalVelocity, ObjectToSimulate.ObjectPhysicsParams.RotResistance);
@@ -250,9 +250,11 @@ namespace SharpPhysics._2d.Physics
 					}
 					Task.Delay(DelayAmount).Wait();
 				}
-			});
-			thread.Name = $"Physics thread";
-			thread.IsBackground = true;
+			})
+			{
+				Name = $"Physics thread",
+				IsBackground = true
+			};
 			thread.Start();
 		}
 	}

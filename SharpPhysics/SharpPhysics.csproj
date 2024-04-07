@@ -14,7 +14,7 @@
     <AnalysisLevel>6.0-all</AnalysisLevel>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <AssemblyName>SharpPhysics</AssemblyName>
-    <NoWarn>CA1707;CA1051;CA1062;CA1805;CS8618;CA2211;CS8500;</NoWarn>
+    <NoWarn>CA1707;CA1051;CA1062;CA1805;CS8618;CA2211;CS8500;CA1819;CA1031;CS8602;</NoWarn>
     <Description>A 2d renderer &amp; physics simulator made entirely with C#.
 WARNING! THIS PROGRAM IS STILL UNDER DEVELOPMENT!</Description>
     <PackageIcon>logo.png</PackageIcon>
@@ -123,5 +123,4 @@ WARNING! THIS PROGRAM IS STILL UNDER DEVELOPMENT!</Description>
       <PackageCopyToOutput>true</PackageCopyToOutput>
     </Content>
   </ItemGroup>
-
 </Project>

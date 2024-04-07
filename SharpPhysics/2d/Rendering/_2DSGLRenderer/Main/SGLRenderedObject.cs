@@ -49,12 +49,12 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// The object's texture
 		/// </summary>
-		public string objTextureLoc = string.Empty;
+		public string ObjectTextureLocation = string.Empty;
 
 		/// <summary>
 		/// the object to simulate
 		/// </summary>
-		public SimulatedObject2d* objToSim;
+		public UnmanagedMemoryObject<SimulatedObject2d> objToSim;
 
 		/// <summary>
 		/// The rendered objects hash code.
@@ -73,11 +73,16 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		internal bool CurrentlyLoadingInfo = false;
 
+		/// <summary>
+		/// If the object has been initialized by Internal2dRenderer
+		/// </summary>
+		internal bool ObjectInitialized = false;
+
 		~SGLRenderedObject()
 		{
 			// removes the UnsafeUtils.Malloc'd memory to prevent mem leak
 			if (NeedMemFreeSimulatedObject2d)
-				UnsafeUtils.Free(objToSim);
+				objToSim.Dispose();
 		}
 	}
 }

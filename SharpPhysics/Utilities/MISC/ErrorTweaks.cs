@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharpPhysics.Utilities.MISC
+﻿namespace SharpPhysics.Utilities.MISC
 {
 	public static class ErrorTweaks
 	{
@@ -15,9 +9,15 @@ namespace SharpPhysics.Utilities.MISC
 		public static bool CrashOnError17 = false;
 
 		/// <summary>
-		/// If the program should crash on error 18
+		/// If the program should crash on error 18 <br/>
 		/// (double free) Error, Internal Error, A double free has occurred. This happens when memory is treated in strange ways, and you attempt to free memory twice.
 		/// </summary>
 		public static bool CrashOnError18 = false;
+
+		/// <summary>
+		/// If the program should crash on error 19.<br/>
+		/// (Invalid input type) Error, Internal Error, Mem: A UnmanagedMemoryObject<T> setter call has happened with a non-ISizeGettable class. Please call the setter with a ISizeGettable object.
+		/// </summary>
+		public static bool CrashOnError19 = false;
 	}
 }

@@ -142,7 +142,7 @@ namespace SharpPhysics.Utilities.MathUtils
 			int least = 0;
 			foreach (Triangle triangle in triangles)
 			{
-				checkingArea = triangle.GetArea();
+				checkingArea = Triangle.GetArea(triangle);
 				if (leastArea > checkingArea)
 				{
 					leastArea = checkingArea;
@@ -164,5 +164,10 @@ namespace SharpPhysics.Utilities.MathUtils
 				return new(3, 1, leastTri);
 			}
 		}
+
+		//public static bool GetIfTrianglesRecent(Mesh meshToCheck)
+		//{
+		//	meshToCheck.
+		//}
 	}
 }

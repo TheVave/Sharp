@@ -6,7 +6,7 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 	{
 		public static List<Triangle> DelaunayTriangulation(Point[] points)
 		{
-			List<Triangle> triangles = new List<Triangle>();
+			List<Triangle> triangles = [];
 
 			// Find bounding box
 			double minX = points[0].X, minY = points[0].Y, maxX = points[0].X, maxY = points[0].Y;
@@ -21,31 +21,29 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 				if (y > maxY) maxY = y;
 			}
 
-			// Initialize super-triangle vertices closer to the input points
 			double dx = maxX - minX;
 			double dy = maxY - minY;
 			double deltaMax = Math.Max(dx, dy);
 			double midx = (minX + maxX) / 2.0;
 			double midy = (minY + maxY) / 2.0;
 
-			Point superVertex1 = new Point(midx - 2 * deltaMax, midy - deltaMax);
-			Point superVertex2 = new Point(midx + 2 * deltaMax, midy - deltaMax);
-			Point superVertex3 = new Point(midx, midy + 2 * deltaMax);
+			Point superVertex1 = new(midx - 2 * deltaMax, midy - deltaMax);
+			Point superVertex2 = new(midx + 2 * deltaMax, midy - deltaMax);
+			Point superVertex3 = new(midx, midy + 2 * deltaMax);
 
 			triangles.Add(new Triangle(superVertex1, superVertex2, superVertex3));
 
-			// Add each point to the triangulation
 			int iteration = 0;
 
 			foreach (var point in points)
 			{
-				List<Triangle> badTriangles = new List<Triangle>();
-				List<Edge> polygon = new List<Edge>();
+				List<Triangle> badTriangles = [];
+				List<Edge> polygon = [];
 
 				// Find bad triangles
 				foreach (var triangle in triangles)
 				{
-					if (triangle.IsPointInsideCircumcircle(point))
+					if (Triangle.IsPointInsideCircumcircle(point, triangle))
 					{
 						badTriangles.Add(triangle);
 
@@ -59,10 +57,8 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 					}
 				}
 
-				// Remove bad triangles
 				triangles.RemoveAll(triangle => badTriangles.Contains(triangle));
 
-				// Add new triangles to the triangulation
 				foreach (var edge in polygon)
 				{
 					triangles.Add(new Triangle(edge.Vertex1, edge.Vertex2, point));
@@ -71,9 +67,8 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 				iteration++;
 			}
 
-			// Remove triangles with super-triangle vertices
 			triangles.RemoveAll(t =>
-				t.HasVertex(superVertex1) || t.HasVertex(superVertex2) || t.HasVertex(superVertex3));
+				Triangle.HasVertex(superVertex1, t) || Triangle.HasVertex(superVertex2, t) || Triangle.HasVertex(superVertex3, t));
 
 			return triangles.Distinct().ToList();
 		}

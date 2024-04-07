@@ -7,6 +7,7 @@ namespace SharpPhysics.UI.UIElements
 	{
 		public string Txt;
 		public bool Visible { get; set; } = true;
+		public float FontScale = 1;
 		public Action OnDraw = () => { };
 		public Vector2 Position { get; set; } = Vector2.Zero;
 
@@ -25,6 +26,7 @@ namespace SharpPhysics.UI.UIElements
 		{
 			try
 			{
+				ImGui.SetWindowFontScale(FontScale);
 				ImGui.Text(Txt);
 				OnDraw.Invoke();
 				return true;
@@ -33,7 +35,6 @@ namespace SharpPhysics.UI.UIElements
 			{
 				return false;
 			}
-
 		}
 	}
 }

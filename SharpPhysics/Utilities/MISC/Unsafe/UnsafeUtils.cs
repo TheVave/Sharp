@@ -1,31 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
+using System.Text;
 namespace SharpPhysics.Utilities.MISC.Unsafe;
 public static class UnsafeUtils
 {
-	/// <summary>
-	/// Copies memory between two memory pointers with lengths (and types)
-	/// </summary>
-	/// <param name="strt"></param>
-	/// <param name="dest"></param>
-	/// <param name="cpylen"></param>
-    public static unsafe void mmemcpy(LenMemPtr strt, LenMemPtr dest, long cpylen)
-    {
-		try
+	public static int PtrSize
+	{
+		get
 		{
-			long curWdthMngd = 0;
-			// used to be for (byte* i = (byte*)strt.ptr; curWdthMngd < cpylen; curWdthMngd++)
-			while (curWdthMngd++ < cpylen) *(strt.ptr + curWdthMngd) = *(dest.ptr + curWdthMngd);
-		}
-		catch
-		{
-			ErrorHandler.ThrowError(16, false);
+			if (Environment.Is64BitProcess)
+				return 64;
+			else
+				return 32;
 		}
 	}
+
 	/// <summary>
-	/// Copies memory between two byte*s, (slightly) faster than with LenMemPtr.
+	/// Copies memory between two byte*'s.
 	/// </summary>
 	/// <param name="strt"></param>
 	/// <param name="dest"></param>
@@ -42,6 +34,21 @@ public static class UnsafeUtils
 			ErrorHandler.ThrowError(16, false);
 		}
 	}
+
+	/// <summary>
+	/// Gets the size of a simple object.
+	/// e.g int, double, char
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="obj"></param>
+	public static unsafe int GetSimpleObjectSize<T>(T obj)
+	{
+		// may not work
+		if (typeof(T) is string)
+			return Encoding.Unicode.GetByteCount(obj as string);
+		return sizeof(T);
+	}
+
 	/// <summary>
 	/// Copies managed memory to an unmanaged pointer.
 	/// Must be <see cref="UnsafeUtils.Free(void*)"/>'d later.
@@ -51,8 +58,8 @@ public static class UnsafeUtils
 	/// <returns></returns>
 	public static unsafe T* CopyToUnmanagedPointer<T>(T valueToCopy)
 	{
-		long len = RuntimeSizeof(valueToCopy);
-		byte* bteEndPtr = (byte*)Malloc(RuntimeSizeof(len));
+		long len = UnmanagedSizeof(valueToCopy);
+		byte* bteEndPtr = (byte*)Malloc(UnmanagedSizeof(len));
 		byte* bteStartPtr = (byte*)&valueToCopy;
 		mmemcpy(bteStartPtr, bteEndPtr, len);
 		return (T*)bteEndPtr;
@@ -65,9 +72,8 @@ public static class UnsafeUtils
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="ToGetSizeOf"></param>
-	public static unsafe int RuntimeSizeof<T>(T ToGetSizeOf)
+	public static unsafe int UnmanagedSizeof<T>(T ToGetSizeOf)
 	{
-		ArgumentNullException.ThrowIfNull(ToGetSizeOf, nameof(ToGetSizeOf));
 		return Marshal.SizeOf(ToGetSizeOf);
 	}
 
@@ -107,5 +113,68 @@ public static class UnsafeUtils
 				return false;
 			}
 		}
+	}
+
+	/// <summary>
+	/// Gets the size of an object.
+	/// Counts each bit untill it finds an unalloced byte, then returns the current byte-1.
+	/// </summary>
+	/// <param name="obj"></param>
+	/// <returns></returns>
+	[HandleProcessCorruptedStateExceptions]
+	public static int CountingSizeof<T>(T obj)
+	{
+		unsafe
+		{
+			T* objPtr = &obj;
+			int i = 0;
+			try
+			{
+				// while(true) but has loop count local var i
+				for (; ; i++)
+				{
+					byte* ptr = (byte*)i;
+				}
+				//Error, Internal/External Error, unknown cause.
+				ErrorHandler.ThrowError(5, true);
+				return -1;
+			}
+			catch (AccessViolationException ave)
+			{
+				return i--;
+			}
+			catch (OutOfMemoryException oome)
+			{
+				// to try to reduce the used mem on the user's system
+				Environment.Exit(0xFFFF);
+				return -1;
+			}
+			catch
+			{
+				//Error, Internal/External Error, unknown cause.
+				ErrorHandler.ThrowError(5, true);
+				return -1;
+			}
+		}
+	}
+
+	public static int GetArraySize(double[] arr)
+	{
+		return sizeof(double) * arr.Length;
+	}
+	public static int GetArraySize(int[] arr)
+	{
+		return sizeof(int) * arr.Length;
+	}
+	public static int GetArraySize(char[] arr)
+	{
+		return sizeof(char) * arr.Length;
+	}
+	public static int GetArraySize(ISizeGettable[] arr)
+	{
+		int size = 0;
+		foreach (ISizeGettable gettable in arr)
+			size += gettable.GetSize();
+		return size;
 	}
 }

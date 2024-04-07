@@ -53,7 +53,9 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// The time since the program started
 		/// </summary>
+#pragma warning disable IDE0044 // Add readonly modifier
 		Stopwatch PlayTime = new();
+#pragma warning restore IDE0044 // Add readonly modifier
 
 		/// <summary>
 		/// The imgui renderer
@@ -104,7 +106,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 					for (int i = 0; i < ObjectsToRender.Length; i++)
 					{
 						obj = _2dWorld.SceneHierarchies[value].Objects[i];
-						ObjectsToRender[i].objToSim = &obj;
+						ObjectsToRender[i].objToSim.HeldObject = obj;
 					}
 					InternalSceneToRenderId = value;
 				}
@@ -159,7 +161,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// OnLoad
 		/// </summary>
-		public Action OL = new Action(() => { });
+		public Action OL = new(() => { });
 
 		/// <summary>
 		/// The camera to render out of.
@@ -195,8 +197,9 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// Upmost method of deleting objects in the GL instance
 		/// </summary>
 		/// <param name="objid"></param>
-		public virtual void MNDELOBJ() {
-			if (ExecuteRemove is not null) 
+		public virtual void MNDELOBJ()
+		{
+			if (ExecuteRemove is not null)
 			{
 				DELOBJ((uint)ExecuteRemove);
 			}
@@ -299,7 +302,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			int? otherSames = null;
 			uint prog;
 			for (int i = 0; i < ShaderCollector.Pairs.Count - 1; i++)
-				if (ShaderCollector.Pairs[i] == ShaderCollector.Pairs[ShaderCollector.Pairs.Count - 1])
+				if (ShaderCollector.Pairs[i] == ShaderCollector.Pairs[^1])
 				{
 					otherSames = i;
 				}
@@ -416,6 +419,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public unsafe virtual void RNDR(double deltaTime)
 		{
+			if (!Utils.RenderingStarted)
+				Utils.RenderingStarted = true;
 			CLR();
 
 			MNINITSNGLOBJ();
@@ -432,12 +437,17 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 
 				try
 				{
-					SELOBJ(i);
-					DRWOBJ(i);
+					if (ObjectsToRender[i].ObjectInitialized)
+					{
+						SELOBJ(i);
+						DRWOBJ(i);
+					}
 				}
 				catch
 				{
-					// object probably not initialized. Shouldn't crash.
+					// something weird happened.
+					// Error, Internal/External Error, unknown cause.
+					ErrorHandler.ThrowError(5, true);
 				}
 			}
 
@@ -488,7 +498,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			for (int obj = 0; obj < ObjectsToRender.Length; obj++)
 			{
 				if (OR is not null && OR.Length <= obj)
-					OR[obj].Invoke(*ObjectsToRender[obj].objToSim);
+					OR[obj].Invoke(ObjectsToRender[obj].objToSim.HeldObject);
 			}
 		}
 
@@ -514,7 +524,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		public unsafe virtual void DRWOBJ(int objectID)
 		{
 			STTRNSFRMM4(objectID, "mod");
-			gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)ObjectsToRender[objectID].objToSim->ObjectMesh.MeshTriangles.Length * 3);
+			gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)ObjectsToRender[objectID].objToSim.HeldObject.ObjectMesh.MeshTriangles.Length * 3);
 		}
 
 		/// <summary>
@@ -524,11 +534,11 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <returns></returns>
 		public unsafe virtual Matrix4x4 GTTRNSFRMMTRX(int objectID)
 		{
-			Vector3 vctr3 = new Vector3((float)ObjectsToRender[objectID].objToSim->Translation.ObjectPosition.X, (float)ObjectsToRender[objectID].objToSim->Translation.ObjectPosition.Y, 0);
-			Matrix4x4 model = Matrix4x4.CreateScale(ObjectsToRender[objectID].objToSim->Translation.ObjectScale.xSca,
-																ObjectsToRender[objectID].objToSim->Translation.ObjectScale.ySca,
+			Vector3 vctr3 = new((float)ObjectsToRender[objectID].objToSim.HeldObject.Translation.ObjectPosition.X, (float)ObjectsToRender[objectID].objToSim.HeldObject.Translation.ObjectPosition.Y, 0);
+			Matrix4x4 model = Matrix4x4.CreateScale(ObjectsToRender[objectID].objToSim.HeldObject.Translation.ObjectScale.xSca,
+																ObjectsToRender[objectID].objToSim.HeldObject.Translation.ObjectScale.ySca,
 																0f) *
-																Matrix4x4.CreateRotationZ((float)GenericMathUtils.DegreesToRadians(ObjectsToRender[objectID].objToSim->Translation.ObjectRotation.xRot)) *
+																Matrix4x4.CreateRotationZ((float)GenericMathUtils.DegreesToRadians(ObjectsToRender[objectID].objToSim.HeldObject.Translation.ObjectRotation.xRot)) *
 																Matrix4x4.CreateTranslation(vctr3);
 			return model;
 		}
@@ -561,7 +571,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			Mesh objMesh;
 			for (int i = 0; i < ObjectsToRender.Length; i++)
 			{
-				objMesh = ObjectsToRender[i].objToSim->ObjectMesh;
+				objMesh = ObjectsToRender[i].objToSim.HeldObject.ObjectMesh;
 				objMesh.MeshTriangles = [.. DelaunayTriangulator.DelaunayTriangulation(objMesh.MeshPoints)];
 			}
 		}
@@ -573,16 +583,14 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		{
 			int objid = 0;
 			_2dSceneHierarchy hierarchy = _2dWorld.SceneHierarchies[SceneToRenderId];
-			fixed (SimulatedObject2d[]* objs = &hierarchy.Objects)
+			fixed (SimulatedObject2d* obj0ptr = &(hierarchy.Objects[0]))
 			{
+				SimulatedObject2d[]* objs = (SimulatedObject2d[]*)obj0ptr;
 				ObjectsToRender = new SGLRenderedObject[objs->Length];
 				for (int i = 0; i < objs->Length; i++)
 				{
 					ObjectsToRender[i] = new SGLRenderedObject();
-					fixed (SimulatedObject2d* ptrtoset = &(*objs)[i])
-					{
-						ObjectsToRender[i].objToSim = ptrtoset;
-					}
+					ObjectsToRender[i].objToSim.HeldObject = (*objs)[i];
 				}
 			}
 		}
@@ -595,13 +603,13 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 				SGLRenderedObject[] rndrBfr = new SGLRenderedObject[ObjectsToRender.Length + objs.Length];
 				fixed (SGLRenderedObject[]* ptr = &ObjectsToRender)
 				{
-					try { 
+					try
+					{
 						ObjectsToRender.CopyTo(rndrBfr, 0);
 						objs.CopyTo(rndrBfr, ObjectsToRender.Length - 1);
 					}
 					catch
 					{
-
 						objs.CopyTo(rndrBfr, 0);
 					}
 					// renderbfr has all the objects
@@ -636,7 +644,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			{
 				if (OU is not null && OU.Length > obj)
 				{
-					OU[obj].Invoke(*ObjectsToRender[obj].objToSim);
+					OU[obj].Invoke(ObjectsToRender[obj].objToSim.HeldObject);
 				}
 			}, ObjectsToRender.Length);
 		}
@@ -677,6 +685,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			{
 				INITSNGLOBJ(i);
 				ObjectsToRender[i].HashCode = ObjectsToRender[i].GetHashCode();
+				ObjectsToRender[i].ObjectInitialized = true;
 			}
 			// cleans up a little
 			BUFCLNUP();
@@ -688,39 +697,6 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			STLOGO();
 			// inits ImGui
 			guiRenderer.LD(Wnd, gl);
-
-			// old code:
-
-			// loads some necessary info for the objects.
-			//INITOBJS();
-			//// inits the OpenGL context
-			//INTGLCNTXT();
-			//// binds vao
-			//BNDVAO();
-			//// creates vbo
-			//INITVBO();
-			//// sets vbo data
-			//STVBO();
-			//// compiles shaders and shader progs
-			//CMPLPROGC(objectToRender[0].VrtxShader, objectToRender[0].FragShader, 0);
-			//// sets clear color
-			//STCLRCOLR(ColorName.Blue);
-			//// sets the texture supporting attributes
-			//STSTDATTRIB();
-			//// cleans up some stuff mid-way
-			//CLNUP();
-			//// binds texture info
-			//TXINIT();
-			//// sets the texture info
-			//TXST();
-			//// sets texture settings
-			//TXRHINTS();
-			//// generates mipmaps
-			//GNMPMPS();
-			//// sets the texture info to the shader
-			//STTXTRUNI();
-			//// loads user-defined info
-			//OL.Invoke();
 		}
 
 		/// <summary>
@@ -761,7 +737,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 
 		public unsafe virtual void GTVBOBUF(int objid)
 		{
-			vboDataBuf = GVFPS(ObjectsToRender[objid].objToSim->ObjectMesh);
+			vboDataBuf = GVFPS(ObjectsToRender[objid].objToSim.HeldObject.ObjectMesh);
 		}
 
 		public virtual void BUFCLNUP()
@@ -811,7 +787,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			ImageResult result = new();
 			try
 			{
-				result = ImageResult.FromMemory(File.ReadAllBytes($"{Environment.CurrentDirectory}\\Ctnt\\Txtrs\\{ObjectsToRender[objid].objTextureLoc}"), ColorComponents.RedGreenBlueAlpha);
+				result = ImageResult.FromMemory(File.ReadAllBytes($"{Environment.CurrentDirectory}\\Ctnt\\Txtrs\\{ObjectsToRender[objid].ObjectTextureLocation}"), ColorComponents.RedGreenBlueAlpha);
 			}
 			catch
 			{
@@ -893,7 +869,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// Gets a float[] containing the points from a mesh object
 		/// </summary>
 		public unsafe virtual float[] GVFPS(Mesh msh) =>
-			Triangle.ToFloats3D(ObjectsToRender[0].objToSim->ObjectMesh.MeshTriangles);
+			Triangle.ToFloats3D(ObjectsToRender[0].objToSim.HeldObject.ObjectMesh.MeshTriangles);
 
 		/// <summary>
 		/// Connects the mesh and texture cords
@@ -955,7 +931,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </summary>
 		public virtual unsafe void STVBO(int objid)
 		{
-			float[] data = MSHTXCRDS(vboDataBuf, ObjectsToRender[objid].objToSim->ObjectMesh);
+			float[] data = MSHTXCRDS(vboDataBuf, ObjectsToRender[objid].objToSim.HeldObject.ObjectMesh);
 			fixed (float* buf = data)
 				gl.BufferData(BufferTargetARB.ArrayBuffer, (nuint)(sizeof(float) * data.Length), buf, BufferUsageARB.StaticDraw);
 		}
@@ -984,7 +960,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// </param>
 		public virtual void STCLRCOLR(ColorName name)
 		{
-			Color clr = new Color(name);
+			Color clr = new(name);
 			gl.ClearColor(clr.R, clr.G, clr.B, clr.A);
 			clearBufferBit = clr;
 		}
@@ -1039,6 +1015,8 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// Deallocates a objects VRAM and makes it not rendered,
 		/// and then have the garbage collector clean the rest up.
+		/// NOT TESTED! 
+		/// MAY FAIL!
 		/// </summary>
 		/// <param name="objid"></param>
 		// DEV NOTE: I WIL CUM BAK 2 THIS
@@ -1047,7 +1025,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			// remove vbo (vertex data)
 			DLVRTXARR(ObjectsToRender[objid].vbo);
 
-			// remove ebo (removes some unnecessary vertex data)
+			// remove ebo
 			DLBFR(ObjectsToRender[objid].eboPtr);
 
 			// remove texture
@@ -1057,11 +1035,31 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			ExecuteRemove = null;
 		}
 
-		public virtual void DLBFR(uint bfr) => 
+		public virtual void DLBFR(uint bfr) =>
 			gl.DeleteBuffer(bfr);
 		public virtual void DLVRTXARR(uint idx) =>
 			gl.DeleteVertexArray(idx);
 		public virtual void DLTXTR(uint txtrIdx) =>
 			gl.DeleteTexture(txtrIdx);
+
+		/// <summary>
+		/// Changes an object's texture.
+		/// NOT TESTED! MAY FAIL!
+		/// </summary>
+		/// <param name="objid"></param>
+		public virtual void CHNGTXTR(int objid, string newTexturePath)
+		{
+			// del texture
+			DLTXTR(ObjectsToRender[objid].TexturePtr);
+			// recreate (new) texture
+			// create & bind texture
+			TXINIT(objid);
+			// set texture info
+			TXST(objid);
+			// send info to the shader uniform.
+			STTXTRUNI(objid);
+		}
+
+		//public virtual void CHNGMSH(int objid, Mesh toChangeTo)
 	}
 }

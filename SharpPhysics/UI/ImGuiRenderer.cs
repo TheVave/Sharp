@@ -1,9 +1,5 @@
 ﻿using ImGuiNET;
 using SharpPhysics.UI.UIHierarchy;
-using Silk.NET.OpenGLES;
-using Silk.NET.OpenGL;
-using Silk.NET.OpenGLES.Extensions.ImGui;
-using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
 using System.Numerics;
 

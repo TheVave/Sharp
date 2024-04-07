@@ -119,6 +119,21 @@ namespace SharpPhysics
 		}
 
 		/// <summary>
+		/// The objects to render.
+		/// </summary>
+		public static SGLRenderedObject[] ObjectsToRender
+		{
+			get
+			{
+				return renderer.ObjectsToRender;
+			}
+			set
+			{
+				renderer.ObjectsToRender = value;
+			}
+		}
+
+		/// <summary>
 		/// Starts rendering
 		/// </summary>
 		public static void InitRendering()

@@ -1,55 +1,61 @@
 ﻿using SharpPhysics._2d.Objects;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
+using SharpPhysics.Utilities.MISC.Unsafe;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
-	public class Mesh
+	/// <summary>
+	/// The class for holding info on the shape of an object.
+	/// 
+	/// </summary>
+	public class Mesh : ISizeGettable
 	{
 		/// <summary>
 		/// The X points in the mesh with an offset of the position of the object.
 		/// </summary>
-		public double[] MeshPointsX;
+		public double[] MeshPointsX { get; internal set; }
 
 		/// <summary>
 		/// The Y points in the mesh with an offset of the position of the object.
 		/// </summary>
-		public double[] MeshPointsY;
+		public double[] MeshPointsY { get; internal set; }
 
 		/// <summary>
 		/// The Z points in the mesh with an offset of the position of the object.
 		/// </summary>
-		public double[] MeshPointsZ;
+		public double[] MeshPointsZ { get; internal set; }
 
 		/// <summary>
 		/// The points that make up the mesh.
 		/// </summary>
-		public Point[] MeshPoints;
+		public Point[] MeshPoints { get; internal set; }
 
 		/// <summary>
 		/// The X points in the mesh with, no offset, exactly how the model was first made.
 		/// </summary>
-		public double[] MeshPointsActualX;
+		public double[] MeshPointsActualX { get; internal set; }
 
 		/// <summary> 
 		/// The Y points in the mesh with, no offset, exactly how the model was first made.
 		/// </summary>
-		public double[] MeshPointsActualY;
+		public double[] MeshPointsActualY { get; internal set; }
 
 		/// <summary>
 		/// The Z points in the mesh with, no offset, exactly how the model was first made.
 		/// </summary>
-		public double[] MeshPointsActualZ;
+		public double[] MeshPointsActualZ { get; internal set; }
 
 		/// <summary>
-		/// The triangles that make up the mesh. Used for collision and rendering.
+		/// The triangles that make up the mesh. Used for collision.
 		/// </summary>
-		public Triangle[] MeshTriangles;
+		public Triangle[] MeshTriangles { get; internal set; }
 
 		/// <summary>
-		/// The triangles that make up the mesh. Used for collision and rendering.
-		/// Not changed for movement
+		/// The triangles that make up the mesh. 
+		/// Used for rendering.
+		/// Not changed for movement.
 		/// </summary>
-		public readonly Triangle[] ActualTriangles;
+		public Triangle[] ActualTriangles { get; internal set; }
 
 		/// <summary>
 		/// The maximum distance of the origin to mesh
@@ -130,5 +136,16 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			// if I don't recalc the triangles it'll just make a pointer to ActualTriangles
 			MeshTriangles = DelaunayTriangulator.DelaunayTriangulation(MeshPoints).ToArray();
 		}
+
+		public unsafe int GetSize() =>
+			// six arrays of same len
+			(UnsafeUtils.GetArraySize(MeshPointsX) * 6) +
+			// MaximumDistanceFromCenter
+			(sizeof(double)) +
+			// GetSize method size
+			// annoying: class inherits from object, so implement those method sizes
+			(UnsafeUtils.PtrSize * 5) +
+			// complex: triangles
+			(UnsafeUtils.GetArraySize(ActualTriangles) * 2);
 	}
 }

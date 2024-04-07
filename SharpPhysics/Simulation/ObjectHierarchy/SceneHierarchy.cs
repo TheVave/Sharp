@@ -1,5 +1,4 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
-using SharpPhysics.Utilities.MISC;
 
 namespace SharpPhysics.Simulation.ObjectHierarchy
 {

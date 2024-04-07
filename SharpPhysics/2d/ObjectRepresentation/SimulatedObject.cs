@@ -4,10 +4,12 @@ using SharpPhysics._2d.Objects;
 using SharpPhysics._2d.Physics;
 using SharpPhysics._2d.Raycasting;
 using SharpPhysics.Utilities.MISC;
+using SharpPhysics.Utilities.MISC.Unsafe;
+using System.Text;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
-	public class SimulatedObject2d
+	public class SimulatedObject2d : ISizeGettable
 	{
 		/// <summary>
 		/// The object name
@@ -114,5 +116,21 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			}
 			return physicsSimulator;
 		}
+
+		public int GetSize() =>
+			// Name param size
+			Encoding.Unicode.GetByteCount(Name) +
+			// methods
+			((UnsafeUtils.PtrSize * 5) +
+			// SimulatePhysics param
+			sizeof(bool)) +
+			// complex: ObjectMesh
+			ObjectMesh.GetSize() +
+			// Complex: ObjectPhysicsParams
+			ObjectPhysicsParams.GetSize() +
+			// Complex: Translation
+			Translation.GetSize() +
+			// sizeof(object)
+			(UnsafeUtils.PtrSize * 4);
 	}
 }

@@ -2,12 +2,6 @@
 using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Utilities;
 using SharpPhysics.Utilities.MISC;
-using Silk.NET.Vulkan;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpPhysics._2d.Rendering
 {
@@ -47,15 +41,11 @@ namespace SharpPhysics._2d.Rendering
 				{
 					MainRendererSGL.renderer.PauseRender = true;
 					SimulatedObject2d object2D = _2dWorld.SceneHierarchies[sceneID].Objects[obj];
-					try
-					{
-						SGLRenderedObject objectRndrd = MainRendererSGL.renderer.ObjectsToRender[obj];
-						if (objectRndrd.objToSim != &object2D) throw new();
-					}
-					catch
-					{
+
+					if (MainRendererSGL.renderer.ObjectsToRender[obj].objToSim.HeldObject != object2D)
+						// Error, Internal Error, You can't remove an uninialized object.
 						ErrorHandler.ThrowError(14, true);
-					}
+
 					MainRendererSGL.renderer.ExecuteRemove = obj;
 					fixed (int?* executeRemovePtr = &MainRendererSGL.renderer.ExecuteRemove)
 						Utils.AwaitUntilValue(executeRemovePtr, null);
@@ -80,17 +70,7 @@ namespace SharpPhysics._2d.Rendering
 		/// </summary>
 		public static void InitRendering()
 		{
-			try
-			{
-				MainRendererSGL.InitRendering();
-			}
-			catch
-			{
-				IsESCompatible = true;
-				MainRendererSGLES.InitRendering();
-			}
-
-			ErrorHandler.ThrowError(12, true);
+			MainRendererSGL.InitRendering();
 		}
 	}
 }

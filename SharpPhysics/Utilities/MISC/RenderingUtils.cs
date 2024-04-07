@@ -2,10 +2,10 @@
 using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
+using SharpPhysics.Utilities.MISC.Unsafe;
 using Silk.NET.Core;
 using StbImageSharp;
 using static SharpPhysics.Utilities.MathUtils.GenericMathUtils;
-using static SharpPhysics.Utilities.MISC.Unsafe.UnsafeUtils;
 
 namespace SharpPhysics.Utilities.MISC
 {
@@ -47,7 +47,7 @@ namespace SharpPhysics.Utilities.MISC
 		}
 
 		public static RawImage GetRawImageFromImageResult(ImageResult reslt) =>
-			new RawImage(reslt.Width, reslt.Height, new Memory<byte>(reslt.Data));
+			new(reslt.Width, reslt.Height, new Memory<byte>(reslt.Data));
 
 		/// <summary>
 		/// Gets a float[] containing the texture cords
@@ -92,7 +92,7 @@ namespace SharpPhysics.Utilities.MISC
 		/// <returns></returns>
 		public static Point GetGreatestPointFromArray(Point[] arr)
 		{
-			Point curGreatest = new Point(0, 0);
+			Point curGreatest = new(0, 0);
 			foreach (Point p in arr)
 			{
 				if (p.X > curGreatest.X) curGreatest.X = p.X;
@@ -108,7 +108,7 @@ namespace SharpPhysics.Utilities.MISC
 		/// <returns></returns>
 		public static Point GetLowestPointFromArray(Point[] arr)
 		{
-			Point curLowest = new Point(0, 0);
+			Point curLowest = new(0, 0);
 			foreach (Point p in arr)
 			{
 				if (p.X < curLowest.X) curLowest.X = p.X;
@@ -171,7 +171,7 @@ namespace SharpPhysics.Utilities.MISC
 				vertices[i * 3 + 1] = distinctVertices[(int)indices[i] * 3 + 1];
 				vertices[i * 3 + 2] = distinctVertices[(int)indices[i] * 3 + 2];
 			}
-			return indices.ToArray();
+			return [.. indices];
 		}
 
 		/// <summary>
@@ -203,10 +203,11 @@ namespace SharpPhysics.Utilities.MISC
 		public static unsafe SGLRenderedObject GetBlankSGLRenderedObjectFromSimulatedObject2d(SimulatedObject2d obj)
 		{
 			// must be freed later because mem doesn't get collected by the GC
-			SimulatedObject2d* ptr = CopyToUnmanagedPointer(obj);
+			UnmanagedMemoryObject<SimulatedObject2d> objToSim = new();
+			objToSim.Create(obj);
 			return new SGLRenderedObject()
 			{
-				objToSim = ptr,
+				objToSim = objToSim,
 				NeedMemFreeSimulatedObject2d = true
 			};
 		}

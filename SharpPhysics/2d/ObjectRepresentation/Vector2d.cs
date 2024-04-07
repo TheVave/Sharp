@@ -1,6 +1,8 @@
-﻿namespace SharpPhysics._2d.ObjectRepresentation
+﻿using SharpPhysics.Utilities.MISC.Unsafe;
+
+namespace SharpPhysics._2d.ObjectRepresentation
 {
-	public class Vector2d
+	public class Vector2d : ISizeGettable
 	{
 		public double VelocityX { get; set; }
 		public double VelocityY { get; set; }
@@ -13,6 +15,14 @@
 		{
 			VelocityX = velocityX;
 			VelocityY = velocityY;
+		}
+
+		public int GetSize()
+		{
+			unsafe
+			{
+				return sizeof(Vector2d);
+			}
 		}
 	}
 }

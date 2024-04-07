@@ -1,6 +1,8 @@
-﻿namespace SharpPhysics._2d.ObjectRepresentation
+﻿using SharpPhysics.Utilities.MISC.Unsafe;
+
+namespace SharpPhysics._2d.ObjectRepresentation
 {
-	public class PhysicsParams2d
+	public class PhysicsParams2d : ISizeGettable
 	{
 		/// <summary>
 		/// The resistance for moving
@@ -49,6 +51,14 @@
 		{
 			Velocity = velocity;
 			Mass = mass;
+		}
+
+		public int GetSize()
+		{
+			unsafe
+			{
+				return sizeof(PhysicsParams2d);
+			}
 		}
 	}
 }

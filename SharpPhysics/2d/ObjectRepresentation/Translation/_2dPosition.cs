@@ -1,7 +1,8 @@
-﻿
+﻿using SharpPhysics.Utilities.MISC.Unsafe;
+
 namespace SharpPhysics._2d.ObjectRepresentation.Translation
 {
-	public class _2dPosition
+	public class _2dPosition : ISizeGettable
 	{
 		/// <summary>
 		/// Point located at the origin.
@@ -14,6 +15,15 @@ namespace SharpPhysics._2d.ObjectRepresentation.Translation
 		{
 			return $"Pos:{X},{Y},{Z}";
 		}
+
+		public int GetSize()
+		{
+			unsafe
+			{
+				return sizeof(_2dPosition);
+			}
+		}
+
 		public _2dPosition(double x, double y, double z)
 		{
 			X = x;

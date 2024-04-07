@@ -3,7 +3,6 @@ using SharpPhysics._2d.Rendering;
 using SharpPhysics.StrangeDataTypes;
 using SharpPhysics.Utilities;
 using SharpPhysics.Utilities.MISC;
-using System.Diagnostics;
 
 namespace SharpPhysics._2d.ObjectRepresentation.Hierarchies
 {
@@ -15,15 +14,20 @@ namespace SharpPhysics._2d.ObjectRepresentation.Hierarchies
 		/// If you change this it will (somewhat slowly) set up/remove the objects to render.
 		/// </summary>
 		// Wrapper for trueObjs
-		public SimulatedObject2d[] Objects { 
-			get 
+		public SimulatedObject2d[] Objects
+		{
+			get
 			{
 				return trueObjs;
-			} 
+			}
 			set
 			{
-				unsafe {
+				//if (Utils.RenderingStarted)
+				//{
+				unsafe
+				{
 					List<HowChanged> changes = Utils.FindChange(trueObjs, value).ToList();
+					trueObjs = value;
 					List<int> addedObjs = changes
 											.Select((change, index) => new { change, index })
 											.Where(item => item.change == HowChanged.Added)
@@ -42,7 +46,7 @@ namespace SharpPhysics._2d.ObjectRepresentation.Hierarchies
 						SGLRenderedObject*[] ptrArray = new SGLRenderedObject*[addedObjs.Count];
 						SimulatedObject2d[] objs = new SimulatedObject2d[addedObjs.Count];
 						SGLRenderedObject LatestObject;
-						foreach (SimulatedObject2d obj in objs)
+						//foreach (SimulatedObject2d obj in objs)
 						for (int i = 0; i < addedObjs.Count; i++)
 						{
 							LatestObject = RenderingUtils.GetBlankSGLRenderedObjectFromSimulatedObject2d(trueObjs[addedObjs[i]]);
@@ -53,25 +57,29 @@ namespace SharpPhysics._2d.ObjectRepresentation.Hierarchies
 					if (changes.Contains(HowChanged.Removed))
 					{
 						// dealing with removing objects
-						MainRenderer.RRO(/* removedObjects.ToArray() =-> */[.. removedObjects], HierarchyId);
+						MainRenderer.RRO(/* removedObjects.ToArray() -> */[.. removedObjects], HierarchyId);
 					}
-					// we don't care about moved or unchanged objects, 
+					// we don't care about moved or unchanged objects, so do nothing.
 				}
+				//}
+				//else
+				//{
+				//trueObjs = value;
+				//}
 			}
 		}
 
-		///// <summary>
-		///// The objects that are rendered from the scene. </br>
-		///// If the current rendering scene is not this one, it will return a blank array.
-		///// </summary>
-		//// May be changed to a List<SGLRenderedObject>, as this breaks CA1819, see https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1819
-		//public SGLRenderedObject[] RenderedObjects
-		//{
-		//	get => (MainRendererSGL.SceneIDToRender == HierarchyId) ? MainRendererSGL.renderer.ObjectsToRender : [];
-		//	set => MainRendererSGL.re
-		//}
+		/// <summary>
+		/// the objects that are rendered from the scene. </br>
+		/// if the current rendering scene is not this one, it will return a blank array.
+		/// </summary>
+		public SGLRenderedObject[] RenderedObjects
+		{
+			get => (MainRendererSGL.SceneIDToRender == HierarchyId) ? MainRendererSGL.renderer.ObjectsToRender : [];
+			set => MainRendererSGL.ObjectsToRender = value;
+		}
 
-		public SimulatedObject2d[] trueObjs = [];
+		internal SimulatedObject2d[] trueObjs = [];
 		public byte HierarchyId { get; private set; } = 0;
 
 		public _2dSceneHierarchy()

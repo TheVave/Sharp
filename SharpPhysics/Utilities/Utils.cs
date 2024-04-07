@@ -1,5 +1,4 @@
 ﻿using SharpPhysics.StrangeDataTypes;
-using SharpPhysics.Utilities.MISC;
 
 namespace SharpPhysics.Utilities
 {
@@ -7,6 +6,7 @@ namespace SharpPhysics.Utilities
 	{
 		public static void* NULLVOIDPTR = (void*)NULLPTR;
 		public static nint NULLPTR = IntPtr.Zero;
+		public static bool RenderingStarted = false;
 
 		/// <summary>
 		/// Higher values are better for cpu performance and higher ones for accuracy.
