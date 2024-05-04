@@ -1,11 +1,12 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics.StrangeDataTypes;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using SharpPhysics.Utilities.MISC;
 
 namespace SharpPhysics._2d.Physics.CollisionManagement
 {
-	public static class _2dCollisionManager
+	public static class _2dCollisionManager : IAny
 	{
 
 

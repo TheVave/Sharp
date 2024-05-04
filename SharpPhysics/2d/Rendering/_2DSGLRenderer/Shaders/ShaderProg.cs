@@ -1,6 +1,8 @@
-﻿namespace SharpPhysics._2d._2DSGLRenderer.Shaders
+﻿using SharpPhysics.Utilities.MISC.Unsafe;
+
+namespace SharpPhysics._2d._2DSGLRenderer.Shaders
 {
-	public class ShaderProgram
+	public class ShaderProgram : ISizeGettable, IAny
 	{
 		public Shader Vrtx;
 		public Shader Frag;
@@ -11,5 +13,12 @@
 			Vrtx = new Shader();
 			Frag = new Shader();
 		}
+
+		public int GetSize() =>
+			// simple objects
+			sizeof(uint)
+			// complex objects
+			+ Vrtx.GetSize()
+			+ Frag.GetSize();
 	}
 }

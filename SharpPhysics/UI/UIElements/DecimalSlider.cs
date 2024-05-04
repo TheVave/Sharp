@@ -1,9 +1,10 @@
 ﻿using ImGuiNET;
+using SharpPhysics.StrangeDataTypes;
 using System.Numerics;
 
 namespace SharpPhysics.UI.UIElements
 {
-	public class DecimalSlider : IUIElement
+	public class DecimalSlider : IUIElement, IAny
 	{
 		public float SliderVal = 0;
 		public float SliderMin;

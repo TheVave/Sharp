@@ -1,6 +1,7 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics._2d.ObjectRepresentation.Translation;
 using SharpPhysics._2d.Physics.CollisionManagement;
+using SharpPhysics.StrangeDataTypes;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 
@@ -10,7 +11,7 @@ namespace SharpPhysics._2d.Physics
 	/// The default 2d physics simulator. Based on the old unfinished 3d one.
 	/// </summary>
 	[Serializable]
-	public class _2dPhysicsSimulator
+	public class _2dPhysicsSimulator : IAny
 	{
 
 		/// <summary>
@@ -43,7 +44,7 @@ namespace SharpPhysics._2d.Physics
 		/// <summary>
 		/// The most recent movement the object has taken.
 		/// </summary>
-		public _2dMovementRepresenter CurrentMovement { get; private set; } = new(new _2dPosition(0, 0));
+		public _2dMovementRepresenter CurrentMovement { get; private set; } = new(new Position(0, 0));
 
 		/// <summary>
 		/// Momentum multiplier
@@ -147,8 +148,8 @@ namespace SharpPhysics._2d.Physics
 				//												 RotateByRadians(GenericMathUtils.DegreesToRadians(ObjectToSimulate.Translation.ObjectRotation.xRot)).
 				//												 ShiftTriangle(new(ObjectToSimulate.Translation.ObjectPosition.X, ObjectToSimulate.Translation.ObjectPosition.Y));
 				tri = new(actualTriangle.Vertex1, actualTriangle.Vertex2, actualTriangle.Vertex3, false);
-				Triangle.ScaleTriangle(ObjectToSimulate.Translation.ObjectScale.xSca, ObjectToSimulate.Translation.ObjectScale.ySca, ref tri);
-				Triangle.RotateByRadians(GenericMathUtils.DegreesToRadians(ObjectToSimulate.Translation.ObjectRotation.xRot), ref tri);
+				Triangle.ScaleTriangle(ObjectToSimulate.Translation.ObjectScale.XSca, ObjectToSimulate.Translation.ObjectScale.YSca, ref tri);
+				Triangle.RotateByRadians(GenericMathUtils.DegreesToRadians(ObjectToSimulate.Translation.ObjectRotation.XRot), ref tri);
 				Triangle.ShiftTriangle(ObjectToSimulate.Translation.ObjectPosition, tri);
 				ObjectToSimulate.ObjectMesh.MeshTriangles[i] = tri;
 			}
@@ -172,9 +173,9 @@ namespace SharpPhysics._2d.Physics
 
 		private void MomCalc()
 		{
-			ObjectToSimulate.ObjectPhysicsParams.Velocity.VelocityX = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.Velocity.VelocityX, ObjectToSimulate.ObjectPhysicsParams.SpeedResistance);
+			ObjectToSimulate.ObjectPhysicsParams.Velocity.X = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.Velocity.X, ObjectToSimulate.ObjectPhysicsParams.SpeedResistance);
 
-			ObjectToSimulate.ObjectPhysicsParams.Velocity.VelocityY = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.Velocity.VelocityY, ObjectToSimulate.ObjectPhysicsParams.SpeedResistance);
+			ObjectToSimulate.ObjectPhysicsParams.Velocity.Y = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.Velocity.Y, ObjectToSimulate.ObjectPhysicsParams.SpeedResistance);
 
 			// set mesh points for collision
 			for (int i = 0; i < ObjectToSimulate.ObjectMesh.MeshPointsX.Length; i++)
@@ -193,19 +194,19 @@ namespace SharpPhysics._2d.Physics
 			// may change. Ideas for rotational momentum impulse may be from https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/10%3A_Rotational_Motion_and_Angular_Momentum/10.03%3A_Dynamics_of_Rotational_Motion_-_Rotational_Inertia
 			// r in the upper link can be found by finding the area of the object, then working backward from the circle area equation, A = [pi]r^2, rearranged to r = [pi] / sqr(a).
 			rotationalAmount = ObjectToSimulate.ObjectPhysicsParams.RotationalVelocity * TimePerSimulationTick;
-			ObjectToSimulate.Translation.ObjectRotation.xRot += (float)(rotationalAmount);
+			ObjectToSimulate.Translation.ObjectRotation.XRot += (float)(rotationalAmount);
 			ObjectToSimulate.ObjectPhysicsParams.RotationalVelocity = GenericMathUtils.SubtractToZero(ObjectToSimulate.ObjectPhysicsParams.RotationalVelocity, ObjectToSimulate.ObjectPhysicsParams.RotResistance);
 		}
 
 		private void PosCalc()
 		{
 			// do standard calculations to find the displacement in a given direction
-			ObjectToSimulate.Translation.ObjectPosition.X += ObjectToSimulate.ObjectPhysicsParams.Velocity.VelocityX;
-			ObjectToSimulate.Translation.ObjectPosition.Y += ObjectToSimulate.ObjectPhysicsParams.Velocity.VelocityY - ((9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass) * (TimePerSimulationTick / 1000));
+			ObjectToSimulate.Translation.ObjectPosition.X += ObjectToSimulate.ObjectPhysicsParams.Velocity.X;
+			ObjectToSimulate.Translation.ObjectPosition.Y += ObjectToSimulate.ObjectPhysicsParams.Velocity.Y - ((9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass) * (TimePerSimulationTick / 1000));
 
 			// add velocity
-			ObjectToSimulate.ObjectPhysicsParams.Velocity.VelocityX += (ObjectToSimulate.Translation.ObjectPosition - CurrentMovement.EndPosition).X;
-			ObjectToSimulate.ObjectPhysicsParams.Velocity.VelocityY += (ObjectToSimulate.Translation.ObjectPosition - CurrentMovement.EndPosition).Y - ((9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass) * (TimePerSimulationTick / 1000));
+			ObjectToSimulate.ObjectPhysicsParams.Velocity.X += (ObjectToSimulate.Translation.ObjectPosition - CurrentMovement.EndPosition).X;
+			ObjectToSimulate.ObjectPhysicsParams.Velocity.Y += (ObjectToSimulate.Translation.ObjectPosition - CurrentMovement.EndPosition).Y - ((9.8 * ObjectToSimulate.ObjectPhysicsParams.Mass) * (TimePerSimulationTick / 1000));
 		}
 
 		internal void ThreadNameInit()

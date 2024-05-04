@@ -1,6 +1,8 @@
-﻿namespace SharpPhysics._2d.Raycasting
+﻿using SharpPhysics.StrangeDataTypes;
+
+namespace SharpPhysics._2d.Raycasting
 {
-	public class _2dMovementRepresenter
+	public class _2dMovementRepresenter : IAny
 	{
 		public double xStart = 0;
 		public double yStart = 0;

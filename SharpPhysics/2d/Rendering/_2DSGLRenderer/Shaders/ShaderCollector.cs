@@ -1,11 +1,12 @@
 ﻿using SharpPhysics._2d.Rendering._2DSGLRenderer.Shaders;
+using SharpPhysics.StrangeDataTypes;
 using SharpPhysics.Utilities.MISC;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Shaders
 {
-	public static class ShaderCollector
+	public static class ShaderCollector : IAny
 	{
-		public static List<ShaderNamePair> Pairs;
+		public static ShaderNamePair[] Pairs = [new()];
 
 		public static string GetShader(string name)
 		{
@@ -15,23 +16,24 @@ namespace SharpPhysics._2d._2DSGLRenderer.Shaders
 				str = File.ReadAllText($"{Environment.CurrentDirectory}\\Shaders\\{name}.glsl");
 				if (name.StartsWith("Frag"))
 				{
-					if (Pairs[Pairs.Count - 1].FragName != null)
+					if (Pairs[^1].FragName != null)
 					{
-						List<ShaderNamePair> buf = Pairs;
-						Pairs = new List<ShaderNamePair>(Pairs.Count + 1);
-						buf.CopyTo(Pairs.ToArray());
+						ShaderNamePair[] buf = Pairs;
+						Pairs = new ShaderNamePair[buf.Length + 1];
+						Array.Copy(buf, Pairs, buf.Length);
+						Pairs[^1] = new();
 					}
-					Pairs[Pairs.Count - 1].FragName = name;
+					Pairs[^1].FragName = name;
 				}
 				else if (name.StartsWith("Vertex"))
 				{
-					if (Pairs[Pairs.Count - 1].VertName != null)
+					if (Pairs[^1].VertName != null)
 					{
-						List<ShaderNamePair> buf = Pairs;
-						Pairs = new List<ShaderNamePair>(Pairs.Count + 1);
-						buf.CopyTo(Pairs.ToArray());
+						ShaderNamePair[] buf = Pairs;
+						Pairs = new ShaderNamePair[buf.Length + 1];
+						Array.Copy(buf, Pairs, buf.Length);
 					}
-					Pairs[Pairs.Count - 1].VertName = name;
+					Pairs[^1].VertName = name;
 				}
 				else
 				{
@@ -42,10 +44,18 @@ namespace SharpPhysics._2d._2DSGLRenderer.Shaders
 				}
 				return str;
 			}
-			catch
+			catch (IndexOutOfRangeException ioore)
+			{
+				ErrorHandler.ThrowError(20, true);
+			}
+			catch (FileNotFoundException)
 			{
 				//2
 				ErrorHandler.ThrowError(2, true);
+			}
+			catch (DirectoryNotFoundException)
+			{
+				ErrorHandler.ThrowError(21, true);
 			}
 			// For C# to not get angry ||
 			//                         ||

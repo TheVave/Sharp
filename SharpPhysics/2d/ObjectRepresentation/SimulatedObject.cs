@@ -1,15 +1,17 @@
-﻿
-using SharpPhysics._2d.ObjectRepresentation.Translation;
+﻿using SharpPhysics._2d.ObjectRepresentation.Translation;
 using SharpPhysics._2d.Objects;
 using SharpPhysics._2d.Physics;
 using SharpPhysics._2d.Raycasting;
+using SharpPhysics.StrangeDataTypes;
 using SharpPhysics.Utilities.MISC;
 using SharpPhysics.Utilities.MISC.Unsafe;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
-	public class SimulatedObject2d : ISizeGettable
+	[StructLayout(LayoutKind.Sequential)]
+	public struct SimulatedObject2d : ISizeGettable, IAny
 	{
 		/// <summary>
 		/// The object name
@@ -22,7 +24,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		public Mesh ObjectMesh { get; set; }
 
 		/// <summary>
-		/// Simulate physics, you can still include this object in collidable arrays
+		/// Simulate physics. you can still include this object in collidable arrays.
 		/// </summary>
 		public bool SimulatePhysics = true;
 
@@ -92,10 +94,10 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		public void ApplyVectorVelocity(_2dVector force)
 		{
 			_2dLine forceLine = force.ToLine();
-			if (ObjectPhysicsParams.Velocity.VelocityX < forceLine.XEnd) ObjectPhysicsParams.Velocity.VelocityX = 0;
-			else ObjectPhysicsParams.Velocity.VelocityX = forceLine.XEnd;
-			if (ObjectPhysicsParams.Velocity.VelocityY < forceLine.YEnd) ObjectPhysicsParams.Velocity.VelocityY = 0;
-			else ObjectPhysicsParams.Velocity.VelocityY = forceLine.YEnd;
+			if (ObjectPhysicsParams.Velocity.X < forceLine.XEnd) ObjectPhysicsParams.Velocity.X = 0;
+			else ObjectPhysicsParams.Velocity.X = forceLine.XEnd;
+			if (ObjectPhysicsParams.Velocity.Y < forceLine.YEnd) ObjectPhysicsParams.Velocity.Y = 0;
+			else ObjectPhysicsParams.Velocity.Y = forceLine.YEnd;
 		}
 
 		/// <summary>
@@ -120,17 +122,13 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		public int GetSize() =>
 			// Name param size
 			Encoding.Unicode.GetByteCount(Name) +
-			// methods
-			((UnsafeUtils.PtrSize * 5) +
 			// SimulatePhysics param
-			sizeof(bool)) +
+			sizeof(bool) +
 			// complex: ObjectMesh
 			ObjectMesh.GetSize() +
 			// Complex: ObjectPhysicsParams
 			ObjectPhysicsParams.GetSize() +
 			// Complex: Translation
-			Translation.GetSize() +
-			// sizeof(object)
-			(UnsafeUtils.PtrSize * 4);
+			Translation.GetSize();
 	}
 }

@@ -1,6 +1,8 @@
-﻿namespace SharpPhysics.Exceptions
+﻿using SharpPhysics.StrangeDataTypes;
+
+namespace SharpPhysics.Exceptions
 {
-	public class MessageBoxException : Exception
+	public class MessageBoxException : Exception, IAny
 	{
 		public MessageBoxException(string message) : base(message)
 		{

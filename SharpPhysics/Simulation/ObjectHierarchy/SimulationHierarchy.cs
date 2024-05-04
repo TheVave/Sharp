@@ -1,4 +1,6 @@
-﻿namespace SharpPhysics.Simulation.ObjectHierarchy
+﻿using SharpPhysics.StrangeDataTypes;
+
+namespace SharpPhysics.Simulation.ObjectHierarchy
 {
 	internal static class SimulationHierarchy
 	{

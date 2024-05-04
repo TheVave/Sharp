@@ -13,7 +13,9 @@ Error, Internal/External Error, failed to initialize OpenGL or OpenGL ES. The ma
 Error, Internal Error, Not Implemented.
 Error, Internal Error, You can't remove an uninialized object.
 Error, Internal Error, Fast array object removal failure. This is often a example of uninialized values.
-Error, Internal Error, mmemcpy failed. This is often an indication that an object was not initialized correctly.
+Error, Internal Error, Mem: mmemcpy failed. This is often an indication that an object was not initialized correctly.
 Error, Internal Error, RemoveArrayObjFast failed with IndexOutOfRangeException. The value to remove was outside the bounds of the array.
 Error, Internal Error, Mem: A double free has occurred. This happens when memory is treated in strange ways, and you attempt to free memory twice.
 Error, Internal Error, Mem: A UnmanagedMemoryObject<T> setter call has happened with a non-ISizeGettable class. Please call the setter with a ISizeGettable object.
+Error, Internal Error, Unexpected code error in ShaderCollector.cs.
+Error, Internal Error, Shaders or Enviroment.CurrentDirectory do not point to an existing directory. Please make sure that there are no params passed to the program, and then make sure there's a Shader folder in #1.

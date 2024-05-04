@@ -1,10 +1,11 @@
 ﻿using SharpPhysics._2d._2DSGLRenderer.Shaders;
 using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics.StrangeDataTypes;
 using SharpPhysics.Utilities.MISC.Unsafe;
 
 namespace SharpPhysics._2d._2DSGLRenderer.Main
 {
-	public unsafe class SGLRenderedObject
+	public unsafe class SGLRenderedObject : ISizeGettable, IAny
 	{
 		/// <summary>
 		/// The vao that contains all the VRAM data
@@ -84,5 +85,18 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			if (NeedMemFreeSimulatedObject2d)
 				objToSim.Dispose();
 		}
+
+		public int GetSize() =>
+			// simplest objects
+			(sizeof(uint) * (4 + eboContent.Length))
+			+ sizeof(bool) * 3
+			+ sizeof(long)
+			// strings
+			+ UnsafeUtils.GetSimpleObjectSize(FragShader)
+			+ UnsafeUtils.GetSimpleObjectSize(VrtxShader)
+			+ UnsafeUtils.GetSimpleObjectSize(ObjectTextureLocation)
+			// complex
+			+ objToSim.GetSize()
+			+ Program.GetSize();
 	}
 }

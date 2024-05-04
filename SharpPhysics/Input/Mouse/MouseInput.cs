@@ -1,4 +1,5 @@
 ﻿
+using SharpPhysics.StrangeDataTypes;
 using System.Runtime.InteropServices;
 
 namespace SharpPhysics.Input.Mouse

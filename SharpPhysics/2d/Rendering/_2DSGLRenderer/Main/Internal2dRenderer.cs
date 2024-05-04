@@ -2,6 +2,7 @@
 using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics._2d.ObjectRepresentation.Hierarchies;
 using SharpPhysics.Renderer;
+using SharpPhysics.StrangeDataTypes;
 using SharpPhysics.UI;
 using SharpPhysics.Utilities;
 using SharpPhysics.Utilities.MathUtils;
@@ -22,7 +23,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 	/// Please do not interface directly unless you know what you're doing,
 	/// though useful if you want to make custom rendering code.
 	/// </summary>
-	public class Internal2dRenderer
+	public class Internal2dRenderer : IAny
 	{
 		/// <summary>
 		/// vbo data buffer
@@ -301,7 +302,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		{
 			int? otherSames = null;
 			uint prog;
-			for (int i = 0; i < ShaderCollector.Pairs.Count - 1; i++)
+			for (int i = 0; i < ShaderCollector.Pairs.Length - 1; i++)
 				if (ShaderCollector.Pairs[i] == ShaderCollector.Pairs[^1])
 				{
 					otherSames = i;
@@ -535,10 +536,10 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 		public unsafe virtual Matrix4x4 GTTRNSFRMMTRX(int objectID)
 		{
 			Vector3 vctr3 = new((float)ObjectsToRender[objectID].objToSim.HeldObject.Translation.ObjectPosition.X, (float)ObjectsToRender[objectID].objToSim.HeldObject.Translation.ObjectPosition.Y, 0);
-			Matrix4x4 model = Matrix4x4.CreateScale(ObjectsToRender[objectID].objToSim.HeldObject.Translation.ObjectScale.xSca,
-																ObjectsToRender[objectID].objToSim.HeldObject.Translation.ObjectScale.ySca,
+			Matrix4x4 model = Matrix4x4.CreateScale(ObjectsToRender[objectID].objToSim.HeldObject.Translation.ObjectScale.XSca,
+																ObjectsToRender[objectID].objToSim.HeldObject.Translation.ObjectScale.YSca,
 																0f) *
-																Matrix4x4.CreateRotationZ((float)GenericMathUtils.DegreesToRadians(ObjectsToRender[objectID].objToSim.HeldObject.Translation.ObjectRotation.xRot)) *
+																Matrix4x4.CreateRotationZ((float)GenericMathUtils.DegreesToRadians(ObjectsToRender[objectID].objToSim.HeldObject.Translation.ObjectRotation.XRot)) *
 																Matrix4x4.CreateTranslation(vctr3);
 			return model;
 		}
@@ -571,6 +572,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			Mesh objMesh;
 			for (int i = 0; i < ObjectsToRender.Length; i++)
 			{
+				SimulatedObject2d heldObj = ObjectsToRender[i].objToSim.HeldObject;
 				objMesh = ObjectsToRender[i].objToSim.HeldObject.ObjectMesh;
 				objMesh.MeshTriangles = [.. DelaunayTriangulator.DelaunayTriangulation(objMesh.MeshPoints)];
 			}
@@ -697,6 +699,7 @@ namespace SharpPhysics._2d._2DSGLRenderer.Main
 			STLOGO();
 			// inits ImGui
 			guiRenderer.LD(Wnd, gl);
+			MainRendererSGL.IsRendering = true;
 		}
 
 		/// <summary>

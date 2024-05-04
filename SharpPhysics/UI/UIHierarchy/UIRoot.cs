@@ -1,4 +1,6 @@
-﻿namespace SharpPhysics.UI.UIHierarchy
+﻿using SharpPhysics.StrangeDataTypes;
+
+namespace SharpPhysics.UI.UIHierarchy
 {
 	public static class UIRoot
 	{

@@ -1,6 +1,8 @@
-﻿namespace SharpPhysics.UI.UIHierarchy
+﻿using SharpPhysics.StrangeDataTypes;
+
+namespace SharpPhysics.UI.UIHierarchy
 {
-	public class UIWindow
+	public class UIWindow : IAny
 	{
 		public string Title { get; set; }
 		public IUIElement[] Elements = [];

@@ -1,6 +1,8 @@
-﻿namespace SharpPhysics.Renderer.Textures
+﻿using SharpPhysics.StrangeDataTypes;
+
+namespace SharpPhysics.Renderer.Textures
 {
-	public class Texture
+	public class Texture : IAny
 	{
 		public byte[] ImageBytes;
 		public short ImageWidth;

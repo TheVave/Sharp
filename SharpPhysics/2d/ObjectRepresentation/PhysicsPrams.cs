@@ -2,7 +2,7 @@
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
-	public class PhysicsParams2d : ISizeGettable
+	public class PhysicsParams2d : ISizeGettable, IAny
 	{
 		/// <summary>
 		/// The resistance for moving
@@ -19,7 +19,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// <summary>
 		/// What scene the object can collide with.
 		/// </summary>
-		public short sceneCollidableId;
+		public short SceneCollidableId;
 
 		/// <summary>
 		/// Mass of the object
@@ -52,7 +52,10 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			Velocity = velocity;
 			Mass = mass;
 		}
-
+		public override string ToString()
+		{
+			return $"PhysicsParams:{{SpeedResistance:{SpeedResistance}, RotResistance:{RotResistance}, SceneCollidableId:{SceneCollidableId}, Mass:{Mass}, Velocity:{Velocity}, RotationalVelocity:{RotationalVelocity}}}";
+		}
 		public int GetSize()
 		{
 			unsafe

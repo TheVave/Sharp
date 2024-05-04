@@ -2,7 +2,7 @@
 
 namespace SharpPhysics.StrangeDataTypes
 {
-	public struct GetClosestTriangleLineReturn
+	public struct GetClosestTriangleLineReturn : IAny
 	{
 		public Triangle tri;
 		public int vertex1;

@@ -1,4 +1,5 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics.StrangeDataTypes;
 
 namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 {

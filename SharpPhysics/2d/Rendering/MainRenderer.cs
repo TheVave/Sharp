@@ -1,13 +1,20 @@
 ﻿using SharpPhysics._2d._2DSGLRenderer.Main;
 using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics.StrangeDataTypes;
 using SharpPhysics.Utilities;
 using SharpPhysics.Utilities.MISC;
 
 namespace SharpPhysics._2d.Rendering
 {
-	public static class MainRenderer
+	public static class MainRenderer : IAny
 	{
 		internal static bool IsESCompatible = false;
+
+		internal static bool IsRendering { get
+			{
+				return MainRendererSGL.IsRendering;
+			}
+		}
 
 		/// <summary>
 		/// Adds rendered objects

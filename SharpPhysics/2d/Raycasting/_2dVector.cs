@@ -1,8 +1,9 @@
-﻿using SharpPhysics.Utilities.MathUtils;
+﻿using SharpPhysics.StrangeDataTypes;
+using SharpPhysics.Utilities.MathUtils;
 
 namespace SharpPhysics._2d.Raycasting
 {
-	public class _2dVector
+	public class _2dVector : IAny
 	{
 		public Angle VectorAngle;
 		public double Magnitude;

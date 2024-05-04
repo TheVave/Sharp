@@ -1,6 +1,8 @@
-﻿namespace SharpPhysics._2d._2DSGLRenderer
+﻿using SharpPhysics.StrangeDataTypes;
+
+namespace SharpPhysics._2d._2DSGLRenderer
 {
-	public class Size
+	public class Size : IAny
 	{
 		public int Width;
 		public int Height;

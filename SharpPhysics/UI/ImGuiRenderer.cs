@@ -1,11 +1,12 @@
 ﻿using ImGuiNET;
+using SharpPhysics.StrangeDataTypes;
 using SharpPhysics.UI.UIHierarchy;
 using Silk.NET.Windowing;
 using System.Numerics;
 
 namespace SharpPhysics.UI
 {
-	public class ImGuiRenderer
+	public class ImGuiRenderer : IAny
 	{
 		Silk.NET.OpenGL.Extensions.ImGui.ImGuiController controller;
 		Silk.NET.OpenGLES.Extensions.ImGui.ImGuiController controlleres;

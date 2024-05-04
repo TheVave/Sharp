@@ -10,9 +10,9 @@ public static class UnsafeUtils
 		get
 		{
 			if (Environment.Is64BitProcess)
-				return 64;
+				return 8;
 			else
-				return 32;
+				return 4;
 		}
 	}
 
@@ -27,11 +27,12 @@ public static class UnsafeUtils
 		try
 		{
 			long curWdthMngd = 0;
-			while (curWdthMngd++ < cpylen) *(strt + curWdthMngd) = *(dest + curWdthMngd);
+			while (curWdthMngd++ < cpylen) *(dest + curWdthMngd) = *(strt + curWdthMngd);
 		}
 		catch
 		{
 			ErrorHandler.ThrowError(16, false);
+			throw;
 		}
 	}
 

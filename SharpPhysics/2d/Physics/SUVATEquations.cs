@@ -1,9 +1,11 @@
-﻿namespace SharpPhysics._2d.Physics
+﻿using SharpPhysics.StrangeDataTypes;
+
+namespace SharpPhysics._2d.Physics
 {
 	/// <summary>
 	/// This class is the main calculator of the ([nothing]/_2d)PhysicsSimulator class
 	/// </summary>
-	public sealed class SUVATEquations
+	public sealed class SUVATEquations : IAny
 	{
 
 		/// <summary>

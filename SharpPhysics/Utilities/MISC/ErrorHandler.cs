@@ -1,35 +1,36 @@
 ﻿using SharpPhysics.Exceptions;
 using System.Runtime.InteropServices;
 
-namespace SharpPhysics.Utilities.MISC
+namespace SharpPhysics.Utilities.MISC;
+public static class ErrorHandler
 {
-	public static class ErrorHandler
+	public static bool IsWindows = true;
+	public static bool InitCalled = false;
+	public static string[] errors = File.ReadAllLines($"{Environment.CurrentDirectory}\\errors.txt");
+	public static void ThrowError(int messageIdx, bool crash)
 	{
-		public static bool IsWindows = true;
-		public static bool InitCalled = false;
-		public static string[] errors = File.ReadAllLines($"{Environment.CurrentDirectory}\\errors.tx");
-		public static void ThrowError(int messageIdx, bool crash)
+		string message = errors[messageIdx - 1].Replace("#1", Environment.CurrentDirectory);
+		ThrowError(message, crash);
+	}
+	public static void ThrowError(string message, bool crash)
+	{
+		if (Environment.OSVersion.Platform == PlatformID.Win32NT)
 		{
-			string message = errors[messageIdx - 1];
-			ThrowError(message, crash);
+			[DllImport("user32.dll")]
+			static extern int MessageBox(nint h, string m, string c, int type);
+			_ = MessageBox(nint.Zero, message, "Error", /* 0x01 is MB_ICONERROR (error symbol) and 0x00 is MB_OK (ok message box) */ 0x10 | 0x00);
+			if (crash) throw new MessageBoxException(message + " (Shown in message box)");
 		}
-		public static void ThrowError(string message, bool crash)
+		else
 		{
-			if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-			{
-				[DllImport("user32.dll")]
-				static extern int MessageBox(nint h, string m, string c, int type);
-				_ = MessageBox(nint.Zero, message, "Error", /* 0x01 is MB_ICONERROR (error symbol) and 0x00 is MB_OK (ok message box) */ 0x10 | 0x00);
-				if (crash) throw new MessageBoxException(message + " (Shown in message box)");
-			}
+			if (ErrorTweaks.SayNonWindowsOS)
+				throw new MessageBoxException(message + " This OS is not windows, so the program cannot display a message box. Hide this by disabling ErrorTweaks.SayNonWindowsOS.");
 			else
-			{
-				throw new Exception(message + " Non Windows OS.");
-			}
+				throw new MessageBoxException(message);
 		}
-		public static bool YesNoQuestion(string question, string title, bool crashOnNo)
-		{
-			return true;
-		}
+	}
+	public static bool YesNoQuestion(string question, string title, bool crashOnNo)
+	{
+		return true;
 	}
 }

@@ -1,8 +1,9 @@
-﻿using System.Numerics;
+﻿using SharpPhysics.StrangeDataTypes;
+using System.Numerics;
 
 namespace SharpPhysics.UI.UIElements
 {
-	public class Container : IUIElement
+	public class Container : IUIElement, IAny
 	{
 		public IUIElement[] Children;
 		public bool Visible { get; set; } = true;

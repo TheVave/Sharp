@@ -1,11 +1,12 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation.Translation;
+using SharpPhysics.StrangeDataTypes;
 using SharpPhysics.Utilities;
 using SharpPhysics.Utilities.MathUtils;
 using SharpPhysics.Utilities.MISC.Unsafe;
 
 namespace SharpPhysics._2d.ObjectRepresentation
 {
-	public class Point : ISizeGettable
+	public class Point : ISizeGettable, IAny
 	{
 		/// <summary>
 		/// The X position of the point
@@ -63,10 +64,16 @@ namespace SharpPhysics._2d.ObjectRepresentation
 
 		public static Point ShallowCopyPoint(Point pnt) =>
 			(pnt.Is3d) ? new(pnt.X, pnt.Y, pnt.Z) : new(pnt.X, pnt.Y);
+		public Point ShallowCopyPoint() =>
+			(Is3d) ? new(X, Y, Z) : new(X, Y);
 
 		public static float[] ToFloatArray3D(Point pnt)
 		{
 			return [(float)pnt.X, (float)pnt.Y, (float)pnt.Z];
+		}
+		public float[] ToFloatArray3D()
+		{
+			return [(float)X, (float)Y, (float)Z];
 		}
 
 		public static implicit operator float[](Point p)
@@ -95,7 +102,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			a.X += b.X;
 			a.Y += b.Y;
 		}
-		internal static void AddNoCheck2D(Point a, _2dPosition b)
+		internal static void AddNoCheck2D(Point a, Position b)
 		{
 			a.X += b.X;
 			a.Y += b.Y;
@@ -116,6 +123,27 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			p2.X += p.X;
 			p2.Y += p.Y;
 		}
+		public void Add(Point ToAdd)
+		{
+			if (this == null) throw new ArgumentNullException("Cannot add point to null");
+			if (ContainsValue(this, double.NaN)) throw new InvalidOperationException("Point had a value of NaN");
+			if (Is3d != ToAdd.Is3d) throw new InvalidOperationException("Unable to add points with non-similar dimensions");
+			X += ToAdd.X;
+			Y += ToAdd.Y;
+		}
+
+		/// <summary>
+		/// Copies a Point[].
+		/// </summary>
+		/// <param name="pts"></param>
+		/// <returns></returns>
+		public static Point[] ShallowCopyPoints(Point[] pts)
+		{
+			Point[] toReturn = new Point[pts.Length];
+			for (int i = 0; i < pts.Length; i++)
+				toReturn[i] = Point.ShallowCopyPoint(pts[i]);
+			return [];
+		}
 
 		/// <summary>
 		/// Checks if a point contains a value
@@ -124,6 +152,8 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		/// <returns></returns>
 		public static bool ContainsValue(Point pnt, double value) =>
 			value == pnt.X || value == pnt.Y || value == pnt.Z;
+		public bool ContainsValue(double value) =>
+			value == X || value == Y || value == Z;
 
 		/// <summary>
 		/// Checks if a point array contains a value
@@ -157,16 +187,16 @@ namespace SharpPhysics._2d.ObjectRepresentation
 
 
 		/// <summary>
-		/// Warning! Slow!
+		/// Converts a Point[] to a float[].
+		/// Used for rendering.
 		/// </summary>
-		// TODO: Make Point.ToFloatArray faster
+		// NEW CHANGE: this method's speed has been increased.
+		// It is now quite fast.
 		public static float[] ToFloatArray(Point[] points)
 		{
-			float[] toReturn = [];
-			Utils.ParallelForLoop((int loopIdx) =>
-			{
-				toReturn = toReturn.Concat((float[])(points[loopIdx])).ToArray();
-			}, points.Length);
+			float[] toReturn = new float[points.Length * 3];
+			for (int i = 0; i < points.Length; i++)
+				Array.Copy(points[i].ToFloatArray3D(), 0, toReturn, i * 3, 3);
 			return toReturn;
 		}
 

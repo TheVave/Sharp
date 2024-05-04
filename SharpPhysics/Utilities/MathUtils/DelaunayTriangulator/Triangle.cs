@@ -1,11 +1,12 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics._2d.ObjectRepresentation.Translation;
+using SharpPhysics.StrangeDataTypes;
 using SharpPhysics.Utilities.MISC;
 using SharpPhysics.Utilities.MISC.Unsafe;
 
 namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 {
-	public class Triangle : ISizeGettable
+	public class Triangle : ISizeGettable, IAny
 	{
 		public Point Vertex1 { get; private set; }
 		public Point Vertex2 { get; private set; }
@@ -72,7 +73,7 @@ namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 			tri.Vertex2 += pos;
 			tri.Vertex3 += pos;
 		}
-		public static void ShiftTriangle(_2dPosition pos, Triangle tri)
+		public static void ShiftTriangle(Position pos, Triangle tri)
 		{
 			tri.Vertex1.X += pos.X;
 			tri.Vertex1.Y += pos.Y;

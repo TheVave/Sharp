@@ -1,5 +1,6 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
 using SharpPhysics._2d.Raycasting;
+using SharpPhysics.StrangeDataTypes;
 
 namespace SharpPhysics.Utilities.MathUtils
 {

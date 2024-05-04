@@ -1,9 +1,10 @@
 ﻿using ImGuiNET;
+using SharpPhysics.StrangeDataTypes;
 using System.Numerics;
 
 namespace SharpPhysics.UI.UIElements
 {
-	public class Button : IUIElement
+	public class Button : IUIElement, IAny
 	{
 		public Action OnClick { get; set; } = () => { };
 		public bool StartThreadForClick { get; set; } = true;

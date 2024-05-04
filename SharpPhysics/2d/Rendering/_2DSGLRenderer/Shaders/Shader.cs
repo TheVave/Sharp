@@ -1,6 +1,9 @@
-﻿namespace SharpPhysics._2d._2DSGLRenderer.Shaders
+﻿using SharpPhysics.StrangeDataTypes;
+using SharpPhysics.Utilities.MISC.Unsafe;
+
+namespace SharpPhysics._2d._2DSGLRenderer.Shaders
 {
-	public struct Shader
+	public struct Shader : ISizeGettable, IAny
 	{
 		public uint Program;
 		public string ShaderCode;
@@ -41,6 +44,14 @@
 		{
 			return ((Program.GetHashCode() / ShaderCode.GetHashCode()) / (int)ShaderCompilePtr);
 		}
+
+		public readonly int GetSize() =>
+			// simple
+			(sizeof(uint) * 2)
+			// enums
+			+ (sizeof(int))
+			// strings
+			+ UnsafeUtils.GetSimpleObjectSize(ShaderCode);
 
 		public static bool operator ==(Shader left, Shader right)
 		{

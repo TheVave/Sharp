@@ -19,5 +19,10 @@
 		/// (Invalid input type) Error, Internal Error, Mem: A UnmanagedMemoryObject<T> setter call has happened with a non-ISizeGettable class. Please call the setter with a ISizeGettable object.
 		/// </summary>
 		public static bool CrashOnError19 = false;
+
+		/// <summary>
+		/// If the program should say the current OS is not windows in various places where it calls windows methods.
+		/// </summary>
+		public static bool SayNonWindowsOS = true;
 	}
 }

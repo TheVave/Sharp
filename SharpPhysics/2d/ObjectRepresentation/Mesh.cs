@@ -1,4 +1,5 @@
 ﻿using SharpPhysics._2d.Objects;
+using SharpPhysics.StrangeDataTypes;
 using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using SharpPhysics.Utilities.MISC.Unsafe;
 
@@ -8,7 +9,7 @@ namespace SharpPhysics._2d.ObjectRepresentation
 	/// The class for holding info on the shape of an object.
 	/// 
 	/// </summary>
-	public class Mesh : ISizeGettable
+	public class Mesh : ISizeGettable, IAny
 	{
 		/// <summary>
 		/// The X points in the mesh with an offset of the position of the object.
@@ -17,13 +18,19 @@ namespace SharpPhysics._2d.ObjectRepresentation
 
 		/// <summary>
 		/// The Y points in the mesh with an offset of the position of the object.
-		/// </summary>
+		/// </summary> 
 		public double[] MeshPointsY { get; internal set; }
 
 		/// <summary>
 		/// The Z points in the mesh with an offset of the position of the object.
 		/// </summary>
 		public double[] MeshPointsZ { get; internal set; }
+
+		/// <summary>
+		/// The points that make up the mesh.
+		/// Not changed for movement.
+		/// </summary>
+		public Point[] MeshActualPoints { get; internal set; }
 
 		/// <summary>
 		/// The points that make up the mesh.
@@ -70,14 +77,15 @@ namespace SharpPhysics._2d.ObjectRepresentation
 			MeshPointsZ = mesh.MeshPointsZ;
 
 			MeshPoints = mesh.MeshPoints;
+			MeshActualPoints = Point.ShallowCopyPoints(mesh.MeshPoints);
 
 			MeshPointsActualX = mesh.MeshPointsX;
 			MeshPointsActualY = mesh.MeshPointsY;
 			MeshPointsActualZ = mesh.MeshPointsZ;
 
-			ActualTriangles = DelaunayTriangulator.DelaunayTriangulation(MeshPoints).ToArray();
+			ActualTriangles = [.. DelaunayTriangulator.DelaunayTriangulation(MeshPoints)];
 			// if I don't recalc the triangles it'll just make a pointer to ActualTriangles
-			MeshTriangles = DelaunayTriangulator.DelaunayTriangulation(MeshPoints).ToArray();
+			MeshTriangles = [.. DelaunayTriangulator.DelaunayTriangulation(MeshPoints)];
 		}
 
 		public Mesh(double[] MeshPointsX, double[] MeshPointsY, double[] MeshPointsZ)
@@ -140,12 +148,15 @@ namespace SharpPhysics._2d.ObjectRepresentation
 		public unsafe int GetSize() =>
 			// six arrays of same len
 			(UnsafeUtils.GetArraySize(MeshPointsX) * 6) +
+			// points
+			(UnsafeUtils.GetArraySize(MeshPoints) * 2) +
 			// MaximumDistanceFromCenter
 			(sizeof(double)) +
-			// GetSize method size
-			// annoying: class inherits from object, so implement those method sizes
-			(UnsafeUtils.PtrSize * 5) +
 			// complex: triangles
 			(UnsafeUtils.GetArraySize(ActualTriangles) * 2);
+		public override string ToString()
+		{
+			return $"Mesh";
+		}
 	}
 }

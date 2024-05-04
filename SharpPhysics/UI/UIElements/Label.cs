@@ -1,9 +1,10 @@
 ﻿using ImGuiNET;
+using SharpPhysics.StrangeDataTypes;
 using System.Numerics;
 
 namespace SharpPhysics.UI.UIElements
 {
-	public class Label : IUIElement
+	public class Label : IUIElement, IAny
 	{
 		public string Txt;
 		public bool Visible { get; set; } = true;

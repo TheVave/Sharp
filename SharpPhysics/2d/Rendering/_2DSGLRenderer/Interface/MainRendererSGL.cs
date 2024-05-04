@@ -28,6 +28,8 @@ namespace SharpPhysics
 		/// </summary>
 		public static short SceneIDToRender;
 
+		public static bool IsRendering = false;
+
 		/// <summary>
 		/// The camera to render all of the objects to.
 		/// </summary>

@@ -43,53 +43,53 @@ unsafe
 			{
 				if (InputManager.IsKeyDown(VirtualKey.T))
 				{
-					MainRendererSGL.ObjectsToRender[0].objToSim.HeldObject.ObjectPhysicsParams.Velocity.VelocityY = speed;
+					MainRendererSGL.ObjectsToRender[0].objToSim.HeldObject.ObjectPhysicsParams.Velocity.Y = speed;
 				}
 				if (InputManager.IsKeyDown(VirtualKey.G))
 				{
-					MainRendererSGL.ObjectsToRender[0].objToSim.HeldObject.ObjectPhysicsParams.Velocity.VelocityY = -speed;
+					MainRendererSGL.ObjectsToRender[0].objToSim.HeldObject.ObjectPhysicsParams.Velocity.Y = -speed;
 				}
 				if (InputManager.IsKeyDown(VirtualKey.F))
 				{
-					MainRendererSGL.ObjectsToRender[0].objToSim.HeldObject.ObjectPhysicsParams.Velocity.VelocityX = -speed;
+					MainRendererSGL.ObjectsToRender[0].objToSim.HeldObject.ObjectPhysicsParams.Velocity.X = -speed;
 				}
 				if (InputManager.IsKeyDown(VirtualKey.H))
 				{
-					MainRendererSGL.ObjectsToRender[0].objToSim.HeldObject.ObjectPhysicsParams.Velocity.VelocityX = speed;
+					MainRendererSGL.ObjectsToRender[0].objToSim.HeldObject.ObjectPhysicsParams.Velocity.X = speed;
 				}
 
 				if (InputManager.IsKeyDown(VirtualKey.W))
 				{
-					MainRendererSGL.ObjectsToRender[1].objToSim.HeldObject.ObjectPhysicsParams.Velocity.VelocityY = speed;
+					MainRendererSGL.ObjectsToRender[1].objToSim.HeldObject.ObjectPhysicsParams.Velocity.Y = speed;
 				}
 				if (InputManager.IsKeyDown(VirtualKey.S))
 				{
-					MainRendererSGL.ObjectsToRender[1].objToSim.HeldObject.ObjectPhysicsParams.Velocity.VelocityY = -speed;
+					MainRendererSGL.ObjectsToRender[1].objToSim.HeldObject.ObjectPhysicsParams.Velocity.Y = -speed;
 				}
 				if (InputManager.IsKeyDown(VirtualKey.A))
 				{
-					MainRendererSGL.ObjectsToRender[1].objToSim.HeldObject.ObjectPhysicsParams.Velocity.VelocityX = -speed;
+					MainRendererSGL.ObjectsToRender[1].objToSim.HeldObject.ObjectPhysicsParams.Velocity.X = -speed;
 				}
 				if (InputManager.IsKeyDown(VirtualKey.D))
 				{
-					MainRendererSGL.ObjectsToRender[1].objToSim.HeldObject.ObjectPhysicsParams.Velocity.VelocityX = speed;
+					MainRendererSGL.ObjectsToRender[1].objToSim.HeldObject.ObjectPhysicsParams.Velocity.X = speed;
 				}
 
 				if (InputManager.IsKeyDown(VirtualKey.UP_ARROW))
 				{
-					MainRendererSGL.Camera.obj.ObjectPhysicsParams.Velocity.VelocityY = camSpeed;
+					MainRendererSGL.Camera.obj.ObjectPhysicsParams.Velocity.Y = camSpeed;
 				}
 				if (InputManager.IsKeyDown(VirtualKey.DOWN_ARROW))
 				{
-					MainRendererSGL.Camera.obj.ObjectPhysicsParams.Velocity.VelocityY = -camSpeed;
+					MainRendererSGL.Camera.obj.ObjectPhysicsParams.Velocity.Y = -camSpeed;
 				}
 				if (InputManager.IsKeyDown(VirtualKey.LEFT_ARROW))
 				{
-					MainRendererSGL.Camera.obj.ObjectPhysicsParams.Velocity.VelocityX = -camSpeed;
+					MainRendererSGL.Camera.obj.ObjectPhysicsParams.Velocity.X = -camSpeed;
 				}
 				if (InputManager.IsKeyDown(VirtualKey.RIGHT_ARROW))
 				{
-					MainRendererSGL.Camera.obj.ObjectPhysicsParams.Velocity.VelocityX = camSpeed;
+					MainRendererSGL.Camera.obj.ObjectPhysicsParams.Velocity.X = camSpeed;
 				}
 			}
 		});

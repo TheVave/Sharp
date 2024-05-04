@@ -1,8 +1,9 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics.StrangeDataTypes;
 
 namespace SharpPhysics.Simulation.ObjectHierarchy
 {
-	public class SceneHierarchy
+	public class SceneHierarchy : IAny
 	{
 		/// <summary>
 		/// The last updated scene ID of the scene

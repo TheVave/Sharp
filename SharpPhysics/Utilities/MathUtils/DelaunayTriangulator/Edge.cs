@@ -1,9 +1,10 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics.StrangeDataTypes;
 using SharpPhysics.Utilities.MISC.Unsafe;
 
 namespace SharpPhysics.Utilities.MathUtils.DelaunayTriangulator
 {
-	public class Edge(Point vertex1, Point vertex2) : ISizeGettable
+	public class Edge(Point vertex1, Point vertex2) : ISizeGettable, IAny
 	{
 		public Point Vertex1 { get; } = vertex1;
 		public Point Vertex2 { get; } = vertex2;

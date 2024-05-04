@@ -1,4 +1,5 @@
-﻿using Silk.NET.Input;
+﻿using SharpPhysics.StrangeDataTypes;
+using Silk.NET.Input;
 using System.Runtime.InteropServices;
 namespace SharpPhysics.Input.Keyboard
 {

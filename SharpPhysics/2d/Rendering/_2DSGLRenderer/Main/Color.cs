@@ -1,8 +1,9 @@
-﻿using SharpPhysics.Utilities.MISC;
+﻿using SharpPhysics.StrangeDataTypes;
+using SharpPhysics.Utilities.MISC;
 
 namespace SharpPhysics.Renderer
 {
-	public class Color
+	public class Color : IAny
 	{
 		/// <summary>
 		/// The colors possible with a standard RGBA style.

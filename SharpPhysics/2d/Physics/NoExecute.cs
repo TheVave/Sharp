@@ -1,6 +1,8 @@
-﻿namespace SharpPhysics._2d.Physics
+﻿using SharpPhysics.StrangeDataTypes;
+
+namespace SharpPhysics._2d.Physics
 {
-	internal class NoExecute : IExecuteAtCollision
+	internal class NoExecute : IExecuteAtCollision, IAny
 	{
 	}
 }

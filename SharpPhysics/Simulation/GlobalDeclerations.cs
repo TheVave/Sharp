@@ -1,4 +1,6 @@
-﻿namespace SharpPhysics.Simulation
+﻿using SharpPhysics.StrangeDataTypes;
+
+namespace SharpPhysics.Simulation
 {
 	public static class GlobalDeclerations
 	{

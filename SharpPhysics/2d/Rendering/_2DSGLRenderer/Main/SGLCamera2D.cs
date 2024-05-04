@@ -1,7 +1,8 @@
-﻿using System.Numerics;
+﻿using SharpPhysics.StrangeDataTypes;
+using System.Numerics;
 namespace SharpPhysics.Renderer.Cameras
 {
-	public class SGLCamera2D
+	public class SGLCamera2D : IAny
 	{
 		public Vector2 FocusPosition;
 		public float Zoom;

@@ -5,6 +5,7 @@ using SharpPhysics.Utilities.MathUtils.DelaunayTriangulator;
 using SharpPhysics.Utilities.MISC.Unsafe;
 using Silk.NET.Core;
 using StbImageSharp;
+using System.Runtime.ExceptionServices;
 using static SharpPhysics.Utilities.MathUtils.GenericMathUtils;
 
 namespace SharpPhysics.Utilities.MISC

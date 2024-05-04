@@ -1,9 +1,10 @@
-﻿using Silk.NET.GLFW;
+﻿using SharpPhysics.StrangeDataTypes;
+using Silk.NET.GLFW;
 using Silk.NET.Windowing;
 
 namespace SharpPhysics._2d._2DSVKRenderer.Main
 {
-	public class Internal2dSVKRenderer
+	public class Internal2dSVKRenderer : IAny
 	{
 		public IWindow wnd;
 		public string wndName;

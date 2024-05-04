@@ -1,9 +1,10 @@
-﻿using System.Diagnostics;
+﻿using SharpPhysics.StrangeDataTypes;
+using System.Diagnostics;
 using static SharpPhysics.Utilities.MISC.Unsafe.UnsafeUtils;
 
 namespace SharpPhysics.Utilities.MISC.Unsafe
 {
-	public class UnmanagedMemoryObject<T>
+	public class UnmanagedMemoryObject<T> : ISizeGettable, IAny
 	{
 		public int Size { get; internal set; } = 0;
 		public unsafe T* ObjectPtr { get; internal set; } = (T*)Utils.NULLPTR;
@@ -74,7 +75,6 @@ namespace SharpPhysics.Utilities.MISC.Unsafe
 			ObjectPtr = (T*)Malloc(Size);
 			Set(obj, Size);
 		}
-		//public PhysicalDeviceUniformBufferStandardLayoutFeatures
 		public unsafe void Create(ISizeGettable obj, int size)
 		{
 			Size = size;
@@ -90,5 +90,13 @@ namespace SharpPhysics.Utilities.MISC.Unsafe
 		{
 			mmemcpy((byte*)&toSet, (byte*)ObjectPtr, size);
 		}
+		public unsafe void Set(ISizeGettable toSet)
+		{
+			mmemcpy((byte*)&toSet, (byte*)ObjectPtr, toSet.GetSize());
+		}
+
+		public unsafe int GetSize() =>
+			PtrSize +
+			sizeof(int);
 	}
 }

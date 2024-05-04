@@ -4,7 +4,7 @@
 
 namespace SharpPhysics.StrangeDataTypes
 {
-	public class Result
+	public class Result : IAny
 	{
 #if USE_LONG_RESULTS
 		public long resultValue;

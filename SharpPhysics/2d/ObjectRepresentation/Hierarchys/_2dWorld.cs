@@ -1,10 +1,11 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation.Hierarchies;
+using SharpPhysics.StrangeDataTypes;
 using SharpPhysics.Utilities.MISC;
 
 namespace SharpPhysics
 {
 	[Serializable]
-	public static class _2dWorld
+	public static class _2dWorld : IAny
 	{
 		public static _2dSceneHierarchy[] SceneHierarchies = [new()];
 		public static string[] HierarchyNames = ["Main"];

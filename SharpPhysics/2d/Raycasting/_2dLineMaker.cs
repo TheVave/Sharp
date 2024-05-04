@@ -1,6 +1,8 @@
-﻿namespace SharpPhysics._2d.Raycasting
+﻿using SharpPhysics.StrangeDataTypes;
+
+namespace SharpPhysics._2d.Raycasting
 {
-	public class _2dLineMaker
+	public class _2dLineMaker : IAny
 	{
 		/// <summary>
 		/// the starting x and y values for the ray

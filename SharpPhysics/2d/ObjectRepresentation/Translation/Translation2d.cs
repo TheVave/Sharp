@@ -2,24 +2,24 @@
 
 namespace SharpPhysics._2d.ObjectRepresentation.Translation
 {
-	public class Translation2d : ISizeGettable
+	public class Translation2d : ISizeGettable, IAny
 	{
 		public Translation2d(double xPos, double yPos, double zPos)
 		{
-			ObjectPosition = new _2dPosition(xPos, yPos, zPos);
-			ObjectRotation = new _2dRotation(0);
-			ObjectScale = new _2dScale(128, 128);
+			ObjectPosition = new Position(xPos, yPos, zPos);
+			ObjectRotation = new Rotation(0);
+			ObjectScale = new Scale(128, 128);
 		}
 
 		public Translation2d()
 		{
-			ObjectPosition = new _2dPosition(0, 0, 0);
-			ObjectRotation = new _2dRotation(0);
-			ObjectScale = new _2dScale(128, 128);
+			ObjectPosition = new Position(0, 0, 0);
+			ObjectRotation = new Rotation(0);
+			ObjectScale = new Scale(128, 128);
 		}
 		public override string ToString()
 		{
-			return $"{ObjectPosition}, {ObjectRotation}, {ObjectScale}";
+			return $"Translation2d:{{ObjectPosition:{ObjectPosition}, ObjectRotation:{ObjectRotation}, ObjectScale:{ObjectScale}}}";
 		}
 
 		public int GetSize()
@@ -30,8 +30,8 @@ namespace SharpPhysics._2d.ObjectRepresentation.Translation
 			}
 		}
 
-		public _2dPosition ObjectPosition;
-		public _2dRotation ObjectRotation;
-		public _2dScale ObjectScale;
+		public Position ObjectPosition;
+		public Rotation ObjectRotation;
+		public Scale ObjectScale;
 	}
 }

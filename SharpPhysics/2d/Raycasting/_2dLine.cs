@@ -1,8 +1,9 @@
 ﻿using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics.StrangeDataTypes;
 
 namespace SharpPhysics._2d.Raycasting
 {
-	public class _2dLine
+	public class _2dLine : IAny
 	{
 		/// <summary>
 		/// the start of the ray at the X position

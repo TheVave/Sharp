@@ -1,4 +1,7 @@
-﻿using SharpPhysics.StrangeDataTypes;
+﻿using SharpPhysics._2d.ObjectRepresentation;
+using SharpPhysics.StrangeDataTypes;
+using SharpPhysics.Utilities.MISC;
+using SharpPhysics.Utilities.MISC.Unsafe;
 
 namespace SharpPhysics.Utilities
 {
@@ -26,11 +29,17 @@ namespace SharpPhysics.Utilities
 		{
 			for (int i = 0; i < executeCount; i++)
 			{
-				action(i);
+				new Thread(() =>
+				{
+					action(i);
+				})
+				{
+					Name = $"ParallelForLoop Thread #{i}"
+				}.Start();
 			}
 		}
 
-		public static HowChanged[] FindChange(object[] original, object[] updated)
+		public static HowChanged[] FindChange(IAny[] original, IAny[] updated)
 		{
 			if (original == null && updated == null)
 			{
@@ -73,6 +82,59 @@ namespace SharpPhysics.Utilities
 			}
 
 			return changes;
+		}
+		public static HowChanged[] FindChange(SimulatedObject2d[] original, SimulatedObject2d[] updated)
+		{
+			if (original == null && updated == null)
+			{
+				return new HowChanged[0];
+			}
+
+			if (original == null)
+			{
+				return Enumerable.Repeat(HowChanged.Added, updated.Length).ToArray();
+			}
+
+			if (updated == null)
+			{
+				return Enumerable.Repeat(HowChanged.Removed, original.Length).ToArray();
+			}
+
+			HowChanged[] changes = new HowChanged[Math.Max(original.Length, updated.Length)];
+
+			for (int i = 0; i < changes.Length; i++)
+			{
+				if (i < original.Length && i < updated.Length)
+				{
+					if (original[i].Equals(updated[i]))
+					{
+						changes[i] = HowChanged.NotChanged;
+					}
+					else
+					{
+						changes[i] = HowChanged.Moved;
+					}
+				}
+				else if (i < original.Length)
+				{
+					changes[i] = HowChanged.Removed;
+				}
+				else if (i < updated.Length)
+				{
+					changes[i] = HowChanged.Added;
+				}
+			}
+
+			return changes;
+		}
+
+		public static T[] IndexArrayToTArray<T>(int[] indexes, T[] startingArray)
+		{
+			T[] toReturn = new T[indexes.Length];
+			int j = 0;
+			foreach (int i in indexes)
+				toReturn[j++] = startingArray[i];
+			return toReturn;
 		}
 	}
 }
