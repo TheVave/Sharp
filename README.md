@@ -1,17 +1,18 @@
-# SharpPhysics #
 
-![SharpPhysics logo](./logo.svg)
+# Sharp #
+
+(Formerly SharpPhysics)
 
 ## SUMMARY ##
 
 ---------------------------------------------------------
 
-SharpPhysics is a (somewhat small and 2d) physics/rendering library set up with Silk.net with OpenGL.
+Sharp is a (somewhat small and 2d) physics/rendering library set up with Silk.net with OpenGL.
 
 ## NOTICE ##
 
 ---------------------------------------------------------
-SharpPhysics is under heavy development!!!
+Sharp is under heavy development!!!
 It should not be used in any production projects!
 
 ## BUILDING ##
@@ -25,15 +26,14 @@ and also copy over glfw.dll to the output directory.
 
 ---------------------------------------------------------
 
-SharpPhysics runs on Windows, Mac, and Linux. <br>
-NOTE: Because of ImGuiNet, SharpPhysics is unable to run on arm64.
+Sharp runs on Windows, Mac, and Linux. <br>
+NOTE: Because of ImGuiNet, Sharp is unable to run on any arm64.
 
 ## RECENT UPDATES ##
 
 ---------------------------------------------------------
 
-I just finished most of the UI stuff, I'll come back to it though.
-What I'm doing next: Making test game
+Renamed to Sharp
 
 ## PACKAGES ##
 
