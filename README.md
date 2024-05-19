@@ -1,7 +1,7 @@
 
 # Sharp #
 
-<img src="./logo.png" width="100" height="200" alt="SharpPhysics logo (scaled)">
+<img src="./logo.png" width="160" height="210" alt="SharpPhysics logo (scaled)">
 
 (Formerly SharpPhysics)
 
