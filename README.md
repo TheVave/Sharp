@@ -1,6 +1,8 @@
 
 # Sharp #
 
+![SharpPhysics logo](./logo.png)
+
 (Formerly SharpPhysics)
 
 ## SUMMARY ##
