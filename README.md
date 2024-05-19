@@ -21,15 +21,14 @@ It should not be used in any production projects!
 
 ---------------------------------------------------------
 
-To build, do all the normal things to build, and make sure to copy over all .glsl files to [output directory]\Shaders,
-and also copy over glfw.dll to the output directory.
+To build, do all the normal things to build, and make sure to copy over all .glsl files to [output directory]\Shaders.
 
 ## PLATFORM SUPPORT ##
 
 ---------------------------------------------------------
 
 Sharp runs on Windows, Mac, and Linux. <br>
-NOTE: Because of ImGuiNet, Sharp is unable to run on any arm64.
+NOTE: Because of ImGuiNet, Sharp is unable to run on any arm64 device.
 
 ## RECENT UPDATES ##
 
@@ -41,9 +40,9 @@ Renamed to Sharp
 
 ---------------------------------------------------------
 
-This program makes use of four libaries, they are:
+This program makes use of five (.5) libaries, they are:
 Newtonsoft.Json
-Silk.Net
+Silk.Net (I'm using OpenGL through Silk.Net)
 StbImageSharp
 GLFW (Written in C)
 SDL (Writtrn in C)
