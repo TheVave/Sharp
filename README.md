@@ -40,12 +40,11 @@ Renamed to Sharp
 
 ---------------------------------------------------------
 
-This program makes use of five (.5) libaries, they are:
-Newtonsoft.Json
-Silk.Net (I'm using OpenGL through Silk.Net)
-StbImageSharp
-GLFW (Written in C)
-SDL (Writtrn in C)
-FontStashSharp.
+This program makes use of four (.5) libaries, they are: <BR>
+Newtonsoft.Json <BR>
+Silk.Net (I'm using OpenGL through Silk.Net) <BR>
+StbImageSharp <BR>
+GLFW (Written in C) <BR>
+SDL (Writtrn in C) <BR>
 
 None of these were made by me.
