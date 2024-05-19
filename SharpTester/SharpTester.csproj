@@ -16,8 +16,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DebugType>embedded</DebugType>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <ProjectReference Include="..\Sharp\Sharp.csproj" />
+      <ProjectReference Include="..\Sharp\Sharp.csproj" />
   </ItemGroup>
 </Project>

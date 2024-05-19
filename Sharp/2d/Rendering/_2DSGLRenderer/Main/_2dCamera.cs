@@ -61,11 +61,11 @@ namespace Sharp._2d._2DSGLRenderer.Main
 			}
 			else
 			{
-				left = obj.Value.Translation.ObjectPosition.X - rndr.wndSize.Width / 2;
-				right = obj.Value.Translation.ObjectPosition.X + rndr.wndSize.Width / 2;
+				left = obj.Translation.ObjectPosition.X - rndr.wndSize.Width / 2;
+				right = obj.Translation.ObjectPosition.X + rndr.wndSize.Width / 2;
 
-				top = obj.Value.Translation.ObjectPosition.Y - rndr.wndSize.Height / 2;
-				bottom = obj.Value.Translation.ObjectPosition.Y + rndr.wndSize.Height / 2;
+				top = obj.Translation.ObjectPosition.Y - rndr.wndSize.Height / 2;
+				bottom = obj.Translation.ObjectPosition.Y + rndr.wndSize.Height / 2;
 			}
 
 			Matrix4x4 focus = Matrix4x4.CreateOrthographicOffCenter((float)left, (float)right, (float)top, (float)bottom, 0.1f, 100f);

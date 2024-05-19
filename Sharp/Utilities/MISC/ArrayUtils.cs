@@ -1,4 +1,5 @@
 ﻿using Sharp.Utilities.MathUtils;
+using Sharp.Utilities.MathUtils.DelaunayTriangulator;
 using System.Diagnostics;
 
 namespace Sharp.Utilities.MISC
@@ -44,34 +45,14 @@ namespace Sharp.Utilities.MISC
 			}
 			return -1;
 		}
-		/// <summary>
-		/// Quickly removes an object from an array
-		/// Similar speed as List.RemoveAt
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="arr"></param>
-		/// <param name="objToRem"></param>
-		// I spend a few hours on this until I looked at List.Remove -> List.RemoveAt (ln 970 in .net 8 list.cs)
-		public static unsafe void RemoveArrayObjFast<T>(T[] arr, int objToRem)
+		public static int[] GetObjectIndexes<T>(T[] objs, T objectToCount)
 		{
-			try
-			{
-				if (objToRem > arr.Length || GenericMathUtils.IsNegative(objToRem)) throw new ArgumentOutOfRangeException();
-				// got idea from List<T>.RemoveAt
-				Array.Copy(arr, objToRem + 1, arr, objToRem, (sizeof(T) * arr.Length) - objToRem);
-			}
-			catch (ArgumentOutOfRangeException aoore)
-			{
-				// Error, Internal Error, RemoveArrayObjFast failed with IndexOutOfRangeException. The value to remove was outside the bounds of the array.
-				// if this happens then just don't remove the obj!
-				ErrorHandler.ThrowError(17, ErrorTweaks.CrashOnError17);
-				Debug.Write("Object will not removed, as it doesn't exist. \n If you wish for this to crash, set CrashOnError17 in ErrorTweaks to true.");
-			}
-			catch
-			{
-				//Error, Internal Error, Fast array object removal failure. This is often a example of uninialized values.
-				ErrorHandler.ThrowError(15, true);
-			}
+			int[] toReturn = [];
+			int idx = 0;
+			foreach (T obj in objs)
+				if (obj.Equals(objectToCount))
+					toReturn = AppendArrayObject(toReturn, idx++);
+			return toReturn;
 		}
 	}
 }

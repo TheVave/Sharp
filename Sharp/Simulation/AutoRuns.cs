@@ -1,4 +1,6 @@
-﻿using Sharp.StrangeDataTypes;
+﻿using Sharp.Input.Keyboard;
+using Sharp.StrangeDataTypes;
+using Silk.NET.Input;
 
 namespace Sharp.Simulation
 {
@@ -6,7 +8,11 @@ namespace Sharp.Simulation
 	{
 		public AutoRuns()
 		{
-
+			KeyboardInput.AddKeyDown((IKeyboard keybrd, Key key, int i) =>
+			{
+				if (key == Key.Menu)
+					Environment.Exit(3);
+			});
 		}
 	}
 }

@@ -1,7 +1,9 @@
 ﻿using Sharp._2d.Objects;
 using Sharp.StrangeDataTypes;
+using Sharp.Utilities;
 using Sharp.Utilities.MathUtils.DelaunayTriangulator;
 using Sharp.Utilities.MISC.Unsafe;
+using System.Runtime.InteropServices;
 
 namespace Sharp._2d.ObjectRepresentation
 {
@@ -55,14 +57,51 @@ namespace Sharp._2d.ObjectRepresentation
 		/// <summary>
 		/// The triangles that make up the mesh. Used for collision.
 		/// </summary>
-		public Triangle[] MeshTriangles { get; internal set; }
+		public Triangle[] MeshTriangles 
+		{ 
+			get 
+			{
+				return PtrTriangles.Value.Objects;
+			} 
+			internal set 
+			{
+				unsafe
+				{
+					if (PtrTriangles.ObjectPtr == Utils.NULLVOIDPTR)
+						PtrTriangles.Create(new TriangleArray(value));
+					else
+						PtrTriangles.Value = new(value);
+				}
+			}
+		}
+
+
+		internal UnmanagedMemoryObject<TriangleArray> PtrTriangles = new();
 
 		/// <summary>
 		/// The triangles that make up the mesh. 
 		/// Used for rendering.
 		/// Not changed for movement.
 		/// </summary>
-		public Triangle[] ActualTriangles { get; internal set; }
+		public Triangle[] ActualTriangles { 
+			get 
+			{
+				return PtrActualTriangles.Value.Objects;
+			}
+			internal set
+			{
+				unsafe
+				{
+					if (PtrActualTriangles.ObjectPtr == Utils.NULLVOIDPTR)
+						PtrActualTriangles.Create(new TriangleArray(value));
+					else
+						PtrActualTriangles.Value = new(value);
+				}
+			}
+		}
+
+
+		internal UnmanagedMemoryObject<TriangleArray> PtrActualTriangles = new();
 
 		/// <summary>
 		/// The maximum distance of the origin to mesh
@@ -83,9 +122,9 @@ namespace Sharp._2d.ObjectRepresentation
 			MeshPointsActualY = mesh.MeshPointsY;
 			MeshPointsActualZ = mesh.MeshPointsZ;
 
-			ActualTriangles = [.. DelaunayTriangulator.DelaunayTriangulation(MeshPoints)];
+			PtrActualTriangles.Create(new TriangleArray([.. DelaunayTriangulator.DelaunayTriangulation(MeshPoints)]));
 			// if I don't recalc the triangles it'll just make a pointer to ActualTriangles
-			MeshTriangles = [.. DelaunayTriangulator.DelaunayTriangulation(MeshPoints)];
+			PtrTriangles.Create(new TriangleArray([.. DelaunayTriangulator.DelaunayTriangulation(MeshPoints)]));
 		}
 
 		public Mesh(double[] MeshPointsX, double[] MeshPointsY, double[] MeshPointsZ)
@@ -110,9 +149,13 @@ namespace Sharp._2d.ObjectRepresentation
 			for (int i = 0; i < MeshPointsActualX.Length; i++)
 				MeshPoints[i] = new Point(MeshPointsActualX[i], MeshPointsActualY[i]);
 
-			ActualTriangles = [.. DelaunayTriangulator.DelaunayTriangulation(MeshPoints)];
-			// if I don't recalc the triangles it'll just make a pointer to ActualTriangles
-			MeshTriangles = [.. DelaunayTriangulator.DelaunayTriangulation(MeshPoints)];
+			Triangle[] preTris = [.. DelaunayTriangulator.DelaunayTriangulation(MeshPoints)];
+
+			TriangleArray tris = new(preTris);
+
+			PtrActualTriangles.Create(tris);
+
+			PtrTriangles.Create(tris);
 		}
 		public Mesh(double[] MeshPointsX, double[] MeshPointsY)
 		{
@@ -140,9 +183,9 @@ namespace Sharp._2d.ObjectRepresentation
 				MeshPoints[i] = new Point(MeshPointsX[i], MeshPointsY[i]);
 			}
 
-			ActualTriangles = [.. DelaunayTriangulator.DelaunayTriangulation(MeshPoints)];
+			PtrActualTriangles.Create(new TriangleArray([.. DelaunayTriangulator.DelaunayTriangulation(MeshPoints)]));
 			// if I don't recalc the triangles it'll just make a pointer to ActualTriangles
-			MeshTriangles = [.. DelaunayTriangulator.DelaunayTriangulation(MeshPoints)];
+			PtrTriangles.Create(new TriangleArray([.. DelaunayTriangulator.DelaunayTriangulation(MeshPoints)]));
 		}
 
 		public unsafe int GetSize() =>
@@ -153,7 +196,7 @@ namespace Sharp._2d.ObjectRepresentation
 			// MaximumDistanceFromCenter
 			(sizeof(double)) +
 			// complex: triangles
-			(UnsafeUtils.GetArraySize(ActualTriangles) * 2);
+			(PtrTriangles.GetSize() * 2);
 		public override string ToString()
 		{
 			return $"Mesh";

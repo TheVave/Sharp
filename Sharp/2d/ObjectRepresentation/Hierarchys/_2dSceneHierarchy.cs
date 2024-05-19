@@ -62,7 +62,9 @@ namespace Sharp._2d.ObjectRepresentation.Hierarchies
 						// constructing a proper, memory safe array from all that unsafe array stuff
 						SGLRenderedObject[] properArray = new SGLRenderedObject[addedObjects.Count];
 						for (int i = 0; i < addedObjects.Count; i++)
+						{
 							properArray[i] = (*ptrArray[i]);
+						}
 						MainRendererSGL.renderer.ObjectsToRender = properArray;
 					}
 				}

@@ -58,7 +58,7 @@ namespace Sharp.Utilities.MathUtils.DelaunayTriangulator
 					}
 				}
 
-				triangles.RemoveAll(triangle => badTriangles.Contains(triangle));
+				triangles.RemoveAll(badTriangles.Contains);
 
 				foreach (var edge in polygon)
 				{
@@ -71,7 +71,9 @@ namespace Sharp.Utilities.MathUtils.DelaunayTriangulator
 			triangles.RemoveAll(t =>
 				Triangle.HasVertex(superVertex1, t) || Triangle.HasVertex(superVertex2, t) || Triangle.HasVertex(superVertex3, t));
 
-			return triangles.Distinct().ToList();
+			bool arg = triangles[1].Equals(triangles[2]);
+
+			return [.. Triangle.MyDistinct([.. triangles])];
 		}
 	}
 }

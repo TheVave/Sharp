@@ -3,6 +3,7 @@ using Sharp._2d.ObjectRepresentation.Translation;
 using Sharp.StrangeDataTypes;
 using Sharp.Utilities.MISC;
 using Sharp.Utilities.MISC.Unsafe;
+using System.Runtime.InteropServices;
 
 namespace Sharp.Utilities.MathUtils.DelaunayTriangulator
 {
@@ -11,7 +12,8 @@ namespace Sharp.Utilities.MathUtils.DelaunayTriangulator
 		public Point Vertex1 { get; private set; }
 		public Point Vertex2 { get; private set; }
 		public Point Vertex3 { get; private set; }
-		public Edge[] Edges { get; private set; }
+		[MarshalAs(UnmanagedType.ByValArray, SizeConst = 150)]
+		public Edge[] Edges;
 		public Circle Circumcircle
 		{
 			get
@@ -41,6 +43,8 @@ namespace Sharp.Utilities.MathUtils.DelaunayTriangulator
 			Vertex1 = vertex1;
 			Vertex2 = vertex2;
 			Vertex3 = vertex3;
+
+			
 
 			if (calculateEdges)
 			{
@@ -131,6 +135,19 @@ namespace Sharp.Utilities.MathUtils.DelaunayTriangulator
 			triangle.Vertex3.Y = triangle.Vertex3.Y * ySca;
 		}
 
+		
+		// TODO: MAKE THIS BETTER
+		public static Triangle[] MyDistinct(Triangle[] triangles)
+		{
+			int[] objectIndices = [];
+			List<Triangle> newTris = triangles.ToList();
+			foreach (Triangle tri in triangles)
+				if ((objectIndices = ArrayUtils.GetObjectIndexes(newTris.ToArray(), tri)).Length > 1)
+					for (int i = objectIndices.Length; i-- > 1;)
+						newTris.RemoveAt(objectIndices[i]);
+			return [.. newTris];
+		}
+
 		public static double GetArea(Triangle tri) =>
 			MeshUtilities.GetArea(tri.Vertex1, tri.Vertex2, tri.Vertex3);
 
@@ -186,6 +203,6 @@ namespace Sharp.Utilities.MathUtils.DelaunayTriangulator
 		}
 
 		public int GetSize() =>
-			(Vertex1.GetSize() * 3) + Circumcircle.GetSize() + UnsafeUtils.GetArraySize(Edges) + sizeof(bool);
+			(Vertex1.GetSize() * 3) + Circumcircle.GetSize() + /* Edges has a constant size of 150 */ 150 + sizeof(bool);
 	}
 }

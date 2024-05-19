@@ -46,15 +46,17 @@ namespace Sharp._2d._2DSGLRenderer.Shaders
 			}
 			catch (IndexOutOfRangeException ioore)
 			{
+				// unexpected error code in shadercollector.cs
 				ErrorHandler.ThrowError(20, true);
 			}
 			catch (FileNotFoundException)
 			{
-				//2
-				ErrorHandler.ThrowError(2, true);
+				//2: missing resource
+				ErrorHandler.ThrowError(2, [$"Missing shader: {Environment.CurrentDirectory}\\Shaders\\{name}.glsl"], true);
 			}
 			catch (DirectoryNotFoundException)
 			{
+				//Error, Internal Error, Shaders or Enviroment.CurrentDirectory do not point to an existing directory. Please make sure that there are no params passed to the program, and then make sure there's a Shader folder in #0.
 				ErrorHandler.ThrowError(21, true);
 			}
 			// For C# to not get angry ||

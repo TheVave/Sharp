@@ -83,7 +83,7 @@ namespace Sharp.Utilities.MISC
 			for (int i = 0; i < output.Length; i++)
 				output[i] += ToShiftBy;
 
-			return Point.ToFloatArray(output);
+			return Point.ToFloatArray(output, false);
 		}
 
 		/// <summary>
@@ -132,11 +132,11 @@ namespace Sharp.Utilities.MISC
 			float[] toRet = new float[first.Length + last.Length];
 			int firstIdx = 0;
 			int lastIdx = 0;
-			int mthRtrn;
+			double mthRtrn;
 
 			for (int i = 0; i < toRet.Length; i++)
 			{
-				mthRtrn = i - (int)(Math.Floor(i / 5d) * 5);
+				mthRtrn = i - (Math.Floor(i / 5d) * 5);
 				if (mthRtrn <= 2)
 					toRet[i] = first[firstIdx++];
 				else

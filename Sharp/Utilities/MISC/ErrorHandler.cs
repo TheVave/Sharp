@@ -9,7 +9,7 @@ public static class ErrorHandler
 	public static string[] errors = File.ReadAllLines($"{Environment.CurrentDirectory}\\errors.txt");
 	public static void ThrowError(int messageIdx, bool crash)
 	{
-		string message = errors[messageIdx - 1].Replace("#1", Environment.CurrentDirectory);
+		string message = errors[messageIdx - 1].Replace("#0", Environment.CurrentDirectory);
 		ThrowError(message, crash);
 	}
 	public static void ThrowError(string message, bool crash)
@@ -28,6 +28,14 @@ public static class ErrorHandler
 			else
 				throw new MessageBoxException(message);
 		}
+	}
+	public static void ThrowError(int messageIdx, string[] parameters, bool crash)
+	{
+		string curMessage = errors[messageIdx - 1];
+		int i = 0;
+		foreach (string param in parameters)
+			curMessage = curMessage.Replace($"#{++i}" /* <== readability! */, param);
+		ThrowError(curMessage, crash);
 	}
 	public static bool YesNoQuestion(string question, string title, bool crashOnNo)
 	{

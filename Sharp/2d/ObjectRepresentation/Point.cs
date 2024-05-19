@@ -61,7 +61,9 @@ namespace Sharp._2d.ObjectRepresentation
 			Y = 0;
 		}
 
-
+		// TODO:
+		//public override bool Equals(object? obj) =>
+		//	(obj is Point) && ()
 		public static Point ShallowCopyPoint(Point pnt) =>
 			(pnt.Is3d) ? new(pnt.X, pnt.Y, pnt.Z) : new(pnt.X, pnt.Y);
 		public Point ShallowCopyPoint() =>
@@ -74,6 +76,10 @@ namespace Sharp._2d.ObjectRepresentation
 		public float[] ToFloatArray3D()
 		{
 			return [(float)X, (float)Y, (float)Z];
+		}
+		public float[] ToFloatArray2D()
+		{
+			return [(float)X, (float)Y];
 		}
 
 		public static implicit operator float[](Point p)
@@ -192,11 +198,11 @@ namespace Sharp._2d.ObjectRepresentation
 		/// </summary>
 		// NEW CHANGE: this method's speed has been increased.
 		// It is now quite fast.
-		public static float[] ToFloatArray(Point[] points)
+		public static float[] ToFloatArray(Point[] points, bool Is3d)
 		{
-			float[] toReturn = new float[points.Length * 3];
+			float[] toReturn = new float[points.Length * (Is3d ? 3 : 2)];
 			for (int i = 0; i < points.Length; i++)
-				Array.Copy(points[i].ToFloatArray3D(), 0, toReturn, i * 3, 3);
+				Array.Copy(Is3d ? points[i].ToFloatArray3D() : points[i].ToFloatArray2D(), 0, toReturn, i * (Is3d ? 3 : 2), (Is3d ? 3 : 2));
 			return toReturn;
 		}
 

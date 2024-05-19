@@ -1,5 +1,5 @@
 Error, Internal/External Error, unable to generate EBO, this is often an indication that there is mesh corruption.
-Error, External Error, Missing resource or incorrectly formatted file.
+Error, External Error, Missing resource or incorrectly formatted file. Missing resource: #1
 Error, Internal/External error, shader compilation failed.
 Error, Internal Error, Compiler link failed.
 Error, Internal/External Error, unknown cause.
@@ -18,4 +18,5 @@ Error, Internal Error, RemoveArrayObjFast failed with IndexOutOfRangeException. 
 Error, Internal Error, Mem: A double free has occurred. This happens when memory is treated in strange ways, and you attempt to free memory twice.
 Error, Internal Error, Mem: A UnmanagedMemoryObject<T> setter call has happened with a non-ISizeGettable class. Please call the setter with a ISizeGettable object.
 Error, Internal Error, Unexpected code error in ShaderCollector.cs.
-Error, Internal Error, Shaders or Enviroment.CurrentDirectory do not point to an existing directory. Please make sure that there are no params passed to the program, and then make sure there's a Shader folder in #1.
+Error, Internal Error, Shaders or Enviroment.CurrentDirectory do not point to an existing directory. Please make sure that there are no params passed to the program, and then make sure there's a Shader folder in #0.
+Error, Internal Error, Mem: Unexpected error. Info: #1

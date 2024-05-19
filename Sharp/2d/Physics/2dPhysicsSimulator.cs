@@ -140,9 +140,10 @@ namespace Sharp._2d.Physics
 		{
 			Triangle actualTriangle;
 			Triangle tri;
-			for (int i = 0; i < ObjectToSimulate.ObjectMesh.ActualTriangles.Length; i++)
+			Triangle[] toSet = new Triangle[ObjectToSimulate.ObjectMesh.PtrTriangles.Value.Objects.Length];
+			for (int i = 0; i < ObjectToSimulate.ObjectMesh.MeshTriangles.Length; i++)
 			{
-				actualTriangle = ObjectToSimulate.ObjectMesh.ActualTriangles[i];
+				actualTriangle = ObjectToSimulate.ObjectMesh.ActualTriangles [i];
 				//Triangle tri = ObjectToSimulate.ObjectMesh.ActualTriangles[i]/*.ShallowClone()*/;
 				//ObjectToSimulate.ObjectMesh.MeshTriangles[i++] = tri.ScaleTriangle(ObjectToSimulate.Translation.ObjectScale.xSca, ObjectToSimulate.Translation.ObjectScale.ySca).
 				//												 RotateByRadians(GenericMathUtils.DegreesToRadians(ObjectToSimulate.Translation.ObjectRotation.xRot)).
@@ -151,8 +152,9 @@ namespace Sharp._2d.Physics
 				Triangle.ScaleTriangle(ObjectToSimulate.Translation.ObjectScale.XSca, ObjectToSimulate.Translation.ObjectScale.YSca, ref tri);
 				Triangle.RotateByRadians(GenericMathUtils.DegreesToRadians(ObjectToSimulate.Translation.ObjectRotation.XRot), ref tri);
 				Triangle.ShiftTriangle(ObjectToSimulate.Translation.ObjectPosition, tri);
-				ObjectToSimulate.ObjectMesh.MeshTriangles[i] = tri;
+				toSet[i] = tri;
 			}
+			ObjectToSimulate.ObjectMesh.MeshTriangles = toSet;
 		}
 
 		private void ColCalc()

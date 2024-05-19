@@ -11,7 +11,7 @@ using System.Text;
 namespace Sharp._2d.ObjectRepresentation
 {
 	[StructLayout(LayoutKind.Sequential)]
-	public struct SimulatedObject2d : ISizeGettable, IAny
+	public class SimulatedObject2d : ISizeGettable, IAny
 	{
 		/// <summary>
 		/// The object name
