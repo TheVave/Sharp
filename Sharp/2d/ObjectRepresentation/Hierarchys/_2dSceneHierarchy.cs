@@ -65,7 +65,7 @@ namespace Sharp._2d.ObjectRepresentation.Hierarchies
 						{
 							properArray[i] = (*ptrArray[i]);
 						}
-						MainRendererSGL.renderer.ObjectsToRender = properArray;
+						MainRendererSGL.renderer.ObjectsToRender = ArrayUtils.ConcatArray(MainRendererSGL.renderer.ObjectsToRender.ToArray(), properArray);
 					}
 				}
 				if (changes.Contains(HowChanged.Removed))

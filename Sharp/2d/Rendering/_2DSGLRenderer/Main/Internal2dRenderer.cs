@@ -107,7 +107,7 @@ namespace Sharp._2d._2DSGLRenderer.Main
 					for (int i = 0; i < ObjectsToRender.Length; i++)
 					{
 						obj = _2dWorld.SceneHierarchies[value].Objects[i];
-						ObjectsToRender[i].objToSim.Value = obj;
+						ObjectsToRender[i].objToSim = obj;
 					}
 					InternalSceneToRenderId = value;
 				}
@@ -499,7 +499,7 @@ namespace Sharp._2d._2DSGLRenderer.Main
 			for (int obj = 0; obj < ObjectsToRender.Length; obj++)
 			{
 				if (OR is not null && OR.Length <= obj)
-					OR[obj].Invoke(ObjectsToRender[obj].objToSim.Value);
+					OR[obj].Invoke(ObjectsToRender[obj].objToSim);
 			}
 		}
 
@@ -525,7 +525,7 @@ namespace Sharp._2d._2DSGLRenderer.Main
 		public unsafe virtual void DRWOBJ(int objectID)
 		{
 			STTRNSFRMM4(objectID, "mod");
-			gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)ObjectsToRender[objectID].objToSim.Value.ObjectMesh.MeshTriangles.Length * 3);
+			gl.DrawArrays(PrimitiveType.Triangles, 0, (uint)ObjectsToRender[objectID].objToSim.ObjectMesh.MeshTriangles.Length * 3);
 		}
 
 		/// <summary>
@@ -535,11 +535,11 @@ namespace Sharp._2d._2DSGLRenderer.Main
 		/// <returns></returns>
 		public unsafe virtual Matrix4x4 GTTRNSFRMMTRX(int objectID)
 		{
-			Vector3 vctr3 = new((float)ObjectsToRender[objectID].objToSim.Value.Translation.ObjectPosition.X, (float)ObjectsToRender[objectID].objToSim.Value.Translation.ObjectPosition.Y, 0);
-			Matrix4x4 model = Matrix4x4.CreateScale(ObjectsToRender[objectID].objToSim.Value.Translation.ObjectScale.XSca,
-																ObjectsToRender[objectID].objToSim.Value.Translation.ObjectScale.YSca,
+			Vector3 vctr3 = new((float)ObjectsToRender[objectID].objToSim.Translation.ObjectPosition.X, (float)ObjectsToRender[objectID].objToSim.Translation.ObjectPosition.Y, 0);
+			Matrix4x4 model = Matrix4x4.CreateScale(ObjectsToRender[objectID].objToSim.Translation.ObjectScale.XSca,
+																ObjectsToRender[objectID].objToSim.Translation.ObjectScale.YSca,
 																0f) *
-																Matrix4x4.CreateRotationZ((float)GenericMathUtils.DegreesToRadians(ObjectsToRender[objectID].objToSim.Value.Translation.ObjectRotation.XRot)) *
+																Matrix4x4.CreateRotationZ((float)GenericMathUtils.DegreesToRadians(ObjectsToRender[objectID].objToSim.Translation.ObjectRotation.XRot)) *
 																Matrix4x4.CreateTranslation(vctr3);
 			return model;
 		}
@@ -571,7 +571,7 @@ namespace Sharp._2d._2DSGLRenderer.Main
 		{
 			for (int i = 0; i < ObjectsToRender.Length; i++)
 			{
-				ObjectsToRender[i].objToSim.Value.ObjectMesh.MeshTriangles = [.. DelaunayTriangulator.DelaunayTriangulation(ObjectsToRender[i].objToSim.Value.ObjectMesh.MeshPoints)];
+				ObjectsToRender[i].objToSim.ObjectMesh.MeshTriangles = [.. DelaunayTriangulator.DelaunayTriangulation(ObjectsToRender[i].objToSim.ObjectMesh.MeshPoints)];
 			}
 		}
 
@@ -589,7 +589,7 @@ namespace Sharp._2d._2DSGLRenderer.Main
 				for (int i = 0; i < objs->Length; i++)
 				{
 					ObjectsToRender[i] = new SGLRenderedObject();
-					ObjectsToRender[i].objToSim.Value = (*objs)[i];
+					ObjectsToRender[i].objToSim = (*objs)[i];
 				}
 			}
 		}
@@ -643,7 +643,7 @@ namespace Sharp._2d._2DSGLRenderer.Main
 			{
 				if (OU is not null && OU.Length > obj)
 				{
-					OU[obj].Invoke(ObjectsToRender[obj].objToSim.Value);
+					OU[obj].Invoke(ObjectsToRender[obj].objToSim);
 				}
 			}, ObjectsToRender.Length);
 		}
@@ -740,7 +740,7 @@ namespace Sharp._2d._2DSGLRenderer.Main
 
 		public unsafe virtual void GTVBOBUF(int objid)
 		{
-			vboDataBuf = GVFPS(ObjectsToRender[objid].objToSim.Value.ObjectMesh);
+			vboDataBuf = GVFPS(ObjectsToRender[objid].objToSim.ObjectMesh);
 		}
 
 		public virtual void BUFCLNUP()
@@ -872,7 +872,7 @@ namespace Sharp._2d._2DSGLRenderer.Main
 		/// Gets a float[] containing the points from a mesh object
 		/// </summary>
 		public unsafe virtual float[] GVFPS(Mesh msh) =>
-			Triangle.ToFloats3D(ObjectsToRender[0].objToSim.Value.ObjectMesh.MeshTriangles);
+			Triangle.ToFloats3D(ObjectsToRender[0].objToSim.ObjectMesh.MeshTriangles);
 
 		/// <summary>
 		/// Connects the mesh and texture cords
@@ -934,7 +934,7 @@ namespace Sharp._2d._2DSGLRenderer.Main
 		/// </summary>
 		public virtual unsafe void STVBO(int objid)
 		{
-			float[] data = MSHTXCRDS(vboDataBuf, ObjectsToRender[objid].objToSim.Value.ObjectMesh);
+			float[] data = MSHTXCRDS(vboDataBuf, ObjectsToRender[objid].objToSim.ObjectMesh);
 			fixed (float* buf = data)
 				gl.BufferData(BufferTargetARB.ArrayBuffer, (nuint)(sizeof(float) * data.Length), buf, BufferUsageARB.StaticDraw);
 		}

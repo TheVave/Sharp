@@ -55,7 +55,7 @@ namespace Sharp._2d._2DSGLRenderer.Main
 		/// <summary>
 		/// the object to simulate
 		/// </summary>
-		public UnmanagedMemoryObject<SimulatedObject2d> objToSim;
+		public SimulatedObject2d objToSim;
 
 		/// <summary>
 		/// The rendered objects hash code.
@@ -78,13 +78,6 @@ namespace Sharp._2d._2DSGLRenderer.Main
 		/// If the object has been initialized by Internal2dRenderer
 		/// </summary>
 		internal bool ObjectInitialized = false;
-
-		~SGLRenderedObject()
-		{
-			// removes the UnsafeUtils.Malloc'd memory to prevent mem leak
-			if (NeedMemFreeSimulatedObject2d)
-				objToSim.Dispose();
-		}
 
 		public int GetSize() =>
 			// simplest objects

@@ -49,7 +49,7 @@ namespace Sharp._2d.Rendering
 					MainRendererSGL.renderer.PauseRender = true;
 					SimulatedObject2d object2D = _2dWorld.SceneHierarchies[sceneID].Objects[obj];
 
-					if (!MainRendererSGL.renderer.ObjectsToRender[obj].objToSim.Value.Equals(object2D))
+					if (!MainRendererSGL.renderer.ObjectsToRender[obj].objToSim.Equals(object2D))
 						// Error, Internal Error, You can't remove an uninialized object.
 						ErrorHandler.ThrowError(14, true);
 

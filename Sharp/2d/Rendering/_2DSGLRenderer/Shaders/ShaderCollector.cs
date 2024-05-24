@@ -33,7 +33,14 @@ namespace Sharp._2d._2DSGLRenderer.Shaders
 						Pairs = new ShaderNamePair[buf.Length + 1];
 						Array.Copy(buf, Pairs, buf.Length);
 					}
-					Pairs[^1].VertName = name;
+					try
+					{
+						Pairs[^1].VertName = name;
+					}
+					catch
+					{
+						ErrorHandler.ThrowError("Switch ordering of shader collection. ShaderCollecter.GetShader() must be called in order FRAG -> VERT", true);
+					}
 				}
 				else
 				{

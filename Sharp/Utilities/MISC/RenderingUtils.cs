@@ -203,12 +203,9 @@ namespace Sharp.Utilities.MISC
 		/// <returns></returns>
 		public static unsafe SGLRenderedObject GetBlankSGLRenderedObjectFromSimulatedObject2d(SimulatedObject2d obj)
 		{
-			// must be freed later because mem doesn't get collected by the GC
-			UnmanagedMemoryObject<SimulatedObject2d> objToSim = new();
-			objToSim.Create(obj);
 			return new SGLRenderedObject()
 			{
-				objToSim = objToSim,
+				objToSim = obj,
 				NeedMemFreeSimulatedObject2d = true
 			};
 		}
