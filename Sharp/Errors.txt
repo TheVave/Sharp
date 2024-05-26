@@ -20,3 +20,4 @@ Error, Internal Error, Mem: A UnmanagedMemoryObject<T> setter call has happened 
 Error, Internal Error, Unexpected code error in ShaderCollector.cs.
 Error, Internal Error, Shaders or Enviroment.CurrentDirectory do not point to an existing directory. Please make sure that there are no params passed to the program, and then make sure there's a Shader folder in #0.
 Error, Internal Error, Mem: Unexpected error. Info: #1
+Error, Internal Error, Attempted to set ObjectsToRender in _2dSceneHierarchy while those were not the currently rendering objects.

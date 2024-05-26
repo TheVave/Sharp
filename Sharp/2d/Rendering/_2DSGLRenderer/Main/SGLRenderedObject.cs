@@ -5,7 +5,7 @@ using Sharp.Utilities.MISC.Unsafe;
 
 namespace Sharp._2d._2DSGLRenderer.Main
 {
-	public unsafe class SGLRenderedObject : ISizeGettable, IAny
+	public unsafe struct SGLRenderedObject : ISizeGettable, IAny
 	{
 		/// <summary>
 		/// The vao that contains all the VRAM data
@@ -65,11 +65,6 @@ namespace Sharp._2d._2DSGLRenderer.Main
 		internal long HashCode;
 
 		/// <summary>
-		/// If the objToSim needs to be freed to prevent a mem leak once the object is disposed.
-		/// </summary>
-		internal bool NeedMemFreeSimulatedObject2d = true;
-
-		/// <summary>
 		/// If the renderer/other SP parts are loading info for the renderer.
 		/// </summary>
 		internal bool CurrentlyLoadingInfo = false;
@@ -78,6 +73,10 @@ namespace Sharp._2d._2DSGLRenderer.Main
 		/// If the object has been initialized by Internal2dRenderer
 		/// </summary>
 		internal bool ObjectInitialized = false;
+
+		public SGLRenderedObject()
+		{
+		}
 
 		public int GetSize() =>
 			// simplest objects

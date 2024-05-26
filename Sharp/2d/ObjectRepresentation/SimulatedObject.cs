@@ -78,18 +78,14 @@ namespace Sharp._2d.ObjectRepresentation
 		/// Registers the object to a scene.
 		/// </summary>
 		/// <param name="scene"></param>
-		public void RegisterToScene(int scene)
-		{
-			_2dWorld.SceneHierarchies[scene].Objects = [.. _2dWorld.SceneHierarchies[scene].Objects, this];
-		}
+		public void RegisterToScene(int scene) =>
+			_2dWorld.SceneHierarchies[scene].SetObjects([.. _2dWorld.SceneHierarchies[scene].Objects, this], true);
 
 		/// <summary>
-		/// Registers the object to scene 1.
+		/// Registers the object to scene 0.
 		/// </summary>
-		public void RegisterToScene()
-		{
-			_2dWorld.SceneHierarchies[0].Objects = [.. _2dWorld.SceneHierarchies[0].Objects, this];
-		}
+		public void RegisterToScene() =>
+			_2dWorld.SceneHierarchies[0].SetObjects([.. _2dWorld.SceneHierarchies[0].Objects, this], true);
 
 		public void ApplyVectorVelocity(_2dVector force)
 		{

@@ -666,11 +666,8 @@ namespace Sharp._2d._2DSGLRenderer.Main
 		public virtual void LD()
 		{
 			// loads some necessary info for the objects.
-			//INITOBJMSH();
-			// /\
-			// ||
-			// possibly not necessary
-			// loads input context
+			INITOBJMSH();
+			// inits input context
 			INPTINIT();
 			// binds scroll event
 			BNDSCRL();
@@ -686,7 +683,6 @@ namespace Sharp._2d._2DSGLRenderer.Main
 			for (int i = 0; i < ObjectsToRender.Length; i++)
 			{
 				INITSNGLOBJ(i);
-				ObjectsToRender[i].HashCode = ObjectsToRender[i].GetHashCode();
 				ObjectsToRender[i].ObjectInitialized = true;
 			}
 			// cleans up a little

@@ -2,10 +2,8 @@
 using Sharp._2d.ObjectRepresentation;
 using Sharp.Utilities.MathUtils;
 using Sharp.Utilities.MathUtils.DelaunayTriangulator;
-using Sharp.Utilities.MISC.Unsafe;
 using Silk.NET.Core;
 using StbImageSharp;
-using System.Runtime.ExceptionServices;
 using static Sharp.Utilities.MathUtils.GenericMathUtils;
 
 namespace Sharp.Utilities.MISC
@@ -206,7 +204,6 @@ namespace Sharp.Utilities.MISC
 			return new SGLRenderedObject()
 			{
 				objToSim = obj,
-				NeedMemFreeSimulatedObject2d = true
 			};
 		}
 

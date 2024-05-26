@@ -24,5 +24,11 @@
 		/// If the program should say the current OS is not windows in various places where it calls windows methods.
 		/// </summary>
 		public static bool SayNonWindowsOS = true;
+
+		/// <summary>
+		/// if the program should crash on error 23. </br>
+		/// (Invalid setting time) Error, Internal Error, Attempted to set ObjectsToRender in _2dSceneHierarchy while those were not the currently rendering objects.
+		/// </summary>
+		public static bool CrashOnError23 = false;
 	}
 }
