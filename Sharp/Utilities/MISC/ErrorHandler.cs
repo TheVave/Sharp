@@ -24,7 +24,7 @@ public static class ErrorHandler
 		else
 		{
 			if (ErrorTweaks.SayNonWindowsOS)
-				throw new MessageBoxException(message + " This OS is not windows, so the program cannot display a message box. Hide this by disabling ErrorTweaks.SayNonWindowsOS.");
+				throw new MessageBoxException(message + " This OS is not Windows, so the program cannot display a message box. Hide this by disabling ErrorTweaks.SayNonWindowsOS.");
 			else
 				throw new MessageBoxException(message);
 		}

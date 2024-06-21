@@ -54,5 +54,19 @@ namespace Sharp.Utilities.MISC
 					toReturn = AppendArrayObject(toReturn, idx++);
 			return toReturn;
 		}
+		public static int GetHighestValueIndex(int[] values)
+		{
+			int curmax = 0;
+			int idx = 0;
+			foreach (int i in values)
+				if (i > curmax)
+				{
+					curmax = idx;
+					idx++;
+				}
+				else
+					idx++;
+			return idx;
+		}
 	}
 }

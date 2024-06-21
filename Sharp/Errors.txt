@@ -21,3 +21,6 @@ Error, Internal Error, Unexpected code error in ShaderCollector.cs.
 Error, Internal Error, Shaders or Enviroment.CurrentDirectory do not point to an existing directory. Please make sure that there are no params passed to the program, and then make sure there's a Shader folder in #0.
 Error, Internal Error, Mem: Unexpected error. Info: #1
 Error, Internal Error, Attempted to set ObjectsToRender in _2dSceneHierarchy while those were not the currently rendering objects.
+Error, Internal Error, Failed to find a suitable Vulkan GPU. This means that your GPU(s) are not compatible with Vulkan. Sharp will not be able to run on them.
+Error, Internal Error, Failed to create a logical device. This may be an error with drivers though I'm not sure. Exact error code (Vulkan error code): #1
+Error, Internal Error, Failed to create a Vulkan instance. This is most likely a hardware issue, but drivers could be the culprit as well. Sharp will be unable to run on your hardware.

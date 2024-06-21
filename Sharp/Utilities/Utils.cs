@@ -8,6 +8,7 @@ namespace Sharp.Utilities
 	public static unsafe class Utils
 	{
 		public static void* NULLVOIDPTR = (void*)NULLPTR;
+		public static byte* NULLBYTEPTR = (byte*)NULLPTR;
 		public static nint NULLPTR = IntPtr.Zero;
 		public static bool RenderingStarted = false;
 
