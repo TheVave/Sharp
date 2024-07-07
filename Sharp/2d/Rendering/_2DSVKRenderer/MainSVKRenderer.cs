@@ -11,5 +11,11 @@ namespace Sharp._2d.Rendering._2DSVKRenderer
 		{
 			rndr.INITRNDRNG();
 		}
+
+		public static void RunExampleApplication()
+		{
+			var app = new HelloTriangleApplication();
+			app.Run();
+		}
 	}
 }

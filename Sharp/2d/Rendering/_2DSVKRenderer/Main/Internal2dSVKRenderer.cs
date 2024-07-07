@@ -9,15 +9,20 @@ using Sharp.Utilities;
 using Sharp.Utilities.MISC;
 using Sharp.Utilities.MISC.Unsafe;
 using System.Runtime.CompilerServices;
+using Silk.NET.Core.Contexts;
+using Silk.NET.Vulkan.Extensions.KHR;
+using Sharp.Utilities.MISC.Unsafe;
 
 namespace Sharp._2d._2DSVKRenderer.Main
 {
 	public struct QueueFamilyIndices
 	{
 		public uint? GraphicsFamily { get; set; }
+		public uint? PresentFamily { get; set; }
+
 		public bool IsComplete()
 		{
-			return GraphicsFamily.HasValue;
+			return GraphicsFamily.HasValue && PresentFamily.HasValue;
 		}
 	}
 
@@ -29,10 +34,13 @@ namespace Sharp._2d._2DSVKRenderer.Main
 		public IView wnd;
 
 		/// <summary>
-		/// The what vulkan renderers onto directly.
-		/// Similar to a window handle.
+		/// The surface
 		/// </summary>
-		public Surface WindowSurface;
+		public KhrSurface KhrWindowSurface;
+
+		public SurfaceKHR WindowSurfaceKhr;
+
+		//public Surface SDLSurface;
 
 		/// <summary>
 		/// The window init settings
@@ -61,6 +69,11 @@ namespace Sharp._2d._2DSVKRenderer.Main
 		public QueueFamilyProperties[] QFamilyProps;
 
 		/// <summary>
+		/// The main queue for running commands
+		/// </summary>
+		public Queue Q;
+
+		/// <summary>
 		/// The Queue family for MainDevice.
 		/// Little confused what the difference between this and QFamilyProps is.
 		/// </summary>
@@ -72,10 +85,14 @@ namespace Sharp._2d._2DSVKRenderer.Main
 		public QueueFamilyProperties[] GraphicsFamilyProps;
 
 		/// <summary>
-		/// The main queue to run commands on.
-		/// kind of the gl object handle in ogl.
+		/// This q can handle presenting the pixels to the screen.
 		/// </summary>
-		public Queue MainQueue;
+		public Queue MainQueuePresent;
+
+		/// <summary>
+		/// This q draws the pixels to render
+		/// </summary>
+		public Queue MainQueueDraw;
 
 		/// <summary>
 		/// Window name
@@ -98,8 +115,7 @@ namespace Sharp._2d._2DSVKRenderer.Main
 		public Vk vk;
 
 		/// <summary>
-		/// If the program should use validation layers.
-		/// They are useful for debugging.
+		/// NOT SUPPORTED CURRENTLY!!!!!
 		/// </summary>
 		public bool EnableValidationLayers;
 
@@ -114,11 +130,17 @@ namespace Sharp._2d._2DSVKRenderer.Main
 		public string title;
 
 		/// <summary>
+		/// If the program should use VSync to stabilize the video.
+		/// If there are horizontal lines appearing, then you should turn on VSync.
+		/// </summary>
+		public bool VSync = true;
+
+		/// <summary>
 		/// The api version to use.
 		/// May be updated in the future for newer versions of vulkan.
-		/// Default value: new(1,1)
+		/// Default value: 1.1
 		/// </summary>
-		public APIVersion version = new(1, 1);
+		public APIVersion version = GraphicsAPI.DefaultVulkan.Version;
 
 		/// <summary>
 		/// If the program is to initially be fullscreen. (Only applies to desktop)
@@ -158,6 +180,7 @@ namespace Sharp._2d._2DSVKRenderer.Main
 		// INDCS=Indices
 		// HNDL=Handle
 		// SRFC=Surface
+		// FRM=From
 
 		// example:
 		// CRTLGCLDVC
@@ -176,10 +199,12 @@ namespace Sharp._2d._2DSVKRenderer.Main
 				MainDevice = GTPHYSDVC(Instance, vk);
 				// gets queue family properties
 				QFamilyProps = GTQFMLYPROP(MainDevice, vk);
+				// gets window surfaces
+				CRTSRFCS(out WindowSurfaceKhr, out KhrWindowSurface, Instance, wnd);
 				// gets a logical device
 				MainLogicalDevice = CRTLGCLDVC(MainDevice, vk);
-				// gets a graphics queue, which allows us to run commands.
-				MainQueue = GTQHNDL(MainLogicalDevice, QueueFamilyIndex, vk);
+				// gets a graphics queue, to run commands.
+				GTQHNDL(MainLogicalDevice, QueueFamilyIndex, vk);
 				// Creates a surface to render onto
 				
 			}
@@ -189,29 +214,38 @@ namespace Sharp._2d._2DSVKRenderer.Main
 			// starts rendering
 			INITVWRNDRNG(wnd);
 			// clean up
-			CLNUP(MainLogicalDevice, vk);
+			CLNUP(MainLogicalDevice, Instance, KhrWindowSurface, WindowSurfaceKhr, vk);
 		}
 
 		public unsafe virtual Device CRTLGCLDVC(PhysicalDevice MainDevice, Vk vk)
 		{
 			var indices = GTQFMLYIDX(MainDevice, vk);
 			QueueFamilyIndex = indices.GraphicsFamily!.Value;
-			float priority = 1.0f;
-			DeviceQueueCreateInfo info = new()
+
+			var uniqueQueueFamilies = new[] { indices.GraphicsFamily!.Value, indices.PresentFamily!.Value };
+			uniqueQueueFamilies = uniqueQueueFamilies.Distinct().ToArray();
+
+			DeviceQueueCreateInfo* queueCreateInfos = (DeviceQueueCreateInfo*)UnsafeUtils.malloc(uniqueQueueFamilies.Length * sizeof(DeviceQueueCreateInfo));
+
+			float queuePriority = 1.0f;
+			for (int i = 0; i < uniqueQueueFamilies.Length; i++)
 			{
-				SType = StructureType.DeviceCreateInfo,
-				QueueFamilyIndex = QueueFamilyIndex,
-				QueueCount = 1,
-				PQueuePriorities = &priority
-			};
+				queueCreateInfos[i] = new()
+				{
+					SType = StructureType.DeviceQueueCreateInfo,
+					QueueFamilyIndex = uniqueQueueFamilies[i],
+					QueueCount = 1,
+					PQueuePriorities = &queuePriority
+				};
+			}
 
 			PhysicalDeviceFeatures DeviceFeatures;
 
 			DeviceCreateInfo createInfo = new()
 			{
 				SType = StructureType.DeviceCreateInfo,
-				PQueueCreateInfos = &info,
-				QueueCreateInfoCount = 1,
+				PQueueCreateInfos = queueCreateInfos,
+				QueueCreateInfoCount = (uint)uniqueQueueFamilies.Length,
 				PEnabledFeatures = &DeviceFeatures,
 				EnabledExtensionCount = 0,
 				EnabledLayerCount = 0
@@ -230,12 +264,19 @@ namespace Sharp._2d._2DSVKRenderer.Main
 			return dvcRef;
 		}
 
-		// will be implemented in the near (very near) future.
-		public virtual void CRTSRFC() { }
+		public virtual unsafe void CRTSRFCS(out SurfaceKHR srfc, out KhrSurface ksrf, Instance inst, IView wnd) 
+		{
+			if (!vk.TryGetInstanceExtension(inst, out ksrf))
+				// Error, Internal/External Error, Failed to get a KHRSurface. This is most likely a driver or windowing system issue. Please make sure your operating system and hardware support Vulkan.
+				ErrorHandler.ThrowError(27, true);
+			srfc = wnd!.VkSurface!.Create<AllocationCallbacks>(inst.ToHandle(), null).ToSurface();
+		}
 
-		public virtual unsafe void CLNUP(Device DeviceToDestroy, Vk vk)
+		public virtual unsafe void CLNUP(Device DeviceToDestroy, Instance InstanceToDestroy, KhrSurface KhrSurfaceToDestroy, SurfaceKHR SurfaceKHRToDestroy, Vk vk)
 		{
 			vk.DestroyDevice(DeviceToDestroy, null);
+			KhrSurfaceToDestroy.DestroySurface(InstanceToDestroy, SurfaceKHRToDestroy, null);
+			vk.DestroyInstance(InstanceToDestroy, null);
 		}
 
 		public unsafe virtual QueueFamilyIndices GTQFMLYIDX(PhysicalDevice device, Vk vk)
@@ -260,6 +301,14 @@ namespace Sharp._2d._2DSVKRenderer.Main
 					indices.GraphicsFamily = i;
 				}
 
+				Bool32 presentSupport = false;
+				KhrWindowSurface.GetPhysicalDeviceSurfaceSupport(device, i, WindowSurfaceKhr, &presentSupport);
+
+				if (presentSupport)
+				{
+					indices.PresentFamily = i;
+				}
+
 				if (indices.IsComplete())
 				{
 					break;
@@ -269,6 +318,15 @@ namespace Sharp._2d._2DSVKRenderer.Main
 			}
 
 			return indices;
+		}
+
+		public unsafe virtual void GTQFRMIDCSALGCLDVC(QueueFamilyIndices idx, Device MainDevice, Vk vk, out Queue Pres, out Queue Draw)
+		{
+			
+
+
+			vk!.GetDeviceQueue(MainDevice, idx.GraphicsFamily!.Value, 0, out Draw);
+			vk!.GetDeviceQueue(MainDevice, idx.PresentFamily!.Value, 0, out Pres);
 		}
 
 		public unsafe virtual QueueFamilyProperties[] GTQFMLYPROP(PhysicalDevice dvc, Vk vk)
@@ -321,6 +379,17 @@ namespace Sharp._2d._2DSVKRenderer.Main
 			if (!physdvcfturs.GeometryShader) score = -1;
 		}
 
+		public virtual unsafe byte** GTEXTS(IView wnd, ref uint count)
+		{
+			//var glfwExtensions = wnd!.VkSurface!.GetRequiredExtensions(out var glfwExtensionCount);
+
+			///string[] ext = SilkMarshal.PtrToStringArray((nint)glfwExtensions, (int)glfwExtensionCount);DefaultInterpolatedStringHandler
+			string[] ext = ["VK_KHR_surface"];
+			count = (uint)ext.Length;
+
+			return (byte**)SilkMarshal.StringArrayToPtr(ext);
+		}
+
 		public virtual void INITVWRNDRNG(IView vw)
 		{
 			vw.Run();
@@ -333,9 +402,19 @@ namespace Sharp._2d._2DSVKRenderer.Main
 
 		public virtual IView CRTWND()
 		{
-			VO = new();
+			VO = ViewOptions.DefaultVulkan;
+			VO.VSync = VSync;
 			VO.API = new(ContextAPI.Vulkan, version);
-			return Silk.NET.Windowing.Window.GetView(VO);
+			IView vw = Silk.NET.Windowing.Window.GetView(VO);
+			if (vw.VkSurface == null)
+			{
+				// Error, Internal/External Error, Failed to get a IVkSurface. A test will be done after you close this window, to see if your environment supports Vulkan. If you see two windows appear, the test has succeeded. If it does succeed it's an issue on our end, and you can report it at GitHub.com/TheVave/Sharp.
+				ErrorHandler.ThrowError(28, false);
+
+				new HelloTriangleApplication().Run();
+			}
+
+			return vw;
         }
 
 		public virtual Vk CRTANDGTWNDAPI()
@@ -369,31 +448,29 @@ namespace Sharp._2d._2DSVKRenderer.Main
 				ApplicationVersion = new Version32(1, 0, 0),
 				PEngineName = (byte*)Marshal.StringToHGlobalAnsi("No Engine"),
 				EngineVersion = new Version32(1, 0, 0),
-				ApiVersion = Vk.Version11
+				ApiVersion = Vk.Version10
 			};
-
-			string[] ext = ["VK_KHR_surface"];
-			byte* firstByte = Utils.NULLBYTEPTR;
-			fixed (string* firstExtPtr = &ext[0])
-			{
-				firstByte = (byte*)firstExtPtr;
-			}
-
 
 			InstanceCreateInfo createInfo = new()
 			{
 				SType = StructureType.InstanceCreateInfo,
-				EnabledExtensionCount = (uint)ext.Length,
-				PpEnabledExtensionNames = &firstByte,
+				
 				PApplicationInfo = &appInfo
 			};
 
-			createInfo.EnabledLayerCount = 0;
+			uint c = 0;
+			byte** bpp = GTEXTS(wnd, ref c);
+			createInfo.EnabledExtensionCount = c;
+			createInfo.PpEnabledExtensionNames = bpp;
 
-			if (vk.CreateInstance(createInfo, null, out inst) != Silk.NET.Vulkan.Result.Success)
+			createInfo.EnabledLayerCount = 0;
+			Silk.NET.Vulkan.Result res = vk.CreateInstance(createInfo, null, out inst);
+
+			SilkMarshal.Free((nint)bpp);
+			if (res != Silk.NET.Vulkan.Result.Success)
 			{
-				//Error, Internal Error, Failed to create a Vulkan instance. This is most likely a hardware issue, but drivers could be the culprit as well. Sharp will be unable to run on your hardware.
-				ErrorHandler.ThrowError(26, true);
+				//Error, Internal Error, Failed to create a Vulkan instance. Sharp may be unable to run on your hardware. Exact error: #1
+				ErrorHandler.ThrowError(26, [res.ToString()], true);
 			}
 
 			Marshal.FreeHGlobal((IntPtr)appInfo.PApplicationName);
