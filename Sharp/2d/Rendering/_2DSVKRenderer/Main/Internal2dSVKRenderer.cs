@@ -20,10 +20,17 @@ namespace Sharp._2d._2DSVKRenderer.Main
 		public uint? GraphicsFamily { get; set; }
 		public uint? PresentFamily { get; set; }
 
-		public bool IsComplete()
+		public readonly bool IsComplete()
 		{
 			return GraphicsFamily.HasValue && PresentFamily.HasValue;
 		}
+	}
+
+	public struct SwapChainSupportDetails
+	{
+		public SurfaceCapabilitiesKHR Capabilities;
+		public SurfaceFormatKHR[] Formats;
+		public PresentModeKHR[] PresentModes;
 	}
 
 	public class Internal2dSVKRenderer : IAny
@@ -41,6 +48,11 @@ namespace Sharp._2d._2DSVKRenderer.Main
 		public SurfaceKHR WindowSurfaceKhr;
 
 		//public Surface SDLSurface;
+
+		private readonly string[] deviceExtensions =
+		[
+			KhrSwapchain.ExtensionName
+		];
 
 		/// <summary>
 		/// The window init settings
@@ -74,6 +86,11 @@ namespace Sharp._2d._2DSVKRenderer.Main
 		public Queue Q;
 
 		/// <summary>
+		/// The current platform
+		/// </summary>
+		public VKDrawPlatform platform;
+
+		/// <summary>
 		/// The Queue family for MainDevice.
 		/// Little confused what the difference between this and QFamilyProps is.
 		/// </summary>
@@ -83,6 +100,11 @@ namespace Sharp._2d._2DSVKRenderer.Main
 		/// The Queue families that support graphics calculation
 		/// </summary>
 		public QueueFamilyProperties[] GraphicsFamilyProps;
+
+		/// <summary>
+		/// The queue family indices (not properties)
+		/// </summary>
+		public QueueFamilyIndices QueueFamilyIndices;
 
 		/// <summary>
 		/// This q can handle presenting the pixels to the screen.
@@ -181,6 +203,9 @@ namespace Sharp._2d._2DSVKRenderer.Main
 		// HNDL=Handle
 		// SRFC=Surface
 		// FRM=From
+		// SWPCHN=Swap chain
+		// QRY=Query
+		// SUP=Support
 
 		// example:
 		// CRTLGCLDVC
@@ -202,10 +227,10 @@ namespace Sharp._2d._2DSVKRenderer.Main
 				// gets window surfaces
 				CRTSRFCS(out WindowSurfaceKhr, out KhrWindowSurface, Instance, wnd);
 				// gets a logical device
-				MainLogicalDevice = CRTLGCLDVC(MainDevice, vk);
+				MainLogicalDevice = CRTLGCLDVC(MainDevice, vk, QueueFamilyIndices, out QueueFamilyIndex);
 				// gets a graphics queue, to run commands.
 				GTQHNDL(MainLogicalDevice, QueueFamilyIndex, vk);
-				// Creates a surface to render onto
+				// Creates a swapchain
 				
 			}
 
@@ -217,12 +242,58 @@ namespace Sharp._2d._2DSVKRenderer.Main
 			CLNUP(MainLogicalDevice, Instance, KhrWindowSurface, WindowSurfaceKhr, vk);
 		}
 
-		public unsafe virtual Device CRTLGCLDVC(PhysicalDevice MainDevice, Vk vk)
+		public unsafe virtual void CRTSWPCHN()
 		{
-			var indices = GTQFMLYIDX(MainDevice, vk);
-			QueueFamilyIndex = indices.GraphicsFamily!.Value;
 
-			var uniqueQueueFamilies = new[] { indices.GraphicsFamily!.Value, indices.PresentFamily!.Value };
+		}
+
+		public unsafe virtual SwapChainSupportDetails QRYSWPCHNSUP(KhrSurface khrSurface, SurfaceKHR surface, PhysicalDevice physicalDevice)
+		{
+			var details = new SwapChainSupportDetails();
+
+			khrSurface!.GetPhysicalDeviceSurfaceCapabilities(physicalDevice, surface, out details.Capabilities);
+
+			uint formatCount = 0;
+			khrSurface.GetPhysicalDeviceSurfaceFormats(physicalDevice, surface, ref formatCount, null);
+
+			if (formatCount != 0)
+			{
+				details.Formats = new SurfaceFormatKHR[formatCount];
+				fixed (SurfaceFormatKHR* formatsPtr = details.Formats)
+				{
+					khrSurface.GetPhysicalDeviceSurfaceFormats(physicalDevice, surface, ref formatCount, formatsPtr);
+				}
+			}
+			else
+			{
+				details.Formats = Array.Empty<SurfaceFormatKHR>();
+			}
+
+			uint presentModeCount = 0;
+			khrSurface.GetPhysicalDeviceSurfacePresentModes(physicalDevice, surface, ref presentModeCount, null);
+
+			if (presentModeCount != 0)
+			{
+				details.PresentModes = new PresentModeKHR[presentModeCount];
+				fixed (PresentModeKHR* formatsPtr = details.PresentModes)
+				{
+					khrSurface.GetPhysicalDeviceSurfacePresentModes(physicalDevice, surface, ref presentModeCount, formatsPtr);
+				}
+
+			}
+			else
+			{
+				details.PresentModes = Array.Empty<PresentModeKHR>();
+			}
+
+			return details;
+		}
+
+		public unsafe virtual Device CRTLGCLDVC(PhysicalDevice MainDevice, Vk vk, QueueFamilyIndices QueueFamilyIndices, out uint QueueFamilyIndex)
+		{
+			QueueFamilyIndex = QueueFamilyIndices.GraphicsFamily!.Value;
+
+			var uniqueQueueFamilies = new[] { QueueFamilyIndices.GraphicsFamily!.Value, QueueFamilyIndices.PresentFamily!.Value };
 			uniqueQueueFamilies = uniqueQueueFamilies.Distinct().ToArray();
 
 			DeviceQueueCreateInfo* queueCreateInfos = (DeviceQueueCreateInfo*)UnsafeUtils.malloc(uniqueQueueFamilies.Length * sizeof(DeviceQueueCreateInfo));
@@ -247,8 +318,9 @@ namespace Sharp._2d._2DSVKRenderer.Main
 				PQueueCreateInfos = queueCreateInfos,
 				QueueCreateInfoCount = (uint)uniqueQueueFamilies.Length,
 				PEnabledFeatures = &DeviceFeatures,
-				EnabledExtensionCount = 0,
-				EnabledLayerCount = 0
+				EnabledExtensionCount = (uint)deviceExtensions.Length,
+				PpEnabledExtensionNames = (byte**)SilkMarshal.StringArrayToPtr(deviceExtensions),
+				EnabledLayerCount = 0,
 			};
 
 			Device dvcRef;
@@ -266,7 +338,7 @@ namespace Sharp._2d._2DSVKRenderer.Main
 
 		public virtual unsafe void CRTSRFCS(out SurfaceKHR srfc, out KhrSurface ksrf, Instance inst, IView wnd) 
 		{
-			if (!vk.TryGetInstanceExtension(inst, out ksrf))
+			if (!vk!.TryGetInstanceExtension(inst, out ksrf))
 				// Error, Internal/External Error, Failed to get a KHRSurface. This is most likely a driver or windowing system issue. Please make sure your operating system and hardware support Vulkan.
 				ErrorHandler.ThrowError(27, true);
 			srfc = wnd!.VkSurface!.Create<AllocationCallbacks>(inst.ToHandle(), null).ToSurface();
@@ -281,8 +353,11 @@ namespace Sharp._2d._2DSVKRenderer.Main
 
 		public unsafe virtual QueueFamilyIndices GTQFMLYIDX(PhysicalDevice device, Vk vk)
 		{
-			var indices = new QueueFamilyIndices();
+			QueueFamilyIndices = new QueueFamilyIndices();
 
+
+			// TODO: REFACTOR
+			// if only c# had functional programming.
 			uint queueFamilityCount = 0;
 			vk!.GetPhysicalDeviceQueueFamilyProperties(device, ref queueFamilityCount, null);
 
@@ -298,7 +373,7 @@ namespace Sharp._2d._2DSVKRenderer.Main
 			{
 				if (queueFamily.QueueFlags.HasFlag(QueueFlags.GraphicsBit))
 				{
-					indices.GraphicsFamily = i;
+					QueueFamilyIndices.GraphicsFamily = i;
 				}
 
 				Bool32 presentSupport = false;
@@ -306,10 +381,10 @@ namespace Sharp._2d._2DSVKRenderer.Main
 
 				if (presentSupport)
 				{
-					indices.PresentFamily = i;
+					QueueFamilyIndices.PresentFamily = i;
 				}
 
-				if (indices.IsComplete())
+				if (QueueFamilyIndices.IsComplete())
 				{
 					break;
 				}
@@ -317,14 +392,13 @@ namespace Sharp._2d._2DSVKRenderer.Main
 				i++;
 			}
 
-			return indices;
+
+			return QueueFamilyIndices;
 		}
 
+		//get q from indices and logical dvc
 		public unsafe virtual void GTQFRMIDCSALGCLDVC(QueueFamilyIndices idx, Device MainDevice, Vk vk, out Queue Pres, out Queue Draw)
 		{
-			
-
-
 			vk!.GetDeviceQueue(MainDevice, idx.GraphicsFamily!.Value, 0, out Draw);
 			vk!.GetDeviceQueue(MainDevice, idx.PresentFamily!.Value, 0, out Pres);
 		}
@@ -377,14 +451,40 @@ namespace Sharp._2d._2DSVKRenderer.Main
 			score += (int)physdvcprop.Limits.MaxImageDimension2D;
 
 			if (!physdvcfturs.GeometryShader) score = -1;
+			if (!QueueFamilyIndices.IsComplete()) score = -1;
+			if (!VLDEXT(MainDevice, deviceExtensions)) score = -1;
 		}
 
-		public virtual unsafe byte** GTEXTS(IView wnd, ref uint count)
+		public virtual unsafe bool VLDEXT(PhysicalDevice MainDevice, string[] deviceExts)
 		{
-			//var glfwExtensions = wnd!.VkSurface!.GetRequiredExtensions(out var glfwExtensionCount);
+			uint extentionsCount = 0;
+			vk!.EnumerateDeviceExtensionProperties(MainDevice, (byte*)null, ref extentionsCount, null);
 
-			///string[] ext = SilkMarshal.PtrToStringArray((nint)glfwExtensions, (int)glfwExtensionCount);DefaultInterpolatedStringHandler
+			var availableExtensions = new ExtensionProperties[extentionsCount];
+			fixed (ExtensionProperties* availableExtensionsPtr = availableExtensions)
+			{
+				vk!.EnumerateDeviceExtensionProperties(MainDevice, (byte*)null, ref extentionsCount, availableExtensionsPtr);
+			}
+
+			var availableExtensionNames = availableExtensions.Select(extension => Marshal.PtrToStringAnsi((IntPtr)extension.ExtensionName)).ToHashSet();
+
+			return deviceExts.All(availableExtensionNames.Contains);
+		}
+
+		public virtual unsafe byte** GTEXTS(ref uint count)
+		{
 			string[] ext = ["VK_KHR_surface"];
+
+			if (platform == VKDrawPlatform.Windows)
+				ext = [.. ext, "VK_KHR_win32_surface"];
+			if (platform == VKDrawPlatform.Linux)
+				ext = [.. ext, "VK_KHR_xcb_surface", "VK_KHR_Wayland_surface"];
+			if (platform == VKDrawPlatform.iOS)
+				ext = [.. ext, "VK_MVK_ios_surface"];
+			if (platform == VKDrawPlatform.MacOS)
+				ext = [.. ext, "VK_MVK_ios_surface"];
+			if (platform == VKDrawPlatform.Android)
+				ext = [.. ext, "VK_KHR_android_surface"];
 			count = (uint)ext.Length;
 
 			return (byte**)SilkMarshal.StringArrayToPtr(ext);
@@ -402,10 +502,15 @@ namespace Sharp._2d._2DSVKRenderer.Main
 
 		public virtual IView CRTWND()
 		{
-			VO = ViewOptions.DefaultVulkan;
-			VO.VSync = VSync;
-			VO.API = new(ContextAPI.Vulkan, version);
-			IView vw = Silk.NET.Windowing.Window.GetView(VO);
+			//VO = ViewOptions.DefaultVulkan;
+			//VO.VSync = VSync;
+			//VO.API = new(ContextAPI.Vulkan, version);
+			//IView vw = Silk.NET.Windowing.Window.GetView(VO);
+			
+
+			IView vw = Silk.NET.Windowing.Window.GetView(ViewOptions.DefaultVulkan);
+			vw.Initialize();
+
 			if (vw.VkSurface == null)
 			{
 				// Error, Internal/External Error, Failed to get a IVkSurface. A test will be done after you close this window, to see if your environment supports Vulkan. If you see two windows appear, the test has succeeded. If it does succeed it's an issue on our end, and you can report it at GitHub.com/TheVave/Sharp.
@@ -459,7 +564,7 @@ namespace Sharp._2d._2DSVKRenderer.Main
 			};
 
 			uint c = 0;
-			byte** bpp = GTEXTS(wnd, ref c);
+			byte** bpp = GTEXTS(ref c);
 			createInfo.EnabledExtensionCount = c;
 			createInfo.PpEnabledExtensionNames = bpp;
 
