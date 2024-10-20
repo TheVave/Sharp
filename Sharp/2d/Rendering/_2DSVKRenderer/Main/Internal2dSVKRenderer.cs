@@ -12,9 +12,17 @@ using System.Runtime.CompilerServices;
 using Silk.NET.Core.Contexts;
 using Silk.NET.Vulkan.Extensions.KHR;
 using Sharp.Utilities.MISC.Unsafe;
+using System.Diagnostics;
+using Sharp._2d.Rendering._2DSVKRenderer;
+using Sharp._2d.Rendering._2DSVKRenderer.Main;
 
 namespace Sharp._2d._2DSVKRenderer.Main
 {
+	/// <summary>
+	/// The queue family indices.
+	/// Queue families are types of queues
+	/// No idea why they are indices.
+	/// </summary>
 	public struct QueueFamilyIndices
 	{
 		public uint? GraphicsFamily { get; set; }
@@ -26,6 +34,9 @@ namespace Sharp._2d._2DSVKRenderer.Main
 		}
 	}
 
+	/// <summary>
+	/// Details of the graphics card's support for swapchains (if it has any)
+	/// </summary>
 	public struct SwapChainSupportDetails
 	{
 		public SurfaceCapabilitiesKHR Capabilities;
@@ -33,62 +44,130 @@ namespace Sharp._2d._2DSVKRenderer.Main
 		public PresentModeKHR[] PresentModes;
 	}
 
+	/// <summary>
+	/// The actual renderer. You found it.
+	/// It's all here. (over 800 lines of code)
+	/// All methods inside of this should be virtual, so you can rewrite it all.
+	/// </summary>
 	public class Internal2dSVKRenderer : IAny
 	{
 		/// <summary>
-		/// The window
+		/// The SDL window object.
 		/// </summary>
 		public IView wnd;
 
 		/// <summary>
-		/// The surface
+		/// KhrSurface / SurfaceKhr
+		/// The window handles.
 		/// </summary>
 		public KhrSurface KhrWindowSurface;
 
+		/// <summary>
+		/// KhrSurface / SurfaceKhr
+		/// The window handles.
+		/// </summary>
 		public SurfaceKHR WindowSurfaceKhr;
 
 		//public Surface SDLSurface;
 
+		/// <summary>
+		/// The device extensions.
+		/// </summary>
 		private readonly string[] deviceExtensions =
 		[
 			KhrSwapchain.ExtensionName
 		];
 
 		/// <summary>
-		/// The window init settings
+		/// The view options.
+		/// This will be applied to the created window.
 		/// </summary>
 		public ViewOptions VO;
 
+		public int TestEnvIdx;
+
 		/// <summary>
-		/// The window width
+		/// The width of the window to be created.
+		/// As of 9/7/24, this is very important as the program's window cannot be resized.
 		/// </summary>
 		public int WindowWidth;
 
 		/// <summary>
-		/// The window height
+		/// The elapsed time since the Swap chain was created in Vulkan (since rendering started)
+		/// </summary>
+		double TotalElapsed = 0;
+		
+		/// <summary>
+		/// The elapsed time since the last frame.
+		/// 
+		/// </summary>
+		double Elapsed = 0;
+
+		/// <summary>
+		/// The swap chain for the program to use for rendering.
+		/// Is created somewhat late in initialization.
+		/// </summary>
+		public KhrSwapchain Swapchain;
+
+		/// <summary>
+		/// The (extension-specific?) for the program to use for rendering.
+		/// Is created somewhat late in initialization.
+		/// </summary>
+		public SwapchainKHR SwapchainKHR;
+
+		/// <summary>
+		/// The swap chain image format.
+		/// </summary>
+		private Format swapChainImageFormat;
+
+		/// <summary>
+		/// The size of the swap chain images.
+		/// Vulkan's 2d size struct.
+		/// </summary>
+		private Extent2D swapChainExtent;
+
+		/// <summary>
+		/// The array of swap chain images.
+		/// Will be set by the renderer.
+		/// </summary>
+		public Image[] SwapChainImages;
+
+		/// <summary>
+		/// The views to images.
+		/// For the main swapchain
+		/// </summary>
+		public ImageView[] SwapchainImageViews;
+
+		public SVKTexture[] Textures;
+
+		/// <summary>
+		/// The width of the window to be created.
+		/// As of 9/7/24, this is very important as the program's window cannot be resized.
 		/// </summary>
 		public int WindowHeight;
 
 		/// <summary>
-		/// The main logical device to render to.
-		/// Essentially a subdivision of the gpu.
+		/// The main logical device (handle) to render to.
+		/// This is a subdivision of the GPU.
 		/// </summary>
 		public Device MainLogicalDevice;
 
 		/// <summary>
-		/// The Queue family props for MainDevice
+		/// Properties about the <see cref="QueueFamilyIndices"/>.
 		/// </summary>
 		public QueueFamilyProperties[] QFamilyProps;
 
 		/// <summary>
-		/// The main queue for running commands
+		/// The graphics pipeline queue object.
+		/// This is what you use to actually draw things.
+		/// (Or to send messages to the GPU to actually draw things)
 		/// </summary>
 		public Queue Q;
 
 		/// <summary>
-		/// The current platform
+		/// The platform to draw to.
 		/// </summary>
-		public VKDrawPlatform platform;
+		public VKDrawPlatform Platform;
 
 		/// <summary>
 		/// The Queue family for MainDevice.
@@ -158,6 +237,11 @@ namespace Sharp._2d._2DSVKRenderer.Main
 		public bool VSync = true;
 
 		/// <summary>
+		/// The views to the SwapChainImages
+		/// </summary>
+		public ImageView[] VkImageViews;
+
+		/// <summary>
 		/// The api version to use.
 		/// May be updated in the future for newer versions of vulkan.
 		/// Default value: 1.1
@@ -174,10 +258,24 @@ namespace Sharp._2d._2DSVKRenderer.Main
 		/// </summary>
 		public bool Borderless;
 
-		public readonly uint SDL_WINDOWPOS_UNDEFINED = 0x80000000;
-		public readonly uint SDL_WINDOW_FULLSCREEN = 0x1;
-		public readonly uint SDL_WINDOW_SHOWN = 0x4;
-		public readonly uint SDL_WINDOW_VULKAN = 0x10000000;
+		public const uint SDL_WINDOWPOS_UNDEFINED = 0x80000000;
+		public const uint SDL_WINDOW_FULLSCREEN = 0x1;
+		public const uint SDL_WINDOW_SHOWN = 0x4;
+		public const uint SDL_WINDOW_VULKAN = 0x10000000;
+		public const uint VK_COMPONENT_SWIZZLE_IDENTITY = 0;
+		public const uint VK_IMAGE_VIEW_TYPE_1D = 0;
+		public const uint VK_IMAGE_VIEW_TYPE_2D = 1;
+		public const uint VK_IMAGE_VIEW_TYPE_3D = 2;
+		public const uint VK_IMAGE_VIEW_TYPE_CUBE = 3;
+		public const uint VK_IMAGE_VIEW_TYPE_1D_ARRAY = 4;
+		public const uint VK_IMAGE_VIEW_TYPE_2D_ARRAY = 5;
+		public const uint VK_IMAGE_VIEW_TYPE_CUBE_ARRAY = 6;
+
+		/// <summary>
+		/// Temporary holder that contains image view create info.
+		/// Should not be used!
+		/// </summary>
+		public ImageViewCreateInfo TempCreateInfo = new();
 
 		// guide to reading method names:
 		// significant reading required and this is not a highly direct list.
@@ -206,45 +304,157 @@ namespace Sharp._2d._2DSVKRenderer.Main
 		// SWPCHN=Swap chain
 		// QRY=Query
 		// SUP=Support
+		// EXTNT=Extent
 
 		// example:
 		// CRTLGCLDVC
 		// CRT=Create LGCL=Logical DVC=Device
-		// Create logical device.
+		// Create logical device is what CRTLGCLDVC does.
 
 		public virtual void INITRNDRNG()
 		{
 			// VULKAN SETUP AND WINDOW CREATION 
 			{
+				Debug.WriteLine("Initialized");
 				// Creates a window with SDL
 				wnd = CRTWND();
+				Debug.WriteLine("Window created");
 				// Inits vulkan
 				vk = VKLD(out Instance);
-				// gets a physical device
-				MainDevice = GTPHYSDVC(Instance, vk);
-				// gets queue family properties
-				QFamilyProps = GTQFMLYPROP(MainDevice, vk);
+				Debug.WriteLine("Vulkan loaded");
 				// gets window surfaces
 				CRTSRFCS(out WindowSurfaceKhr, out KhrWindowSurface, Instance, wnd);
+				Debug.WriteLine("Created surfaces");
+				// gets a physical device
+				MainDevice = GTPHYSDVC(Instance, vk);
+				Debug.WriteLine("Created physical device.");
+				// gets queue families
+				QueueFamilyIndices = GTQFMLYIDX(MainDevice, vk);
+				Debug.WriteLine("Collected queue family indices.");
+				// gets queue family properties
+				QFamilyProps = GTQFMLYPROP(MainDevice, vk);
+				Debug.WriteLine("Collected queue family properties.");
 				// gets a logical device
 				MainLogicalDevice = CRTLGCLDVC(MainDevice, vk, QueueFamilyIndices, out QueueFamilyIndex);
+				Debug.WriteLine("Created logical device.");
 				// gets a graphics queue, to run commands.
 				GTQHNDL(MainLogicalDevice, QueueFamilyIndex, vk);
+				Debug.WriteLine("Created queue.");
 				// Creates a swapchain
-				
+				CRTSWPCHN(MainDevice, WindowSurfaceKhr, KhrWindowSurface, QueueFamilyIndices, Instance, MainLogicalDevice, ref Swapchain, ref SwapchainKHR, ref SwapChainImages, ref swapChainImageFormat, ref swapChainExtent);
+				Debug.WriteLine("Created swapchain.");
+				// Set up swapchain images
+
 			}
 
 			// inits events
 			STES(wnd);
+			
 			// starts rendering
 			INITVWRNDRNG(wnd);
 			// clean up
 			CLNUP(MainLogicalDevice, Instance, KhrWindowSurface, WindowSurfaceKhr, vk);
 		}
 
-		public unsafe virtual void CRTSWPCHN()
+		public unsafe virtual void INITSWPCHNIMGVWS(ref Image[] swapchainImages, ref ImageView[] imageViews)
 		{
+			imageViews = new ImageView[swapchainImages.Length];
+			for (int i = 0; i < SwapChainImages.Length; i++)
+				CRTIMGVW();
 
+		}
+
+		public unsafe virtual void CRTIMGVW(Image image, Format format, uint ImageType, ComponentMapping componentParam = new(), bool doMipMaping = false, ImageType type)
+		{
+			TempCreateInfo = new()
+			{
+				SType = StructureType.ImageViewCreateInfo,
+				Image = image,
+				Format = format,
+				ViewType = ImageViewType.Type2D,
+				Components = componentParam,
+
+			};
+
+		}
+
+		public unsafe virtual void CRTSWPCHN(PhysicalDevice MainDevice, SurfaceKHR surfacekhr, KhrSurface khrsurface, QueueFamilyIndices idcs, Instance inst, Device dvc, ref KhrSwapchain Swapchain, ref SwapchainKHR swapchainKHR, ref Image[] imgs, ref Format imgfrmt, ref Extent2D imgsze)
+		{
+			var swapChainSupport = QRYSWPCHNSUP(khrsurface, surfacekhr, MainDevice);
+
+			var surfaceFormat = CHSWPSRFCFRMT(swapChainSupport.Formats);
+			var presentMode = ChoosePresentMode(swapChainSupport.PresentModes);
+			var extent = CHSWPCHNEXTNT(swapChainSupport.Capabilities);
+
+			var imageCount = swapChainSupport.Capabilities.MinImageCount + 1;
+			if (swapChainSupport.Capabilities.MaxImageCount > 0 && imageCount > swapChainSupport.Capabilities.MaxImageCount)
+			{
+				imageCount = swapChainSupport.Capabilities.MaxImageCount;
+			}
+
+			SwapchainCreateInfoKHR creatInfo = new()
+			{
+				SType = StructureType.SwapchainCreateInfoKhr,
+				Surface = surfacekhr,
+
+				MinImageCount = imageCount,
+				ImageFormat = surfaceFormat.Format,
+				ImageColorSpace = surfaceFormat.ColorSpace,
+				ImageExtent = extent,
+				ImageArrayLayers = 1,
+				ImageUsage = ImageUsageFlags.ColorAttachmentBit,
+			};
+
+			var indices = QueueFamilyIndices;
+			var queueFamilyIndices = stackalloc[] { indices.GraphicsFamily!.Value, indices.PresentFamily!.Value };
+
+			if (indices.GraphicsFamily != indices.PresentFamily)
+			{
+				creatInfo = creatInfo with
+				{
+					ImageSharingMode = SharingMode.Concurrent,
+					QueueFamilyIndexCount = 2,
+					PQueueFamilyIndices = queueFamilyIndices,
+				};
+			}
+			else
+			{
+				creatInfo.ImageSharingMode = SharingMode.Exclusive;
+			}
+
+			creatInfo = creatInfo with
+			{
+				PreTransform = swapChainSupport.Capabilities.CurrentTransform,
+				CompositeAlpha = CompositeAlphaFlagsKHR.OpaqueBitKhr,
+				PresentMode = presentMode,
+				Clipped = true,
+
+				OldSwapchain = default
+			};
+
+			if (!vk!.TryGetDeviceExtension(inst, dvc, out Swapchain))
+			{
+				throw new NotSupportedException("VK_KHR_swapchain extension not found.");
+			}
+			fixed (SwapchainKHR* pswap = &swapchainKHR)
+			{
+				if (Swapchain!.CreateSwapchain(dvc, &creatInfo, null, pswap) != Silk.NET.Vulkan.Result.Success)
+				{
+					throw new Exception("failed to create swap chain!");
+				}
+			}
+
+			Swapchain.GetSwapchainImages(dvc, SwapchainKHR, &imageCount, null);
+			imgs = new Image[imageCount];
+			fixed (Image* swapChainImagesPtr = imgs)
+			{
+				Swapchain.GetSwapchainImages(dvc, SwapchainKHR, ref imageCount, swapChainImagesPtr);
+			}
+
+			imgfrmt = surfaceFormat.Format;
+			imgsze = extent;
+
+			
 		}
 
 		public unsafe virtual SwapChainSupportDetails QRYSWPCHNSUP(KhrSurface khrSurface, SurfaceKHR surface, PhysicalDevice physicalDevice)
@@ -356,7 +566,7 @@ namespace Sharp._2d._2DSVKRenderer.Main
 			QueueFamilyIndices = new QueueFamilyIndices();
 
 
-			// TODO: REFACTOR
+			
 			// if only c# had functional programming.
 			uint queueFamilityCount = 0;
 			vk!.GetPhysicalDeviceQueueFamilyProperties(device, ref queueFamilityCount, null);
@@ -421,7 +631,7 @@ namespace Sharp._2d._2DSVKRenderer.Main
 			PhysicalDevice dvc = new();
 			uint dvcCount = 0;
 			vk.EnumeratePhysicalDevices(instance, &dvcCount, (PhysicalDevice*)Utils.NULLVOIDPTR);
-			// failed to find a suitable vulkan gpu
+			// failed to find a gpu
 			if (dvcCount == 0) ErrorHandler.ThrowError(24, true);
 			PhysicalDevice[] devices = new PhysicalDevice[dvcCount];
 			fixed (PhysicalDevice* ptr = &devices[0])
@@ -430,8 +640,12 @@ namespace Sharp._2d._2DSVKRenderer.Main
 
 			int i = 0;
 			foreach (PhysicalDevice physdvc in devices)
-				GTVLDPHYSDVC(physdvc, ref scores[i++]);
+				GTVLDPHYSDVC(devices[i], ref scores[i++]);
+
 			int chosenDvc = ArrayUtils.GetHighestValueIndex(scores) - 1;
+			if (scores[chosenDvc] == -1)
+				//Error, Internal Error, Failed to find a suitable Vulkan GPU. This means that your GPU(s) are not compatible with Vulkan. Sharp will not be able to run on them.
+				ErrorHandler.ThrowError(24, true);
 
 			return devices[chosenDvc];
 		}
@@ -444,21 +658,31 @@ namespace Sharp._2d._2DSVKRenderer.Main
 			PhysicalDeviceProperties physdvcprop = vk.GetPhysicalDeviceProperties(physdvc);
 			PhysicalDeviceFeatures physdvcfturs = vk.GetPhysicalDeviceFeatures(physdvc);
 
-			if (physdvcprop.DeviceType == PhysicalDeviceType.DiscreteGpu) score += 1000;
-			if (physdvcprop.DeviceType == PhysicalDeviceType.IntegratedGpu) score += 100;
-			if (physdvcprop.DeviceType == PhysicalDeviceType.Other) score+=300;
-			if (physdvcprop.DeviceType == PhysicalDeviceType.VirtualGpu) score += 3000;
+			if (physdvcprop.DeviceType == PhysicalDeviceType.DiscreteGpu) score += 5000;
+			if (physdvcprop.DeviceType == PhysicalDeviceType.IntegratedGpu) score += 500;
+			if (physdvcprop.DeviceType == PhysicalDeviceType.Other) score+=1500;
+			if (physdvcprop.DeviceType == PhysicalDeviceType.VirtualGpu) score += 15000;
 			score += (int)physdvcprop.Limits.MaxImageDimension2D;
 
+			bool extensionsSupported = VLDEXT(physdvc, deviceExtensions);
+
+			bool swapChainAdequate = false;
+			if (extensionsSupported)
+			{
+				var swapChainSupport = QRYSWPCHNSUP(KhrWindowSurface, WindowSurfaceKhr, physdvc);
+				swapChainAdequate = swapChainSupport.Formats.Any() && swapChainSupport.PresentModes.Any();
+			}
+
 			if (!physdvcfturs.GeometryShader) score = -1;
-			if (!QueueFamilyIndices.IsComplete()) score = -1;
-			if (!VLDEXT(MainDevice, deviceExtensions)) score = -1;
+			//if (!QueueFamilyIndices.IsComplete()) score = -1;
+			if (!extensionsSupported) score = -1;
+			if (!swapChainAdequate) score = -1;
 		}
 
 		public virtual unsafe bool VLDEXT(PhysicalDevice MainDevice, string[] deviceExts)
 		{
 			uint extentionsCount = 0;
-			vk!.EnumerateDeviceExtensionProperties(MainDevice, (byte*)null, ref extentionsCount, null);
+			Silk.NET.Vulkan.Result res = vk!.EnumerateDeviceExtensionProperties(MainDevice, (byte*)null, ref extentionsCount, null);
 
 			var availableExtensions = new ExtensionProperties[extentionsCount];
 			fixed (ExtensionProperties* availableExtensionsPtr = availableExtensions)
@@ -471,19 +695,72 @@ namespace Sharp._2d._2DSVKRenderer.Main
 			return deviceExts.All(availableExtensionNames.Contains);
 		}
 
+		public unsafe virtual PresentModeKHR ChoosePresentMode(IReadOnlyList<PresentModeKHR> availablePresentModes)
+		{
+			if (Platform == VKDrawPlatform.Android || Platform == VKDrawPlatform.iOS || Platform == VKDrawPlatform.Other)
+				if (VSync)
+					return PresentModeKHR.FifoKhr;
+				else
+					return PresentModeKHR.ImmediateKhr;
+			else
+				foreach (PresentModeKHR presentMode in availablePresentModes)
+					if (presentMode == PresentModeKHR.MailboxKhr)
+						return presentMode;
+			if (VSync)
+				return PresentModeKHR.FifoKhr;
+			else
+				return PresentModeKHR.ImmediateKhr;
+		}
+
+		public unsafe virtual Extent2D CHSWPCHNEXTNT(SurfaceCapabilitiesKHR surfaceCapabilities)
+		{
+			if (surfaceCapabilities.CurrentExtent.Width != uint.MaxValue)
+			{
+				return surfaceCapabilities.CurrentExtent;
+			}
+			else
+			{
+				var framebufferSize = wnd!.FramebufferSize;
+
+				Extent2D actualExtent = new()
+				{
+					Width = (uint)framebufferSize.X,
+					Height = (uint)framebufferSize.Y
+				};
+
+				actualExtent.Width = Math.Clamp(actualExtent.Width, surfaceCapabilities.MinImageExtent.Width, surfaceCapabilities.MaxImageExtent.Width);
+				actualExtent.Height = Math.Clamp(actualExtent.Height, surfaceCapabilities.MinImageExtent.Height, surfaceCapabilities.MaxImageExtent.Height);
+
+				return actualExtent;
+			}
+		} 
+
+		public virtual unsafe SurfaceFormatKHR CHSWPSRFCFRMT(SurfaceFormatKHR[] surfaceFormats)
+		{
+			foreach (var availableFormat in surfaceFormats)
+			{
+				if (availableFormat.Format == Format.B8G8R8A8Srgb && availableFormat.ColorSpace == ColorSpaceKHR.SpaceSrgbNonlinearKhr)
+				{
+					return availableFormat;
+				}
+			}
+
+			return surfaceFormats[0];
+		}
+
 		public virtual unsafe byte** GTEXTS(ref uint count)
 		{
 			string[] ext = ["VK_KHR_surface"];
 
-			if (platform == VKDrawPlatform.Windows)
+			if (Platform == VKDrawPlatform.Windows)
 				ext = [.. ext, "VK_KHR_win32_surface"];
-			if (platform == VKDrawPlatform.Linux)
+			if (Platform == VKDrawPlatform.Linux)
 				ext = [.. ext, "VK_KHR_xcb_surface", "VK_KHR_Wayland_surface"];
-			if (platform == VKDrawPlatform.iOS)
+			if (Platform == VKDrawPlatform.iOS)
 				ext = [.. ext, "VK_MVK_ios_surface"];
-			if (platform == VKDrawPlatform.MacOS)
+			if (Platform == VKDrawPlatform.MacOS)
 				ext = [.. ext, "VK_MVK_ios_surface"];
-			if (platform == VKDrawPlatform.Android)
+			if (Platform == VKDrawPlatform.Android)
 				ext = [.. ext, "VK_KHR_android_surface"];
 			count = (uint)ext.Length;
 
@@ -495,9 +772,16 @@ namespace Sharp._2d._2DSVKRenderer.Main
 			vw.Run();
 		}
 
+		private void VWRNDR(double obj)
+		{
+			Elapsed = obj;
+			TotalElapsed += obj;
+		}
+
 		public virtual void STES(IView vw)
 		{
-			wnd.Load += LD;
+			vw.Render += VWRNDR;
+			vw.Load += LD;
 		}
 
 		public virtual IView CRTWND()
@@ -574,6 +858,8 @@ namespace Sharp._2d._2DSVKRenderer.Main
 			SilkMarshal.Free((nint)bpp);
 			if (res != Silk.NET.Vulkan.Result.Success)
 			{
+				//if (res.ToString() == "ExtensionNotPresent")
+				//	MainSVKRenderer.rndr.TSTENV();
 				//Error, Internal Error, Failed to create a Vulkan instance. Sharp may be unable to run on your hardware. Exact error: #1
 				ErrorHandler.ThrowError(26, [res.ToString()], true);
 			}
@@ -589,5 +875,17 @@ namespace Sharp._2d._2DSVKRenderer.Main
 
 			return vk;
 		}
+
+		//private void TSTENV()
+		//{
+		//	if (++TestEnvIdx == 1) {
+		//		Platform = VKDrawPlatform.Windows;
+
+		//	}
+		//	else if (++TestEnvIdx == 2) {
+		//		Platform = VKDrawPlatform.Linux;
+		//	}
+		//	el
+		//}
 	}
 }

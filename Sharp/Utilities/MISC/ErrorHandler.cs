@@ -7,11 +7,6 @@ public static class ErrorHandler
 	public static bool IsWindows = true;
 	public static bool InitCalled = false;
 	public static string[] errors = File.ReadAllLines($"{Environment.CurrentDirectory}\\errors.txt");
-	public static void ThrowError(int messageIdx, bool crash)
-	{
-		string message = errors[messageIdx - 1].Replace("#0", Environment.CurrentDirectory);
-		ThrowError(message, crash);
-	}
 	public static void ThrowError(string message, bool crash)
 	{
 		if (Environment.OSVersion.Platform == PlatformID.Win32NT)
@@ -29,8 +24,10 @@ public static class ErrorHandler
 				throw new MessageBoxException(message);
 		}
 	}
+	public static void ThrowError(int messageIdx, bool crash) => ThrowError(messageIdx, [], crash);
 	public static void ThrowError(int messageIdx, string[] parameters, bool crash)
 	{
+		parameters = parameters.Prepend(Environment.CurrentDirectory).ToArray();
 		string curMessage = errors[messageIdx - 1];
 		int i = 0;
 		foreach (string param in parameters)

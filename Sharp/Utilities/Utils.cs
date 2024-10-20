@@ -26,6 +26,7 @@ namespace Sharp.Utilities
 			while (!(*reference).Equals(valueToAwait)) Task.Delay(timeToWait);
 		}
 
+
 		public static unsafe void ParallelForLoop(Action<int> action, int executeCount)
 		{
 			for (int i = 0; i < executeCount; i++)
